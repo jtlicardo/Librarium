@@ -3,8 +3,8 @@
     <svg
       class="ham ham6"
       viewBox="0 0 100 100"
-      width="80"
-      onclick="this.classList.toggle('active')"
+      width="50"
+      :class="{ active: sidebarOpen }"
       id="hamIcon"
       @click="toggleSidebar"
     >
@@ -29,6 +29,11 @@ export default {
   methods: {
     toggleSidebar() {
       this.$store.commit("toggleSidebar")
+    },
+  },
+  computed: {
+    sidebarOpen() {
+      return this.$store.state.sidebarOpen
     },
   },
   watch: {

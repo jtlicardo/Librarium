@@ -13,6 +13,9 @@ export default new Vuex.Store({
     toggleSidebar(state) {
       state.sidebarOpen = !state.sidebarOpen
     },
+    setIsOpenToFalse(state) {
+      if (state.sidebarOpen) state.sidebarOpen = false
+    },
   },
   actions: {},
   modules: {},

@@ -18,6 +18,14 @@ export default {
   components: {
     SidebarNav,
     TheHeader,
-  },
+  }
 }
 </script>
+
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+Antique:wght@300;400;500;700;900&display=swap");
+
+* {
+  font-family: "Zen Kaku Gothic Antique", sans-serif;
+}
+</style>

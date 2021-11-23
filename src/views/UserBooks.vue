@@ -5,7 +5,11 @@
 </template>
 
 <script>
-
-export default {
-}
+export default {}
 </script>
+
+<style scoped>
+h1 {
+  font-weight: 400;
+}
+</style>
