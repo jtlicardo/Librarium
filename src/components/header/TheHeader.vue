@@ -1,5 +1,11 @@
 <template>
-  <v-app-bar color="#02afff" height="80px" clipped-left app>
+  <v-app-bar
+    color="#02afff"
+    height="80px"
+    clipped-left
+    app
+    class="d-flex justify-space-between"
+  >
     <svg
       class="ham ham6"
       viewBox="0 0 100 100"
@@ -21,6 +27,31 @@
         d="m 69.575405,67.073826 h -40 c -13.100415,0 -14.380204,-31.80258 -6.899646,-33.421777 24.612039,-5.327373 -9.016154,52.337577 12.75751,30.563913 l 28.284272,-28.284272"
       />
     </svg>
+
+    <v-img
+      src="../../assets/logo.png"
+      contain
+      max-height="40px"
+      :max-width="imageWidth"
+    ></v-img>
+
+    <!-- <p>User icon</p> -->
+
+    <v-menu offset-y>
+      <template v-slot:activator="{ on, attrs }">
+        <v-icon color="white" large class="ml-3 mr-2" v-bind="attrs" v-on="on">
+          mdi-account-circle
+        </v-icon>
+      </template>
+      <v-list>
+        <v-list-item>
+          <v-list-item-title>Account info</v-list-item-title>
+        </v-list-item>
+        <v-list-item>
+          <v-list-item-title>Log out</v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-menu>
   </v-app-bar>
 </template>
 
@@ -35,6 +66,20 @@ export default {
     sidebarOpen() {
       return this.$store.state.sidebarOpen
     },
+    imageWidth() {
+      switch (this.$vuetify.breakpoint.name) {
+        case "xs":
+          return "150px"
+        case "sm":
+          return "200px"
+        case "md":
+          return "200px"
+        case "lg":
+          return "200px"
+        case "xl":
+          return "200px"
+      }
+    },
   },
   watch: {
     $route(to, from) {
@@ -47,6 +92,11 @@ export default {
 </script>
 
 <style>
+.v-toolbar__content {
+  width: 100%;
+  justify-content: space-between;
+}
+
 .ham {
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;

@@ -1,4 +1,4 @@
-# librarium
+# Librarium
 
 ## Project setup
 ```
