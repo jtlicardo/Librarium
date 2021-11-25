@@ -25,10 +25,10 @@ export default {
   computed: {
     sidebarOpen: {
       get: function () {
-        return this.$store.state.sidebarOpen
+        return this.$store.getters.sidebarOpen
       },
       set: function (newValue) {
-        this.$store.state.sidebarOpen = newValue
+        this.$store.dispatch("setSidebarState", newValue)
       },
     },
   },

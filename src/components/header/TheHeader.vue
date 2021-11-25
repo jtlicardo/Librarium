@@ -58,14 +58,7 @@ export default {
   },
   methods: {
     toggleSidebar() {
-      this.$store.commit("toggleSidebar")
-    },
-  },
-  watch: {
-    $route(to, from) {
-      let hamIcon = document.querySelector("#hamIcon")
-      hamIcon.classList.toggle("active")
-      this.$store.state.sidebarOpen = false
+      this.$store.dispatch("toggleSidebar")
     },
   },
 }
