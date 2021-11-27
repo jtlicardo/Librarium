@@ -8,13 +8,6 @@
           <v-text-field v-model="firstname" label="Title"></v-text-field>
           <v-text-field v-model="lastname" label="Author"></v-text-field>
           <v-text-field v-model="email" label="Genre"></v-text-field>
-          <v-select
-            :items="options"
-            placeholder="Number of pages"
-            solo
-            clearable
-            class="mt-2"
-          ></v-select>
           <v-btn elevation="2" color="yellow darken-1">Search</v-btn>
           <h3 class="mt-5">
             ...or
@@ -43,13 +36,6 @@ export default {
   components: {
     BookCard,
   },
-  data: () => ({
-    options: [
-      "Short ( < 100 pages )",
-      "Medium ( 100 - 400 pages )",
-      "Long ( > 400 pages )",
-    ],
-  }),
 }
 </script>
 
