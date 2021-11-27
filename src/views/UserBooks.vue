@@ -1,14 +1,14 @@
 <template>
   <v-container class="mt-md-10">
     <v-row>
-      <v-col cols="2"></v-col>
+      <v-col cols="12" md="2"></v-col>
       <v-col cols="12" md="3">
         <h1 class="mb-5">Search for a book...</h1>
         <v-form>
           <v-text-field v-model="firstname" label="Title"></v-text-field>
           <v-text-field v-model="lastname" label="Author"></v-text-field>
           <v-text-field v-model="email" label="Genre"></v-text-field>
-          <v-btn elevation="2" color="yellow darken-1">Search</v-btn>
+          <v-btn elevation="2" color="yellow darken-1" class="mt-5 mb-5">Search</v-btn>
           <h3 class="mt-5">
             ...or
             <u>see all books.</u>
