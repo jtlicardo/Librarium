@@ -3,14 +3,13 @@
     :headers="headerTitles"
     :items="reservations"
     :single-expand="singleExpand"
-    :expanded.sync="expanded"
     item-key="name"
     show-expand
     hide-default-header
     hide-default-footer
     class="elevation-1 grey lighten-3"
+    @click:row="(item, slot) => slot.expand(!slot.isExpanded)"
   >
-    <template v-slot:top></template>
     <template v-slot:expanded-item="{ headers, item }">
       <td :colspan="headers.length" class="py-5">
         <b class="text-h6">RESERVATIONS DETAILS</b>
@@ -44,7 +43,6 @@
 export default {
   data() {
     return {
-      expanded: ["what"],
       singleExpand: true,
       headerTitles: [
         {
@@ -52,6 +50,10 @@ export default {
           align: "start",
           sortable: false,
           value: "name",
+        },
+        {
+          text: "",
+          value: "data-table-expand",
         },
       ],
       reservations: [
