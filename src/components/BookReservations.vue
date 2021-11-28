@@ -5,8 +5,10 @@
     hide-default-footer
     class="elevation-1"
   >
-    <template v-slot:item.cancel="{ item }">
-      <v-icon class="mx-2" color="red darken-2" @click="">mdi-trash-can-outline</v-icon>
+    <template v-slot:[`item.cancel`]>
+      <v-icon class="mx-2" color="red darken-2" @click="openDialog">
+        mdi-trash-can-outline
+      </v-icon>
     </template>
   </v-data-table>
 </template>
@@ -44,6 +46,9 @@ export default {
         },
       ],
     }
+  },
+  methods: {
+    openDialog() {},
   },
 }
 </script>
