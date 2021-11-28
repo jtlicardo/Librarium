@@ -34,6 +34,7 @@
           <b>End date:</b>
           {{ item.endDate }}
         </p>
+        <v-btn class="mt-3 white--text" color="red darken-1">CANCEL RESERVATION</v-btn>
       </td>
     </template>
   </v-data-table>
@@ -74,15 +75,9 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .v-data-table {
-  max-width: 70% !important;
-}
-
-@media only screen and (max-width: 600px) {
-  .v-data-table {
-    max-width: 100% !important;
-  }
+  max-width: 100% !important;
 }
 
 .v-data-table > .v-data-table__wrapper > table > tbody > tr > td {

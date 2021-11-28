@@ -5,6 +5,7 @@
       <v-col cols="12" md="10">
         <h1 class="mb-5">My reservations</h1>
         <book-reservations-mobile v-if="mobile" />
+        <book-reservations v-else />
       </v-col>
     </v-row>
   </v-container>
@@ -12,15 +13,17 @@
 
 <script>
 import BookReservationsMobile from "@/components/BookReservationsMobile.vue"
+import BookReservations from "@/components/BookReservations.vue"
 
 export default {
   components: {
+    BookReservations,
     BookReservationsMobile,
   },
   methods: {
     checkViewport() {
       console.log("resize event listener triggered!")
-      if (window.innerWidth < 600) this.mobile = true
+      if (window.innerWidth < 635) this.mobile = true
       else this.mobile = false
     },
   },
@@ -34,7 +37,7 @@ export default {
     this.checkViewport()
     addEventListener("resize", () => {
       clearTimeout(this.resizeTimer)
-      this.resizeTimer = setTimeout(this.checkViewport, 200)
+      this.resizeTimer = setTimeout(this.checkViewport, 100)
     })
   },
 }
