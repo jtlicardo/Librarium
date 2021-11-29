@@ -7,9 +7,7 @@
   >
     <template v-slot:[`item.cancel`]>
       <v-btn class="mx-2" color="red darken-1" fab x-small elevation="1">
-        <v-icon color="white" @click="openDialog">
-          mdi-trash-can-outline
-        </v-icon>
+        <v-icon color="white" @click="openDialog">mdi-trash-can-outline</v-icon>
       </v-btn>
     </template>
   </v-data-table>
@@ -57,7 +55,7 @@ export default {
 
 <style scoped>
 .v-data-table {
-  max-width: 70% !important;
+  max-width: 80% !important;
 }
 
 @media only screen and (max-width: 1264px) {
@@ -66,7 +64,7 @@ export default {
   }
 }
 
-.v-data-table > .v-data-table__wrapper > table > tbody > tr > td {
+.v-data-table >>> .v-data-table__wrapper > table > tbody > tr > td {
   font-size: 1rem !important;
 }
 </style>

@@ -63,4 +63,8 @@ export default {
     max-width: 100% !important;
   }
 }
+
+.v-data-table >>> .v-data-table__wrapper > table > tbody > tr > td {
+  font-size: 1rem !important;
+}
 </style>

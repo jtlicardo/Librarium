@@ -12,7 +12,7 @@
   >
     <template v-slot:expanded-item="{ headers, item }">
       <td :colspan="headers.length" class="py-5">
-        <b class="text-h6">RESERVATIONS DETAILS</b>
+        <b class="text-h6">LOAN DETAILS</b>
         <p class="my-0">
           <b>Book title:</b>
           {{ item.name }}
@@ -26,14 +26,14 @@
           {{ item.inventoryNumber }}
         </p>
         <p class="my-0">
-          <b>Start date:</b>
-          {{ item.startDate }}
+          <b>Issue date:</b>
+          {{ item.issueDate }}
         </p>
         <p class="my-0">
-          <b>End date:</b>
-          {{ item.endDate }}
+          <b>Due date:</b>
+          {{ item.dueDate }}
         </p>
-        <v-btn class="mt-3 white--text" color="red darken-1">CANCEL RESERVATION</v-btn>
+        <v-btn class="mt-3 black--text" color="yellow darken-1">SEND REQUEST</v-btn>
       </td>
     </template>
   </v-data-table>
@@ -61,15 +61,15 @@ export default {
           name: "Crime and Punishment",
           author: "Fyodor Dostoevsky",
           inventoryNumber: "26008",
-          startDate: "16.11.2021.",
-          endDate: "19.11.2021.",
+          issueDate: "16.11.2021.",
+          dueDate: "19.11.2021.",
         },
         {
           name: "Sapiens - A Brief History of Humankind",
           author: "Yuval Noah Harari",
           inventoryNumber: "57961",
-          startDate: "15.11.2021.",
-          endDate: "18.11.2021.",
+          issueDate: "15.11.2021.",
+          dueDate: "18.11.2021.",
         },
       ],
     }
