@@ -4,7 +4,11 @@
     :items="filteredBooks"
     :items-per-page="5"
     class="elevation-1"
-  ></v-data-table>
+  >
+    <template v-slot:[`item.logo`]="{ item }">
+      <v-img :src="item.logo" contain height="100px"></v-img>
+    </template>
+  </v-data-table>
 </template>
 
 <script>
@@ -15,13 +19,13 @@ export default {
         {
           text: "LOGO",
           sortable: false,
-          value: "bookTitle",
+          value: "logo",
         },
-        { text: "BOOK TITLE", value: "author", sortable: false },
-        { text: "AUTHOR", value: "inventoryNumber", sortable: false },
-        { text: "GENRE", value: "issueDate", sortable: false },
-        { text: "# OF PAGES", value: "dueDate", sortable: false },
-        { text: "# OF COPIES", value: "request", sortable: false },
+        { text: "BOOK TITLE", value: "title", sortable: false },
+        { text: "AUTHOR", value: "author", sortable: false },
+        { text: "GENRE", value: "genres", sortable: false },
+        { text: "# OF PAGES", value: "page_num", sortable: false },
+        { text: "# OF COPIES", value: "copies", sortable: false },
       ],
     }
   },
@@ -33,4 +37,8 @@ export default {
 }
 </script>
 
-<style></style>
+<style scoped>
+.v-data-table >>> .v-data-table__wrapper > table > tbody > tr > td {
+  max-width: 50px;
+}
+</style>
