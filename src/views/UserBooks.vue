@@ -8,10 +8,12 @@
           <v-text-field label="Title"></v-text-field>
           <v-text-field label="Author"></v-text-field>
           <v-text-field label="Genre"></v-text-field>
-          <v-btn elevation="2" color="yellow darken-1" class="mt-5 mb-5">Search</v-btn>
+          <v-btn elevation="2" color="yellow darken-1" class="mt-5 mb-5" to="/search">
+            Search
+          </v-btn>
           <h3 class="mt-5">
             ...or
-            <u>see all books.</u>
+            <router-link to="/search">see all books.</router-link>
           </h3>
         </v-form>
       </v-col>
@@ -43,5 +45,9 @@ export default {
 h1,
 h3 {
   font-weight: 400;
+}
+
+h3 a {
+  color: black;
 }
 </style>

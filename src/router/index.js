@@ -1,34 +1,39 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import UserBooks from '../views/UserBooks.vue'
+import Vue from "vue"
+import VueRouter from "vue-router"
+import UserBooks from "../views/UserBooks.vue"
 import UserReservations from "../views/UserReservations.vue"
 import UserLoans from "../views/UserLoans.vue"
+import BookSearch from "@/views/BookSearch.vue"
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: "/",
-    redirect: "/ubooks"
+    redirect: "/ubooks",
   },
   {
-    path: '/ubooks',
-    component: UserBooks
+    path: "/ubooks",
+    component: UserBooks,
   },
   {
-    path: '/ureservations',
-    component: UserReservations
+    path: "/ureservations",
+    component: UserReservations,
   },
   {
     path: "/uloans",
-    component: UserLoans
-  }
+    component: UserLoans,
+  },
+  {
+    path: "/search",
+    component: BookSearch,
+  },
 ]
 
 const router = new VueRouter({
-  mode: 'history',
+  mode: "history",
   base: process.env.BASE_URL,
-  routes
+  routes,
 })
 
 export default router
