@@ -31,7 +31,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .ham {
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;

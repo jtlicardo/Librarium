@@ -10,6 +10,8 @@ export default new Vuex.Store({
   state() {
     return {
       sidebarOpen: false,
+      backButton: false,
+      backButtonActive: false,
       books: [
         {
           id: "b1",

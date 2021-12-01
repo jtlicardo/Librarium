@@ -6,7 +6,8 @@
     app
     class="d-flex justify-space-between"
   >
-    <hamburger-icon @click.native="toggleSidebar"></hamburger-icon>
+    <hamburger-icon @click.native="toggleSidebar" v-if="!backButton"></hamburger-icon>
+    <back-button v-else @click.native="removeBackButton"></back-button>
 
     <v-img
       src="../../assets/logo.png"
@@ -35,10 +36,12 @@
 
 <script>
 import HamburgerIcon from "./HamburgerIcon.vue"
+import BackButton from "@/components/header/BackButton.vue"
 
 export default {
   components: {
     HamburgerIcon,
+    BackButton,
   },
   computed: {
     imageWidth() {
@@ -49,10 +52,17 @@ export default {
           return "200px"
       }
     },
+    backButton() {
+      return this.$store.getters.backButton
+    },
   },
   methods: {
     toggleSidebar() {
       this.$store.dispatch("toggleSidebar")
+    },
+    removeBackButton() {
+      this.$store.dispatch("removeBackButton")
+      this.$store.dispatch("removeBackButtonActive")
     },
   },
 }

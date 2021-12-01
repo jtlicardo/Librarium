@@ -8,12 +8,20 @@
           <v-text-field label="Title"></v-text-field>
           <v-text-field label="Author"></v-text-field>
           <v-text-field label="Genre"></v-text-field>
-          <v-btn elevation="2" color="yellow darken-1" class="mt-5 mb-5" to="/search">
+          <v-btn
+            elevation="2"
+            color="yellow darken-1"
+            class="mt-5 mb-5"
+            to="/search"
+            @click.native="toggleBackButton"
+          >
             Search
           </v-btn>
           <h3 class="mt-5">
             ...or
-            <router-link to="/search">see all books.</router-link>
+            <router-link to="/search" @click.native="toggleBackButton">
+              see all books.
+            </router-link>
           </h3>
         </v-form>
       </v-col>
@@ -37,6 +45,12 @@ import BookCard from "@/components/BookCard.vue"
 export default {
   components: {
     BookCard,
+  },
+  methods: {
+    toggleBackButton() {
+      this.$store.dispatch("showBackButton")
+      this.$store.dispatch("showBackButtonActive")
+    },
   },
 }
 </script>
