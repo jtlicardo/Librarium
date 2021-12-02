@@ -65,6 +65,13 @@ export default {
       this.$store.dispatch("removeBackButtonActive")
     },
   },
+  mounted() {
+    // if back button is pressed
+    window.onpopstate = (event) => {
+      this.$store.dispatch("removeBackButton")
+      this.$store.dispatch("removeBackButtonActive")
+    }
+  },
 }
 </script>
 
