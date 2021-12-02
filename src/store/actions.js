@@ -21,4 +21,7 @@ export default {
   removeBackButtonActive(context) {
     context.commit("removeBackButtonActive")
   },
+  updateFilters(context, payload) {
+    context.commit("updateFilters", payload)
+  },
 }

@@ -12,6 +12,11 @@ export default new Vuex.Store({
       sidebarOpen: false,
       backButton: false,
       backButtonActive: false,
+      searchInput: {
+        title: "",
+        author: "",
+        genre: "",
+      },
       books: [
         {
           id: "b1",

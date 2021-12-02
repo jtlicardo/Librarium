@@ -43,7 +43,7 @@ export default {
   },
   computed: {
     filteredBooks() {
-      return this.$store.getters.books
+      return this.$store.getters.filteredBooks
     },
   },
 }

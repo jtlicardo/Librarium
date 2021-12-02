@@ -17,4 +17,7 @@ export default {
   removeBackButtonActive(state) {
     state.backButtonActive = false
   },
+  updateFilters(state, payload) {
+    state.searchInput = payload
+  },
 }
