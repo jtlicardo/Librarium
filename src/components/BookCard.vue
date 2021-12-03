@@ -2,7 +2,9 @@
   <v-card max-width="500px">
     <div class="d-flex flex-no-wrap justify-space-between mt-3">
       <div>
-        <v-card-title class="text-subtitle-1 text-sm-h5 text-md-subtitle-1 text-lg-h5">
+        <v-card-title
+          class="text-subtitle-1 text-sm-h5 text-md-subtitle-1 text-lg-h6 word-break"
+        >
           {{ title }}
         </v-card-title>
         <v-card-subtitle>by {{ author }}</v-card-subtitle>
@@ -31,4 +33,8 @@ export default {
 }
 </script>
 
-<style></style>
+<style scoped>
+.word-break {
+  word-break: keep-all;
+}
+</style>

@@ -1,9 +1,10 @@
 import Vue from "vue"
 import VueRouter from "vue-router"
-import UserBooks from "../views/UserBooks.vue"
-import UserReservations from "../views/UserReservations.vue"
-import UserLoans from "../views/UserLoans.vue"
+import UserBooks from "@/views/UserBooks.vue"
+import UserReservations from "@/views/UserReservations.vue"
+import UserLoans from "@/views/UserLoans.vue"
 import BookSearch from "@/views/BookSearch.vue"
+import BookDetails from "@/views/BookDetails.vue"
 
 Vue.use(VueRouter)
 
@@ -27,6 +28,11 @@ const routes = [
   {
     path: "/search",
     component: BookSearch,
+  },
+  {
+    path: "/:id",
+    component: BookDetails,
+    props: true,
   },
 ]
 
