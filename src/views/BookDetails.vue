@@ -1,8 +1,4 @@
 <template>
-  <!-- <div>
-    <p>Book details</p>
-    <p>{{ bookTitle }}</p>
-  </div> -->
   <v-container class="mt-md-10">
     <v-row>
       <v-col cols="12" md="2"></v-col>
@@ -36,7 +32,9 @@ export default {
     },
   },
   created() {
-    this.selectedBook = this.$store.getters.allBooks.find((book) => book.id === this.id)
+    this.selectedBook = this.$store.getters["books/allBooks"].find(
+      (book) => book.id === this.id
+    )
   },
 }
 </script>

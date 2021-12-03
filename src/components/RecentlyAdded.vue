@@ -18,7 +18,7 @@ export default {
   },
   computed: {
     books() {
-      return this.$store.getters.allBooks
+      return this.$store.getters["books/allBooks"]
     },
   },
 }
