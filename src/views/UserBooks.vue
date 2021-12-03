@@ -28,12 +28,7 @@
       <v-col cols="2"></v-col>
       <v-col cols="12" md="5">
         <h1>Recently added books</h1>
-        <div class="mt-5">
-          <book-card></book-card>
-          <book-card></book-card>
-          <book-card></book-card>
-          <book-card></book-card>
-        </div>
+        <recently-added></recently-added>
       </v-col>
     </v-row>
   </v-container>
@@ -41,10 +36,12 @@
 
 <script>
 import BookCard from "@/components/BookCard.vue"
+import RecentlyAdded from "@/components/RecentlyAdded.vue"
 
 export default {
   components: {
     BookCard,
+    RecentlyAdded,
   },
   data() {
     return {
