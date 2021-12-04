@@ -3,18 +3,27 @@
     :headers="headers"
     :items="bookCopies"
     hide-default-footer
-    class="elevation-1 grey lighten-4"
+    class="elevation-1 grey lighten-5"
   >
-    <template v-slot:[`item.reserve`]>
-      <v-btn color="yellow darken-1" elevation="1">RESERVE</v-btn>
+    <template v-slot:[`item.status`]="{ item }">
+      <book-status :type="item.status" class="mx-auto" />
+    </template>
+    <template v-slot:[`item.reserve`]="{ item }">
+      <v-btn color="yellow darken-1" elevation="1" v-if="item.status === 'Available'">
+        RESERVE
+      </v-btn>
     </template>
   </v-data-table>
-  <!-- <p>sas {{ bookCopies }}</p> -->
 </template>
 
 <script>
+import BookStatus from "@/components/BookStatus.vue"
+
 export default {
   props: ["bookId"],
+  components: {
+    BookStatus,
+  },
   data() {
     return {
       selectedBook: null,
@@ -23,9 +32,10 @@ export default {
           text: "INVENTORY NUMBER",
           sortable: false,
           value: "inventoryNumber",
+          align: "center",
         },
-        { text: "STATUS", value: "status", sortable: false },
-        { text: "", value: "reserve", sortable: false },
+        { text: "STATUS", value: "status", sortable: false, align: "center" },
+        { text: "", value: "reserve", sortable: false, align: "right" },
       ],
     }
   },
@@ -42,4 +52,12 @@ export default {
 }
 </script>
 
-<style></style>
+<style scoped>
+.v-data-table {
+  max-width: 600px !important;
+}
+
+.v-data-table >>> .v-data-table__wrapper > table > tbody > tr > td {
+  font-size: 1rem !important;
+}
+</style>

@@ -19,22 +19,22 @@ export default {
             {
               id: "c1",
               inventoryNumber: "76921",
-              status: "available",
+              status: "Available",
             },
             {
               id: "c2",
               inventoryNumber: "89832",
-              status: "available",
+              status: "Available",
             },
             {
               id: "c3",
               inventoryNumber: "26008",
-              status: "reserved",
+              status: "Reserved",
             },
             {
               id: "c4",
               inventoryNumber: "671889",
-              status: "loaned",
+              status: "Loaned",
             },
           ],
         },
@@ -50,7 +50,7 @@ export default {
             {
               id: "c1",
               inventoryNumber: "76921",
-              status: "available",
+              status: "Available",
             },
           ],
         },
@@ -66,17 +66,17 @@ export default {
             {
               id: "c1",
               inventoryNumber: "76921",
-              status: "available",
+              status: "Available",
             },
             {
               id: "c2",
               inventoryNumber: "76921",
-              status: "available",
+              status: "Available",
             },
             {
               id: "c3",
               inventoryNumber: "76921",
-              status: "reserved",
+              status: "Reserved",
             },
           ],
         },
@@ -92,12 +92,12 @@ export default {
             {
               id: "c1",
               inventoryNumber: "76921",
-              status: "available",
+              status: "Available",
             },
             {
               id: "c2",
               inventoryNumber: "76921",
-              status: "loaned",
+              status: "Loaned",
             },
           ],
         },
