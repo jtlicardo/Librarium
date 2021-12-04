@@ -18,22 +18,22 @@ export default {
           copies: [
             {
               id: "c1",
-              inventory_num: "76921",
+              inventoryNumber: "76921",
               status: "available",
             },
             {
               id: "c2",
-              inventory_num: "89832",
+              inventoryNumber: "89832",
               status: "available",
             },
             {
               id: "c3",
-              inventory_num: "26008",
+              inventoryNumber: "26008",
               status: "reserved",
             },
             {
               id: "c4",
-              inventory_num: "671889",
+              inventoryNumber: "671889",
               status: "loaned",
             },
           ],
@@ -49,7 +49,7 @@ export default {
           copies: [
             {
               id: "c1",
-              inventory_num: "76921",
+              inventoryNumber: "76921",
               status: "available",
             },
           ],
@@ -65,17 +65,17 @@ export default {
           copies: [
             {
               id: "c1",
-              inventory_num: "76921",
+              inventoryNumber: "76921",
               status: "available",
             },
             {
               id: "c2",
-              inventory_num: "76921",
+              inventoryNumber: "76921",
               status: "available",
             },
             {
               id: "c3",
-              inventory_num: "76921",
+              inventoryNumber: "76921",
               status: "reserved",
             },
           ],
@@ -91,12 +91,12 @@ export default {
           copies: [
             {
               id: "c1",
-              inventory_num: "76921",
+              inventoryNumber: "76921",
               status: "available",
             },
             {
               id: "c2",
-              inventory_num: "76921",
+              inventoryNumber: "76921",
               status: "loaned",
             },
           ],
