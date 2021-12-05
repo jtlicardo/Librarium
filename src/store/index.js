@@ -5,12 +5,14 @@ import actions from "./actions.js"
 import getters from "./getters.js"
 
 import booksModule from "@/store/modules/books/index.js"
+import usersModule from "@/store/modules/users/index.js"
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   modules: {
-    books: booksModule
+    books: booksModule,
+    users: usersModule,
   },
   state() {
     return {

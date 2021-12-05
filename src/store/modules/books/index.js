@@ -37,7 +37,7 @@ export default {
               status: "Loaned",
             },
           ],
-          ratings: [
+          reviews: [
             {
               id: "r1",
               userId: "u1",

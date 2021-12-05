@@ -11,10 +11,17 @@
           <b>{{ bookTitle }}</b>
         </h3>
         <book-copies class="mt-5 mx-auto" :bookId="id" />
-        <div class="d-flex mt-14 pt-10 justify-space-between">
+        <div class="d-flex mt-14 pt-10 mb-10 justify-space-between">
           <h3>Reviews by users</h3>
           <h3>Average rating</h3>
         </div>
+        <book-review
+          v-for="review in bookReviews"
+          :key="review.id"
+          :title="review.title"
+          :userId="review.userId"
+          :comment="review.comment"
+        />
       </v-col>
       <v-col cols="12" md="2"></v-col>
     </v-row>
@@ -23,11 +30,13 @@
 
 <script>
 import BookCopies from "@/components/BookCopies.vue"
+import BookReview from "@/components/BookReview.vue"
 
 export default {
   props: ["id"],
   components: {
     BookCopies,
+    BookReview,
   },
   data() {
     return {
@@ -43,6 +52,9 @@ export default {
     },
     bookLogo() {
       return this.selectedBook.logo
+    },
+    bookReviews() {
+      return this.selectedBook.reviews
     },
   },
   created() {
