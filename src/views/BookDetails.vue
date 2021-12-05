@@ -13,14 +13,16 @@
         <book-copies class="mt-5 mx-auto" :bookId="id" />
         <div class="d-flex mt-14 pt-10 mb-10 justify-space-between">
           <h3>Reviews by users</h3>
-          <h3>Average rating</h3>
+          <h3 v-if="hasReviews">Average rating</h3>
         </div>
+        <h4 v-if="!hasReviews">No reviews yet :(</h4>
         <book-review
           v-for="review in bookReviews"
           :key="review.id"
           :title="review.title"
           :userId="review.userId"
           :comment="review.comment"
+          :rating="review.rating"
         />
         <h3 class="mt-14 pt-10">Submit your own review</h3>
         <submit-review />
@@ -40,7 +42,7 @@ export default {
   components: {
     BookCopies,
     BookReview,
-    SubmitReview
+    SubmitReview,
   },
   data() {
     return {
@@ -56,6 +58,9 @@ export default {
     },
     bookLogo() {
       return this.selectedBook.logo
+    },
+    hasReviews() {
+      return this.selectedBook.reviews && this.selectedBook.reviews.length > 0
     },
     bookReviews() {
       return this.selectedBook.reviews
