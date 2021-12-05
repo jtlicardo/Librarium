@@ -11,6 +11,10 @@
           <b>{{ bookTitle }}</b>
         </h3>
         <book-copies class="mt-5 mx-auto" :bookId="id" />
+        <div class="d-flex mt-14 pt-10 justify-space-between">
+          <h3>Reviews by users</h3>
+          <h3>Average rating</h3>
+        </div>
       </v-col>
       <v-col cols="12" md="2"></v-col>
     </v-row>

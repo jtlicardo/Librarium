@@ -37,6 +37,32 @@ export default {
               status: "Loaned",
             },
           ],
+          ratings: [
+            {
+              id: "r1",
+              userId: "u1",
+              rating: 5,
+              title: "One of my all time favorite novels!",
+              comment:
+                "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Et ducimus vero voluptates nam repudiandae quos, eos non sequi! Autem officiis sed ut laborum magnam architecto veritatis, mollitia aspernatur quaerat ducimus!",
+            },
+            {
+              id: "r2",
+              userId: "u2",
+              rating: 5,
+              title: "Fascinating",
+              comment:
+                "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Et ducimus vero voluptates nam repudiandae quos, eos non sequi! Autem officiis sed ut laborum magnam architecto veritatis, mollitia aspernatur quaerat ducimus!",
+            },
+            {
+              id: "r3",
+              userId: "u3",
+              rating: 4,
+              title: "Good book",
+              comment:
+                "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Et ducimus vero voluptates nam repudiandae quos, eos non sequi! Autem officiis sed ut laborum magnam architecto veritatis, mollitia aspernatur quaerat ducimus!",
+            },
+          ],
         },
         {
           id: "b2",
