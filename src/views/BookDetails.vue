@@ -22,6 +22,8 @@
           :userId="review.userId"
           :comment="review.comment"
         />
+        <h3 class="mt-14 pt-10">Submit your own review</h3>
+        <submit-review />
       </v-col>
       <v-col cols="12" md="2"></v-col>
     </v-row>
@@ -31,12 +33,14 @@
 <script>
 import BookCopies from "@/components/BookCopies.vue"
 import BookReview from "@/components/BookReview.vue"
+import SubmitReview from "@/components/SubmitReview.vue"
 
 export default {
   props: ["id"],
   components: {
     BookCopies,
     BookReview,
+    SubmitReview
   },
   data() {
     return {
