@@ -1,11 +1,25 @@
 <template>
-  <div class="login mx-auto d-flex flex-column justify-center">
+  <v-container class="login mx-auto d-flex flex-column justify-center">
     <h1 class="text-center">SIGNUP</h1>
     <div class="inputs">
-      <v-text-field v-model="email" label="Email" type="email" required></v-text-field>
+      <v-text-field v-model="name" label="Full name" type="text" required></v-text-field>
+      <v-text-field
+        v-model="email"
+        label="Email"
+        hint="We won't send spam :)"
+        type="email"
+        required
+      ></v-text-field>
       <v-text-field
         v-model="password"
         label="Password"
+        type="password"
+        hint="6 characters minimum"
+        required
+      ></v-text-field>
+      <v-text-field
+        v-model="repeatedPassword"
+        label="Repeat password"
         type="password"
         required
       ></v-text-field>
@@ -15,7 +29,7 @@
       Existing user?
       <a @click="changeCmp">Log in here.</a>
     </p>
-  </div>
+  </v-container>
 </template>
 
 <script>
@@ -23,8 +37,10 @@ export default {
   emits: ["change-cmp"],
   data() {
     return {
+      name: "",
       email: "",
       password: "",
+      repeatedPassword: "",
     }
   },
   methods: {
@@ -38,7 +54,7 @@ export default {
 <style scoped>
 .login {
   background-color: white;
-  width: 570px;
+  max-width: 570px;
   margin-top: 120px;
   border-radius: 20px;
   padding: 20px 50px 30px;
@@ -46,5 +62,15 @@ export default {
 
 .inputs {
   padding: 40px 40px;
+}
+
+p,
+p a {
+  color: gray;
+}
+
+p a {
+  text-decoration: underline;
+  font-weight: 500;
 }
 </style>

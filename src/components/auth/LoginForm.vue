@@ -1,5 +1,5 @@
 <template>
-  <div class="login mx-auto d-flex flex-column justify-center">
+  <v-container class="login mx-auto d-flex flex-column justify-center">
     <h1 class="text-center">LOGIN</h1>
     <div class="inputs">
       <v-text-field v-model="email" label="Email" type="email" required></v-text-field>
@@ -16,7 +16,7 @@
       <a @click="changeCmp">Sign up here</a>
       or:
     </p>
-  </div>
+  </v-container>
 </template>
 
 <script>
@@ -39,7 +39,7 @@ export default {
 <style scoped>
 .login {
   background-color: white;
-  width: 570px;
+  max-width: 570px;
   margin-top: 120px;
   border-radius: 20px;
   padding: 20px 50px 30px;
@@ -47,5 +47,15 @@ export default {
 
 .inputs {
   padding: 40px 40px;
+}
+
+p,
+p a {
+  color: gray;
+}
+
+p a {
+  text-decoration: underline;
+  font-weight: 500;
 }
 </style>

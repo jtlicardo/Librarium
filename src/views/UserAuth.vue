@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-img src="@/assets/logo.png" width="400px" class="mx-auto mt-10"></v-img>
-    <transition>
+    <transition name="form" mode="out-in">
       <login-form
         v-if="activeComponent === 'login-form'"
         @change-cmp="changeComponent"
@@ -33,4 +33,14 @@ export default {
 }
 </script>
 
-<style></style>
+<style scoped>
+.form-enter-active,
+.form-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.form-enter,
+.form-leave-to {
+  opacity: 0;
+}
+</style>
