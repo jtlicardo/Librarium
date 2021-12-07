@@ -28,9 +28,12 @@ export default {
     imageWidth() {
       switch (this.$vuetify.breakpoint.name) {
         case "xs":
-          return "250px"
+        case "sm":
+        case "md":
+        case "lg":
+          return "225px"
         default:
-          return "400px"
+          return "300px"
       }
     },
   },
