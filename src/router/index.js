@@ -5,10 +5,15 @@ import UserReservations from "@/views/UserReservations.vue"
 import UserLoans from "@/views/UserLoans.vue"
 import BookSearch from "@/views/BookSearch.vue"
 import BookDetails from "@/views/BookDetails.vue"
+import UserAuth from "@/views/UserAuth.vue"
 
 Vue.use(VueRouter)
 
 const routes = [
+  {
+    path: "/auth",
+    component: UserAuth,
+  },
   {
     path: "/",
     redirect: "/ubooks",

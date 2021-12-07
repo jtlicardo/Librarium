@@ -1,8 +1,8 @@
 <template>
   <v-app>
-    <sidebar-nav></sidebar-nav>
-    <the-header></the-header>
-    <v-main>
+    <sidebar-nav v-if="showHeader"></sidebar-nav>
+    <the-header v-if="showHeader"></the-header>
+    <v-main :class="{ authbg: !showHeader }">
       <v-container fluid>
         <router-view></router-view>
       </v-container>
@@ -19,6 +19,13 @@ export default {
     SidebarNav,
     TheHeader,
   },
+  computed: {
+    showHeader() {
+      const curRoute = this.$route.path
+      if (curRoute === "/auth") return false
+      else return true
+    },
+  },
 }
 </script>
 
@@ -27,5 +34,13 @@ export default {
 
 * {
   font-family: "Zen Kaku Gothic Antique", sans-serif;
+}
+
+.authbg {
+  background-image: url("./assets/authbackground.jpg");
+  height: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 </style>
