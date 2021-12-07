@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-img src="@/assets/logo.png" width="400px" class="mx-auto mt-10"></v-img>
+    <v-img src="@/assets/logo.png" :max-width="imageWidth" class="mx-auto mt-10"></v-img>
     <transition name="form" mode="out-in">
       <login-form
         v-if="activeComponent === 'login-form'"
@@ -23,6 +23,16 @@ export default {
   components: {
     LoginForm,
     SignupForm,
+  },
+  computed: {
+    imageWidth() {
+      switch (this.$vuetify.breakpoint.name) {
+        case "xs":
+          return "250px"
+        default:
+          return "400px"
+      }
+    },
   },
   methods: {
     changeComponent() {

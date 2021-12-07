@@ -40,13 +40,13 @@ export default {
 .login {
   background-color: white;
   max-width: 570px;
-  margin-top: 120px;
+  margin-top: 100px;
   border-radius: 20px;
   padding: 20px 50px 30px;
 }
 
 .inputs {
-  padding: 40px 40px;
+  padding: 5% 5%;
 }
 
 p,
