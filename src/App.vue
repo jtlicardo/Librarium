@@ -13,6 +13,20 @@
 <script>
 import SidebarNav from "./components/nav/SidebarNav.vue"
 import TheHeader from "./components/header/TheHeader.vue"
+import { getAuth, onAuthStateChanged } from "@/firebase.js"
+import store from "@/store/index.js"
+
+const auth = getAuth()
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    const email = user.email
+    console.log("Auth state change, user logged in: ", email)
+    store.dispatch("setCurrentUser", email)
+  } else {
+    console.log("Auth state change, no user.")
+    store.dispatch("setCurrentUser", null)
+  }
+})
 
 export default {
   components: {

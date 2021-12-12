@@ -16,6 +16,7 @@ export default new Vuex.Store({
   },
   state() {
     return {
+      currentUser: null,
       sidebarOpen: false,
       backButton: false,
       backButtonActive: false,

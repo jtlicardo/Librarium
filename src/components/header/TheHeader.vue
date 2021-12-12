@@ -23,11 +23,11 @@
         </v-icon>
       </template>
       <v-list>
-        <v-list-item>
-          <v-list-item-title>Account info</v-list-item-title>
+        <v-list-item link>
+          <v-list-item-title class="text-center py-2">Account info</v-list-item-title>
         </v-list-item>
-        <v-list-item>
-          <v-list-item-title>Log out</v-list-item-title>
+        <v-list-item @click="logout" link>
+          <v-list-item-title class="text-center py-2">Log out</v-list-item-title>
         </v-list-item>
       </v-list>
     </v-menu>
@@ -37,6 +37,7 @@
 <script>
 import HamburgerIcon from "./HamburgerIcon.vue"
 import BackButton from "@/components/header/BackButton.vue"
+import { getAuth, signOut } from "@/firebase.js"
 
 export default {
   components: {
@@ -63,6 +64,17 @@ export default {
     removeBackButton() {
       this.$store.dispatch("removeBackButton")
       this.$store.dispatch("removeBackButtonActive")
+    },
+    logout() {
+      const auth = getAuth()
+      signOut(auth)
+        .then(() => {
+          console.log("Logout successful!")
+          this.$router.replace("/auth")
+        })
+        .catch((error) => {
+          console.error("Logout error!", error)
+        })
     },
   },
   mounted() {

@@ -10,7 +10,7 @@
         required
       ></v-text-field>
     </div>
-    <v-btn color="yellow darken-1" class="mx-auto">LOG IN</v-btn>
+    <v-btn color="yellow darken-1" class="mx-auto" @click="login">LOG IN</v-btn>
     <p class="text-center mt-10">
       New user?
       <a @click="changeCmp">Sign up here</a>
@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import { getAuth, signInWithEmailAndPassword } from "@/firebase.js"
 export default {
   emits: ["change-cmp"],
   data() {
@@ -31,6 +32,19 @@ export default {
   methods: {
     changeCmp() {
       this.$emit("change-cmp")
+    },
+    login() {
+      const auth = getAuth()
+      signInWithEmailAndPassword(auth, this.email, this.password)
+        .then((userCredential) => {
+          const user = userCredential.user
+          console.log("Login successful! ", user)
+          this.$router.replace("/ubooks")
+        })
+        .catch((error) => {
+          const errorMessage = error.message
+          console.log("Login error! ", errorMessage)
+        })
     },
   },
 }

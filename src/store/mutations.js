@@ -1,4 +1,7 @@
 export default {
+  setCurrentUser(state, payload) {
+    state.currentUser = payload
+  },
   toggleSidebar(state) {
     state.sidebarOpen = !state.sidebarOpen
   },

@@ -1,4 +1,7 @@
 export default {
+  currentUser(state) {
+    return state.currentUser
+  },
   sidebarOpen(state) {
     return state.sidebarOpen
   },
