@@ -2,29 +2,46 @@
   <v-container class="login mx-auto d-flex flex-column justify-center">
     <h1 class="text-center">SIGNUP</h1>
     <div class="inputs">
-      <v-text-field v-model="name" label="Full name" type="text" required></v-text-field>
+      <v-text-field
+        v-model="fullname"
+        label="Full name"
+        type="text"
+        required
+        :rules="[rules.required]"
+      ></v-text-field>
       <v-text-field
         v-model="email"
         label="Email"
         hint="We won't send spam :)"
         type="email"
         required
+        validate-on-blur
+        :rules="[rules.required, rules.email]"
       ></v-text-field>
       <v-text-field
         v-model="password"
         label="Password"
         type="password"
         hint="6 characters minimum"
+        :rules="[rules.min]"
+        validate-on-blur
         required
       ></v-text-field>
       <v-text-field
         v-model="repeatedPassword"
         label="Repeat password"
         type="password"
+        :rules="[rules.required, rules.checkRepeatedPassword]"
+        validate-on-blur
         required
       ></v-text-field>
     </div>
-    <v-btn color="yellow darken-1" class="mx-auto">SIGN UP</v-btn>
+    <base-popup
+      :active="errorExists"
+      :text="errorText"
+      @close-dialog="errorExists = false"
+    />
+    <v-btn color="yellow darken-1" class="mx-auto" @click="signup">SIGN UP</v-btn>
     <p class="text-center mt-10">
       Existing user?
       <a @click="changeCmp">Log in here.</a>
@@ -33,19 +50,73 @@
 </template>
 
 <script>
+import { getAuth, createUserWithEmailAndPassword } from "@/firebase.js"
+import BasePopup from "@/components/ui/BasePopup.vue"
+
 export default {
   emits: ["change-cmp"],
+  components: {
+    BasePopup,
+  },
   data() {
     return {
-      name: "",
+      fullname: "",
       email: "",
       password: "",
       repeatedPassword: "",
+      errorExists: null,
+      errorText: "",
+      rules: {
+        required: (value) => !!value || "Required",
+        min: (value) => value.length >= 6 || "6 characters minimum",
+        email: (value) => {
+          const pattern =
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+          return pattern.test(value) || "Invalid e-mail."
+        },
+        checkRepeatedPassword: (value) =>
+          value === this.password || "Passwords don't match!",
+      },
     }
   },
   methods: {
     changeCmp() {
       this.$emit("change-cmp")
+    },
+    validate() {
+      if (this.fullname === "" || this.email === "" || this.password === "") {
+        this.errorExists = true
+        this.errorText = "All fields are required!"
+        return false
+      }
+      const pattern =
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      if (!pattern.test(this.email)) {
+        this.errorExists = true
+        this.errorText = "Invalid email!"
+        return false
+      } else if (this.password.length < 6) {
+        this.errorExists = true
+        this.errorText = "Password needs to have at least 6 characters!"
+        return false
+      } else if (this.password !== this.repeatedPassword) {
+        this.errorExists = true
+        this.errorText = "Passwords don't match!"
+        return false
+      } else return true
+    },
+    signup() {
+      if (!this.validate()) return
+      const auth = getAuth()
+      createUserWithEmailAndPassword(auth, this.email, this.password)
+        .then((userCredential) => {
+          const user = userCredential.user
+          console.log("Signup successful! New user: ", user)
+        })
+        .catch((error) => {
+          const errorMessage = error.message
+          console.error("Signup error! ", errorMessage)
+        })
     },
   },
 }
