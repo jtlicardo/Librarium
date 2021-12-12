@@ -3,7 +3,6 @@
     <v-dialog v-model="active" width="500" @click:outside="closeDialog">
       <v-card>
         <v-alert type="error" prominent>
-          <!-- types: error -->
           <p class="popup-text">{{ text }}</p>
           <v-icon class="popup-icon" @click="closeDialog">
             mdi-close-circle-outline

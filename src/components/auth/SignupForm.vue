@@ -1,41 +1,43 @@
 <template>
   <v-container class="login mx-auto d-flex flex-column justify-center">
     <h1 class="text-center">SIGNUP</h1>
-    <div class="inputs">
-      <v-text-field
-        v-model="fullname"
-        label="Full name"
-        type="text"
-        required
-        :rules="[rules.required]"
-      ></v-text-field>
-      <v-text-field
-        v-model="email"
-        label="Email"
-        hint="We won't send spam :)"
-        type="email"
-        required
-        validate-on-blur
-        :rules="[rules.required, rules.email]"
-      ></v-text-field>
-      <v-text-field
-        v-model="password"
-        label="Password"
-        type="password"
-        hint="6 characters minimum"
-        :rules="[rules.min]"
-        validate-on-blur
-        required
-      ></v-text-field>
-      <v-text-field
-        v-model="repeatedPassword"
-        label="Repeat password"
-        type="password"
-        :rules="[rules.required, rules.checkRepeatedPassword]"
-        validate-on-blur
-        required
-      ></v-text-field>
-    </div>
+    <v-form ref="form">
+      <div class="inputs">
+        <v-text-field
+          v-model.trim="fullname"
+          label="Full name"
+          type="text"
+          required
+          :rules="[rules.required]"
+        ></v-text-field>
+        <v-text-field
+          v-model.trim="email"
+          label="Email"
+          hint="We won't send spam :)"
+          type="email"
+          required
+          validate-on-blur
+          :rules="[rules.required, rules.email]"
+        ></v-text-field>
+        <v-text-field
+          v-model.trim="password"
+          label="Password"
+          type="password"
+          hint="6 characters minimum"
+          :rules="[rules.min]"
+          validate-on-blur
+          required
+        ></v-text-field>
+        <v-text-field
+          v-model.trim="repeatedPassword"
+          label="Repeat password"
+          type="password"
+          :rules="[rules.required, rules.checkRepeatedPassword]"
+          validate-on-blur
+          required
+        ></v-text-field>
+      </div>
+    </v-form>
     <base-popup
       :active="errorExists"
       :text="errorText"
@@ -46,6 +48,9 @@
       Existing user?
       <a @click="changeCmp">Log in here.</a>
     </p>
+    <v-snackbar content-class="text-center" v-model="snackbarActive" timeout="2000">
+      Signup successful!
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -66,9 +71,10 @@ export default {
       repeatedPassword: "",
       errorExists: null,
       errorText: "",
+      snackbarActive: false,
       rules: {
         required: (value) => !!value || "Required",
-        min: (value) => value.length >= 6 || "6 characters minimum",
+        min: (value) => (value && value.length >= 6) || "6 characters minimum",
         email: (value) => {
           const pattern =
             /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -111,7 +117,9 @@ export default {
       createUserWithEmailAndPassword(auth, this.email, this.password)
         .then((userCredential) => {
           const user = userCredential.user
-          console.log("Signup successful! New user: ", user)
+          console.log("Signup successful! ", user)
+          this.snackbarActive = true
+          this.$refs.form.reset()
         })
         .catch((error) => {
           const errorMessage = error.message
