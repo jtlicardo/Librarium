@@ -1,5 +1,18 @@
 <template>
   <v-container class="login mx-auto d-flex flex-column justify-center">
+    <base-dialog
+      title="Signup error!"
+      :text="signupError"
+      color="red"
+      :active="!!signupError"
+      @close="handleError"
+    ></base-dialog>
+    <base-dialog
+      title="Signing you up..."
+      color="primary"
+      loading
+      :active="isLoading"
+    ></base-dialog>
     <h1 class="text-center">SIGNUP</h1>
     <v-form ref="form">
       <div class="inputs">
@@ -38,12 +51,20 @@
         ></v-text-field>
       </div>
     </v-form>
-    <base-popup
-      :active="errorExists"
+    <error-popup
+      :active="validationError"
       :text="errorText"
-      @close-dialog="errorExists = false"
+      @close-dialog="validationError = false"
     />
-    <v-btn color="yellow darken-1" class="mx-auto" @click="signup">SIGN UP</v-btn>
+    <v-btn
+      color="yellow darken-1"
+      class="mx-auto"
+      @click="signup"
+      :disabled="isLoading"
+      :loading="isLoading"
+    >
+      SIGN UP
+    </v-btn>
     <p class="text-center mt-10">
       Existing user?
       <a @click="changeCmp">Log in here.</a>
@@ -55,12 +76,14 @@
 </template>
 
 <script>
-import BasePopup from "@/components/ui/BasePopup.vue"
+import ErrorPopup from "@/components/ui/ErrorPopup.vue"
+import BaseDialog from "@/components/ui/BaseDialog.vue"
 
 export default {
   emits: ["change-cmp"],
   components: {
-    BasePopup,
+    ErrorPopup,
+    BaseDialog,
   },
   data() {
     return {
@@ -68,9 +91,11 @@ export default {
       email: "",
       password: "",
       repeatedPassword: "",
-      errorExists: null,
+      validationError: null,
       errorText: "",
       snackbarActive: false,
+      isLoading: false,
+      signupError: null,
       rules: {
         required: (value) => !!value || "Required",
         min: (value) => (value && value.length >= 6) || "6 characters minimum",
@@ -90,34 +115,45 @@ export default {
     },
     validate() {
       if (this.fullname === "" || this.email === "" || this.password === "") {
-        this.errorExists = true
+        this.validationError = true
         this.errorText = "All fields are required!"
         return false
       }
       const pattern =
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
       if (!pattern.test(this.email)) {
-        this.errorExists = true
+        this.validationError = true
         this.errorText = "Invalid email!"
         return false
       } else if (this.password.length < 6) {
-        this.errorExists = true
+        this.validationError = true
         this.errorText = "Password needs to have at least 6 characters!"
         return false
       } else if (this.password !== this.repeatedPassword) {
-        this.errorExists = true
+        this.validationError = true
         this.errorText = "Passwords don't match!"
         return false
       } else return true
     },
-    signup() {
+    async signup() {
       if (!this.validate()) return
-      this.$store.dispatch("signup", {
-        email: this.email,
-        password: this.password,
-      })
-      this.snackbarActive = true
-      this.$refs.form.reset()
+      this.isLoading = true
+
+      try {
+        await this.$store.dispatch("signup", {
+          email: this.email,
+          password: this.password,
+        })
+        this.snackbarActive = true
+        this.$refs.form.reset()
+      } catch (error) {
+        this.signupError = error.message || "Signup error!"
+      }
+
+      this.isLoading = false
+    },
+    handleError() {
+      this.signupError = null
     },
   },
 }
