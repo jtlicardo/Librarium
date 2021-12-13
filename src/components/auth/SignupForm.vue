@@ -55,7 +55,6 @@
 </template>
 
 <script>
-import { getAuth, createUserWithEmailAndPassword } from "@/firebase.js"
 import BasePopup from "@/components/ui/BasePopup.vue"
 
 export default {
@@ -113,18 +112,12 @@ export default {
     },
     signup() {
       if (!this.validate()) return
-      const auth = getAuth()
-      createUserWithEmailAndPassword(auth, this.email, this.password)
-        .then((userCredential) => {
-          const user = userCredential.user
-          console.log("Signup successful! ", user)
-          this.snackbarActive = true
-          this.$refs.form.reset()
-        })
-        .catch((error) => {
-          const errorMessage = error.message
-          console.error("Signup error! ", errorMessage)
-        })
+      this.$store.dispatch("signup", {
+        email: this.email,
+        password: this.password,
+      })
+      this.snackbarActive = true
+      this.$refs.form.reset()
     },
   },
 }

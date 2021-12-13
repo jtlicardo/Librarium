@@ -38,6 +38,8 @@ export default {
       signInWithEmailAndPassword(auth, this.email, this.password)
         .then((userCredential) => {
           const user = userCredential.user
+          const email = userCredential.user.email
+          this.$store.dispatch("setCurrentUser", email)
           console.log("Login successful! ", user)
           this.$router.replace("/ubooks")
         })

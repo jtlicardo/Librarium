@@ -1,6 +1,14 @@
 export default {
   setCurrentUser(context, payload) {
+    localStorage.setItem("currentUser", payload)
     context.commit("setCurrentUser", payload)
+  },
+  tryLogin(context) {
+    const user = localStorage.getItem("currentUser")
+    if (user) {
+      console.log("tryLogin action: found user!")
+      context.commit("setCurrentUser", user)
+    }
   },
   toggleSidebar(context) {
     context.commit("toggleSidebar")
@@ -27,4 +35,5 @@ export default {
   updateFilters(context, payload) {
     context.commit("updateFilters", payload)
   },
+  auth(context, payload) {},
 }

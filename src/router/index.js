@@ -7,6 +7,7 @@ import BookSearch from "@/views/BookSearch.vue"
 import BookDetails from "@/views/BookDetails.vue"
 import UserAuth from "@/views/UserAuth.vue"
 import store from "@/store/index.js"
+import { getAuth } from "@/firebase.js"
 
 Vue.use(VueRouter)
 
@@ -16,7 +17,7 @@ const routes = [
     path: "/auth",
     component: UserAuth,
     meta: {
-      needsAuth: false,
+      needsUnauth: true,
     },
   },
   {
@@ -77,13 +78,15 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  console.log("Promjena rute: ", from.name, " -> ", to.name)
   const currentUser = store.getters.currentUser
-  console.log("Current user from router: ", currentUser)
+  const auth = getAuth()
+  const firebaseCurrentUser = auth.currentUser
+  console.log("Route change: ", from.name, " -> ", to.name, "Current user: ", currentUser)
+  console.log("Current user from Firebase: ", firebaseCurrentUser)
   const authenticated = currentUser !== null
   if (!authenticated && to.meta.needsAuth) next("/auth")
-  if (authenticated && !to.meta.needsAuth) next(false)
-  next()
+  else if (authenticated && to.meta.needsUnauth) next("/ubooks")
+  else next()
 })
 
 export default router

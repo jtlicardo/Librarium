@@ -40,6 +40,9 @@ export default {
       else return true
     },
   },
+  created() {
+    this.$store.dispatch("tryLogin")
+  },
 }
 </script>
 
