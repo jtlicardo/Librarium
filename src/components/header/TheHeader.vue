@@ -37,7 +37,6 @@
 <script>
 import HamburgerIcon from "./HamburgerIcon.vue"
 import BackButton from "@/components/header/BackButton.vue"
-import { getAuth, signOut } from "@/firebase.js"
 
 export default {
   components: {
@@ -66,15 +65,8 @@ export default {
       this.$store.dispatch("removeBackButtonActive")
     },
     logout() {
-      const auth = getAuth()
-      signOut(auth)
-        .then(() => {
-          console.log("Logout successful!")
-          this.$router.replace("/auth")
-        })
-        .catch((error) => {
-          console.error("Logout error!", error)
-        })
+      this.$store.dispatch("logout")
+      this.$router.replace("/auth")
     },
   },
   mounted() {

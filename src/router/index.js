@@ -77,16 +77,27 @@ const router = new VueRouter({
   routes,
 })
 
+store.dispatch("tryLogin")
+
 router.beforeEach((to, from, next) => {
-  const currentUser = store.getters.currentUser
-  const auth = getAuth()
-  const firebaseCurrentUser = auth.currentUser
-  console.log("Route change: ", from.name, " -> ", to.name, "Current user: ", currentUser)
-  console.log("Current user from Firebase: ", firebaseCurrentUser)
-  const authenticated = currentUser !== null
-  if (!authenticated && to.meta.needsAuth) next("/auth")
-  else if (authenticated && to.meta.needsUnauth) next("/ubooks")
+  const isAuthenticated = store.getters.isAuthenticated
+  console.log("Router - Is authenticated: ", isAuthenticated)
+  if (to.meta.needsAuth && !isAuthenticated) next("/auth")
+  else if (to.meta.needsUnauth && isAuthenticated) next("/ubooks")
   else next()
+  console.log("Route change: ", from.name, " -> ", to.name)
 })
+
+// router.beforeEach((to, from, next) => {
+//   const currentUser = store.getters.currentUser
+//   const auth = getAuth()
+//   const firebaseCurrentUser = auth.currentUser
+//   console.log("Route change: ", from.name, " -> ", to.name, "Current user: ", currentUser)
+//   console.log("Current user from Firebase: ", firebaseCurrentUser)
+//   const authenticated = currentUser !== null
+//   if (!authenticated && to.meta.needsAuth) next("/auth")
+//   else if (authenticated && to.meta.needsUnauth) next("/ubooks")
+//   else next()
+// })
 
 export default router

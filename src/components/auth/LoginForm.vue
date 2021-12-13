@@ -1,5 +1,18 @@
 <template>
   <v-container class="login mx-auto d-flex flex-column justify-center">
+    <base-dialog
+      title="Login error!"
+      :text="loginError"
+      color="red"
+      :active="!!loginError"
+      @close="handleError"
+    ></base-dialog>
+    <base-dialog
+      title="Logging you in..."
+      color="primary"
+      loading
+      :active="isLoading"
+    ></base-dialog>
     <h1 class="text-center">LOGIN</h1>
     <div class="inputs">
       <v-text-field v-model="email" label="Email" type="email" required></v-text-field>
@@ -20,33 +33,41 @@
 </template>
 
 <script>
-import { getAuth, signInWithEmailAndPassword } from "@/firebase.js"
+import ErrorPopup from "@/components/ui/ErrorPopup.vue"
+import BaseDialog from "@/components/ui/BaseDialog.vue"
 export default {
   emits: ["change-cmp"],
+  components: {
+    ErrorPopup,
+    BaseDialog,
+  },
   data() {
     return {
       email: "",
       password: "",
+      isLoading: false,
+      loginError: null,
     }
   },
   methods: {
     changeCmp() {
       this.$emit("change-cmp")
     },
-    login() {
-      const auth = getAuth()
-      signInWithEmailAndPassword(auth, this.email, this.password)
-        .then((userCredential) => {
-          const user = userCredential.user
-          const email = userCredential.user.email
-          this.$store.dispatch("setCurrentUser", email)
-          console.log("Login successful! ", user)
-          this.$router.replace("/ubooks")
+    async login() {
+      this.isLoading = true
+      try {
+        await this.$store.dispatch("login", {
+          email: this.email,
+          password: this.password,
         })
-        .catch((error) => {
-          const errorMessage = error.message
-          console.log("Login error! ", errorMessage)
-        })
+        this.$router.replace("/ubooks")
+      } catch (error) {
+        this.loginError = error.message || "Login error!"
+      }
+      this.isLoading = false
+    },
+    handleError() {
+      this.loginError = null
     },
   },
 }
