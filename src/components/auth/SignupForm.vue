@@ -75,7 +75,7 @@
 <script>
 import ErrorPopup from "@/components/ui/ErrorPopup.vue"
 import BaseDialog from "@/components/ui/BaseDialog.vue"
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth"
+import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth"
 
 export default {
   emits: ["change-cmp"],
@@ -141,6 +141,15 @@ export default {
           .then((userCredential) => {
             const user = userCredential.user
             console.log("Signup successful! ", user)
+            updateProfile(auth.currentUser, {
+              displayName: this.fullname,
+            })
+              .then(() => {
+                console.log("Signed up with display name: ", auth.currentUser.displayName)
+              })
+              .catch((error) => {
+                console.log("Error on setting user display name! ", error)
+              })
             this.$store.dispatch("displaySnackbar", {
               text: "Signup successful!",
               isActive: true,

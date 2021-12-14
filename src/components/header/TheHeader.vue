@@ -65,22 +65,25 @@ export default {
       this.$store.dispatch("removeBackButton")
       this.$store.dispatch("removeBackButtonActive")
     },
-    async logout() {
-      const auth = getAuth()
-      await signOut(auth)
-        .then(() => {
-          console.log("Logout successful!")
-          this.$store.dispatch("displaySnackbar", {
-            text: "Logout successful!",
-            isActive: true,
+    logout() {
+      this.$store.dispatch("displayLogoutDialog", true)
+      setTimeout(() => {
+        const auth = getAuth()
+        signOut(auth)
+          .then(() => {
+            console.log("Logout successful!")
+            this.$store.dispatch("displaySnackbar", {
+              text: "Logout successful!",
+              isActive: true,
+            })
+            this.$store.dispatch("setUser", null)
+            this.$router.replace("/auth")
           })
-          this.$store.dispatch("setUser", null)
-        })
-        .catch((error) => {
-          console.log("Logout error!", error)
-        })
-
-      this.$router.replace("/auth")
+          .catch((error) => {
+            console.log("Logout error!", error)
+          })
+        this.$store.dispatch("displayLogoutDialog", false)
+      }, 1000)
     },
   },
   mounted() {

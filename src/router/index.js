@@ -78,11 +78,17 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   const currentUserEmail = localStorage.getItem("currentUserEmail")
   const isAuthenticated = !!currentUserEmail
-  console.log("Router - user is authenticated: ", isAuthenticated)
   if (to.meta.needsAuth && !isAuthenticated) next("/auth")
   else if (to.meta.needsUnauth && isAuthenticated) next("/ubooks")
   else next()
-  console.log("Route change: ", from.name, " -> ", to.name)
+  console.log(
+    "Route change: ",
+    from.name,
+    " -> ",
+    to.name,
+    "/ User authenticated? ",
+    isAuthenticated
+  )
 })
 
 export default router

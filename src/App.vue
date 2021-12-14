@@ -11,6 +11,12 @@
         </transition>
       </v-container>
     </v-main>
+    <base-dialog
+      title="Logging you out..."
+      color="primary"
+      loading
+      :active="logoutDialogActive"
+    ></base-dialog>
     <v-snackbar content-class="text-center" v-model="snackbarActive" timeout="2000">
       {{ snackbarText }}
     </v-snackbar>
@@ -20,6 +26,7 @@
 <script>
 import SidebarNav from "./components/nav/SidebarNav.vue"
 import TheHeader from "./components/header/TheHeader.vue"
+import BaseDialog from "@/components/ui/BaseDialog.vue"
 import { getAuth, onAuthStateChanged } from "@/firebase.js"
 import store from "@/store/index.js"
 
@@ -38,6 +45,7 @@ export default {
   components: {
     SidebarNav,
     TheHeader,
+    BaseDialog,
   },
   data() {
     return {
@@ -60,6 +68,9 @@ export default {
     },
     snackbarText() {
       return this.$store.getters.snackbarText
+    },
+    logoutDialogActive() {
+      return this.$store.getters.logoutDialogActive
     },
   },
   watch: {

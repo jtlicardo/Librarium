@@ -3,6 +3,9 @@ export default {
     state.snackbarActive = payload.isActive
     state.snackbarText = payload.text
   },
+  displayLogoutDialog(state, payload) {
+    state.logoutDialogActive = payload
+  },
   toggleSidebar(state) {
     state.sidebarOpen = !state.sidebarOpen
   },

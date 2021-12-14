@@ -5,6 +5,9 @@ export default {
   snackbarText(state) {
     return state.snackbarText
   },
+  logoutDialogActive(state) {
+    return state.logoutDialogActive
+  },
   sidebarOpen(state) {
     return state.sidebarOpen
   },

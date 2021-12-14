@@ -2,6 +2,9 @@ export default {
   displaySnackbar(context, payload) {
     context.commit("displaySnackbar", payload)
   },
+  displayLogoutDialog(context, payload) {
+    context.commit("displayLogoutDialog", payload)
+  },
   toggleSidebar(context) {
     context.commit("toggleSidebar")
   },
