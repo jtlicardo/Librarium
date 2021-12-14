@@ -1,6 +1,7 @@
 export default {
-  setCurrentUser(state, payload) {
-    state.currentUser = payload
+  displaySnackbar(state, payload) {
+    state.snackbarActive = payload.isActive
+    state.snackbarText = payload.text
   },
   toggleSidebar(state) {
     state.sidebarOpen = !state.sidebarOpen

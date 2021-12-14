@@ -69,9 +69,6 @@
       Existing user?
       <a @click="changeCmp">Log in here.</a>
     </p>
-    <v-snackbar content-class="text-center" v-model="snackbarActive" timeout="2000">
-      Signup successful!
-    </v-snackbar>
   </v-container>
 </template>
 
@@ -94,7 +91,6 @@ export default {
       repeatedPassword: "",
       validationError: null,
       errorText: "",
-      snackbarActive: false,
       isLoading: false,
       signupError: null,
       rules: {
@@ -145,8 +141,17 @@ export default {
           .then((userCredential) => {
             const user = userCredential.user
             console.log("Signup successful! ", user)
-            this.snackbarActive = true
-            this.$refs.form.reset()
+            this.$store.dispatch("displaySnackbar", {
+              text: "Signup successful!",
+              isActive: true,
+            })
+            this.$router.replace("/ubooks")
+            setTimeout(() => {
+              this.$store.dispatch("displaySnackbar", {
+                text: `Logged in as ${user.email}`,
+                isActive: true,
+              })
+            }, 2500)
           })
           .catch((error) => {
             console.log("Signup error! ", error)

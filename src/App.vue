@@ -1,12 +1,19 @@
 <template>
   <v-app>
     <sidebar-nav v-if="showHeader"></sidebar-nav>
-    <the-header v-if="showHeader"></the-header>
+    <transition name="fade" mode="out-in">
+      <the-header v-if="showHeader"></the-header>
+    </transition>
     <v-main :class="{ authbg: !showHeader }">
       <v-container fluid>
-        <router-view></router-view>
+        <transition :name="transitionName" mode="out-in">
+          <router-view></router-view>
+        </transition>
       </v-container>
     </v-main>
+    <v-snackbar content-class="text-center" v-model="snackbarActive" timeout="2000">
+      {{ snackbarText }}
+    </v-snackbar>
   </v-app>
 </template>
 
@@ -32,21 +39,33 @@ export default {
     SidebarNav,
     TheHeader,
   },
+  data() {
+    return {
+      transitionName: null,
+    }
+  },
   computed: {
     showHeader() {
       const curRoute = this.$route.path
       if (curRoute === "/auth") return false
       else return true
     },
-    didAutoLogout() {
-      return this.$store.getters.didAutoLogout
+    snackbarActive: {
+      get: function () {
+        return this.$store.getters.snackbarActive
+      },
+      set: function (newValue) {
+        this.$store.dispatch("displaySnackbar", { text: "", isActive: newValue })
+      },
+    },
+    snackbarText() {
+      return this.$store.getters.snackbarText
     },
   },
   watch: {
-    didAutoLogout(curValue, oldValue) {
-      if (curValue && curValue !== oldValue) {
-        this.$router.replace("/auth")
-      }
+    $route(to, from) {
+      if (from.path === "/auth" || to.path === "/auth") this.transitionName = "quickfade"
+      else this.transitionName = "fade"
     },
   },
 }
@@ -65,5 +84,25 @@ export default {
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+}
+
+.quickfade-enter-active,
+.quickfade-leave-active {
+  transition: all 0.1s ease-out;
+}
+
+.quickfade-enter,
+.quickfade-leave-active {
+  opacity: 0;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.3s ease-out;
+}
+
+.fade-enter,
+.fade-leave-active {
+  opacity: 0;
 }
 </style>

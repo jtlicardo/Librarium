@@ -1,6 +1,9 @@
 export default {
-  currentUser(state) {
-    return state.currentUser
+  snackbarActive(state) {
+    return state.snackbarActive
+  },
+  snackbarText(state) {
+    return state.snackbarText
   },
   sidebarOpen(state) {
     return state.sidebarOpen

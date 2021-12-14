@@ -1,4 +1,7 @@
 export default {
+  displaySnackbar(context, payload) {
+    context.commit("displaySnackbar", payload)
+  },
   toggleSidebar(context) {
     context.commit("toggleSidebar")
   },

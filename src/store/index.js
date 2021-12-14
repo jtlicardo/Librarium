@@ -19,6 +19,8 @@ export default new Vuex.Store({
   state() {
     return {
       sidebarOpen: false,
+      snackbarActive: false,
+      snackbarText: "",
       backButton: false,
       backButtonActive: false,
       searchInput: {

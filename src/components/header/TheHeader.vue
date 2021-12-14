@@ -70,6 +70,10 @@ export default {
       await signOut(auth)
         .then(() => {
           console.log("Logout successful!")
+          this.$store.dispatch("displaySnackbar", {
+            text: "Logout successful!",
+            isActive: true,
+          })
           this.$store.dispatch("setUser", null)
         })
         .catch((error) => {

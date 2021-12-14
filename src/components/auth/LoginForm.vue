@@ -62,6 +62,10 @@ export default {
           .then((userCredential) => {
             const user = userCredential.user
             console.log("Login successful! ", user)
+            this.$store.dispatch("displaySnackbar", {
+              text: "Login successful!",
+              isActive: true,
+            })
             this.$router.replace("/ubooks")
           })
           .catch((error) => {
