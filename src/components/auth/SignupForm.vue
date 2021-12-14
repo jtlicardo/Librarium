@@ -78,6 +78,7 @@
 <script>
 import ErrorPopup from "@/components/ui/ErrorPopup.vue"
 import BaseDialog from "@/components/ui/BaseDialog.vue"
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth"
 
 export default {
   emits: ["change-cmp"],
@@ -135,22 +136,26 @@ export default {
         return false
       } else return true
     },
-    async signup() {
+    signup() {
       if (!this.validate()) return
       this.isLoading = true
+      setTimeout(() => {
+        const auth = getAuth()
+        createUserWithEmailAndPassword(auth, this.email, this.password)
+          .then((userCredential) => {
+            const user = userCredential.user
+            console.log("Signup successful! ", user)
+            this.snackbarActive = true
+            this.$refs.form.reset()
+          })
+          .catch((error) => {
+            console.log("Signup error! ", error)
+            const errorMessage = error.message
+            this.signupError = errorMessage
+          })
 
-      try {
-        await this.$store.dispatch("signup", {
-          email: this.email,
-          password: this.password,
-        })
-        this.snackbarActive = true
-        this.$refs.form.reset()
-      } catch (error) {
-        this.signupError = error.message || "Signup error!"
-      }
-
-      this.isLoading = false
+        this.isLoading = false
+      }, 1000)
     },
     handleError() {
       this.signupError = null

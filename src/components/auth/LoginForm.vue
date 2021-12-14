@@ -35,6 +35,7 @@
 <script>
 import ErrorPopup from "@/components/ui/ErrorPopup.vue"
 import BaseDialog from "@/components/ui/BaseDialog.vue"
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
 export default {
   emits: ["change-cmp"],
   components: {
@@ -53,18 +54,23 @@ export default {
     changeCmp() {
       this.$emit("change-cmp")
     },
-    async login() {
+    login() {
       this.isLoading = true
-      try {
-        await this.$store.dispatch("login", {
-          email: this.email,
-          password: this.password,
-        })
-        this.$router.replace("/ubooks")
-      } catch (error) {
-        this.loginError = error.message || "Login error!"
-      }
-      this.isLoading = false
+      setTimeout(() => {
+        const auth = getAuth()
+        signInWithEmailAndPassword(auth, this.email, this.password)
+          .then((userCredential) => {
+            const user = userCredential.user
+            console.log("Login successful! ", user)
+            this.$router.replace("/ubooks")
+          })
+          .catch((error) => {
+            console.log("Login error! ", error)
+            const errorMessage = error.message
+            this.loginError = errorMessage
+          })
+        this.isLoading = false
+      }, 1000)
     },
     handleError() {
       this.loginError = null

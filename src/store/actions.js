@@ -1,8 +1,4 @@
 export default {
-  setCurrentUser(context, payload) {
-    localStorage.setItem("currentUser", payload)
-    context.commit("setCurrentUser", payload)
-  },
   toggleSidebar(context) {
     context.commit("toggleSidebar")
   },

@@ -21,10 +21,9 @@ onAuthStateChanged(auth, (user) => {
   if (user) {
     const email = user.email
     console.log("Auth state change, user logged in: ", email)
-    store.dispatch("setCurrentUser", email)
+    store.dispatch("setUser", email)
   } else {
     console.log("Auth state change, no user.")
-    store.dispatch("setCurrentUser", null)
   }
 })
 
