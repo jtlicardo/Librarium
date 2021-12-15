@@ -5,7 +5,11 @@ import {
   signInWithEmailAndPassword,
   onAuthStateChanged,
   signOut,
-  updateProfile
+  updateProfile,
+  GoogleAuthProvider,
+  FacebookAuthProvider,
+  signInWithRedirect,
+  getRedirectResult,
 } from "firebase/auth"
 
 const firebaseConfig = {
@@ -25,5 +29,9 @@ export {
   signInWithEmailAndPassword,
   onAuthStateChanged,
   signOut,
-  updateProfile
+  updateProfile,
+  GoogleAuthProvider,
+  FacebookAuthProvider,
+  signInWithRedirect,
+  getRedirectResult,
 }

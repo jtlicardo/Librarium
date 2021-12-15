@@ -29,13 +29,22 @@
       <a @click="changeCmp">Sign up here</a>
       or:
     </p>
+    <v-btn @click="googleAuth">Google login</v-btn>
+    <v-btn>Facebook login</v-btn>
   </v-container>
 </template>
 
 <script>
 import ErrorPopup from "@/components/ui/ErrorPopup.vue"
 import BaseDialog from "@/components/ui/BaseDialog.vue"
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
+} from "firebase/auth"
 export default {
   emits: ["change-cmp"],
   components: {
@@ -76,9 +85,68 @@ export default {
         this.isLoading = false
       }, 1000)
     },
+    googleAuth() {
+      const provider = new GoogleAuthProvider()
+      const auth = getAuth()
+      if (this.mobile) {
+        signInWithRedirect(auth, provider)
+      } else {
+        signInWithPopup(auth, provider)
+          .then((result) => {
+            const user = result.user
+            console.log("Successful Google login! ", user)
+            this.$store.dispatch("displaySnackbar", {
+              text: `Logged in as ${user.email}`,
+              isActive: true,
+            })
+            this.$router.replace("/ubooks")
+          })
+          .catch((error) => {
+            const errorMessage = error.message
+            const email = error.email
+            const credential = GoogleAuthProvider.credentialFromError(error)
+            console.log("Google login error!", email, errorMessage, credential)
+          })
+      }
+    },
     handleError() {
       this.loginError = null
     },
+  },
+  computed: {
+    mobile() {
+      switch (this.$vuetify.breakpoint.name) {
+        case "xs":
+        case "sm":
+          return true
+        default:
+          return false
+      }
+    },
+  },
+  created() {
+    const auth = getAuth()
+    getRedirectResult(auth)
+      .then((result) => {
+        const user = result.user
+        if (user) {
+          this.isLoading = true
+          console.log("Google mobile login successful!", user)
+          setTimeout(() => {
+            this.$store.dispatch("displaySnackbar", {
+              text: `Logged in as ${user.email}`,
+              isActive: true,
+            })
+            this.$router.replace("/ubooks")
+            this.isLoading = false
+          }, 2000)
+        }
+      })
+      .catch((error) => {
+        const email = error.email
+        const errorMessage = error.message
+        if (email) console.log("Google mobile login error: ", errorMessage)
+      })
   },
 }
 </script>
