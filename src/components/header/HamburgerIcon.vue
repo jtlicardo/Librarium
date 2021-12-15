@@ -1,22 +1,18 @@
 <template>
   <svg
-    class="ham ham6"
+    class="ham hamRotate ham1"
     viewBox="0 0 100 100"
     width="50"
     :class="{ active: sidebarOpen }"
-    id="hamIcon"
   >
     <path
       class="line top"
-      d="m 30,33 h 40 c 13.100415,0 14.380204,31.80258 6.899646,33.421777 -24.612039,5.327373 9.016154,-52.337577 -12.75751,-30.563913 l -28.284272,28.284272"
+      d="m 30,33 h 40 c 0,0 9.044436,-0.654587 9.044436,-8.508902 0,-7.854315 -8.024349,-11.958003 -14.89975,-10.85914 -6.875401,1.098863 -13.637059,4.171617 -13.637059,16.368042 v 40"
     />
-    <path
-      class="line middle"
-      d="m 70,50 c 0,0 -32.213436,0 -40,0 -7.786564,0 -6.428571,-4.640244 -6.428571,-8.571429 0,-5.895471 6.073743,-11.783399 12.286435,-5.570707 6.212692,6.212692 28.284272,28.284272 28.284272,28.284272"
-    />
+    <path class="line middle" d="m 30,50 h 40" />
     <path
       class="line bottom"
-      d="m 69.575405,67.073826 h -40 c -13.100415,0 -14.380204,-31.80258 -6.899646,-33.421777 24.612039,-5.327373 -9.016154,52.337577 12.75751,30.563913 l 28.284272,-28.284272"
+      d="m 30,67 h 40 c 12.796276,0 15.357889,-11.717785 15.357889,-26.851538 0,-15.133752 -4.786586,-27.274118 -16.667516,-27.274118 -11.88093,0 -18.499247,6.994427 -18.435284,17.125656 l 0.252538,40"
     />
   </svg>
 </template>
@@ -49,23 +45,19 @@ export default {
   stroke-width: 5.5;
   stroke-linecap: round;
 }
-
-.ham6 .top {
-  stroke-dasharray: 40 172;
+.hamRotate.active {
+  transform: rotate(45deg);
 }
-.ham6 .middle {
-  stroke-dasharray: 40 111;
+.ham1 .top {
+  stroke-dasharray: 40 139;
 }
-.ham6 .bottom {
-  stroke-dasharray: 40 172;
+.ham1 .bottom {
+  stroke-dasharray: 40 180;
 }
-.ham6.active .top {
-  stroke-dashoffset: -132px;
+.ham1.active .top {
+  stroke-dashoffset: -98px;
 }
-.ham6.active .middle {
-  stroke-dashoffset: -71px;
-}
-.ham6.active .bottom {
-  stroke-dashoffset: -132px;
+.ham1.active .bottom {
+  stroke-dashoffset: -138px;
 }
 </style>
