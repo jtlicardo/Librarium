@@ -29,8 +29,10 @@
       <a @click="changeCmp">Sign up here</a>
       or:
     </p>
-    <v-btn @click="googleAuth">Google login</v-btn>
-    <v-btn>Facebook login</v-btn>
+    <v-btn @click="googleAuth" class="mx-auto mt-5 py-5" color="white">
+      <v-img src="@/assets/google.png" max-width="20px"></v-img>
+      <span class="googlelogin">Log in with Google</span>
+    </v-btn>
   </v-container>
 </template>
 
@@ -45,6 +47,7 @@ import {
   signInWithRedirect,
   getRedirectResult,
 } from "firebase/auth"
+
 export default {
   emits: ["change-cmp"],
   components: {
@@ -152,6 +155,8 @@ export default {
 </script>
 
 <style scoped>
+@import url("https://fonts.googleapis.com/css2?family=Roboto&family=Zen+Kaku+Gothic+Antique:wght@300;400;500;700;900&display=swap");
+
 .login {
   background-color: white;
   max-width: 570px;
@@ -172,5 +177,13 @@ p a {
 p a {
   text-decoration: underline;
   font-weight: 500;
+}
+
+.googlelogin {
+  margin-left: 20px;
+  letter-spacing: 0px;
+  color: grey;
+  text-transform: none;
+  font-family: "Roboto", sans-serif;
 }
 </style>

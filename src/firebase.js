@@ -7,7 +7,6 @@ import {
   signOut,
   updateProfile,
   GoogleAuthProvider,
-  FacebookAuthProvider,
   signInWithRedirect,
   getRedirectResult,
 } from "firebase/auth"
@@ -31,7 +30,6 @@ export {
   signOut,
   updateProfile,
   GoogleAuthProvider,
-  FacebookAuthProvider,
   signInWithRedirect,
   getRedirectResult,
 }
