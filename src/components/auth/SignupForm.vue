@@ -67,7 +67,7 @@
     </v-btn>
     <p class="text-center mt-10">
       Existing user?
-      <a @click="changeCmp">Log in here.</a>
+      <a @click="changeCmp('login')">Log in here.</a>
     </p>
   </v-container>
 </template>
@@ -107,8 +107,8 @@ export default {
     }
   },
   methods: {
-    changeCmp() {
-      this.$emit("change-cmp")
+    changeCmp(payload) {
+      this.$emit("change-cmp", payload)
     },
     validate() {
       if (this.fullname === "" || this.email === "" || this.password === "") {

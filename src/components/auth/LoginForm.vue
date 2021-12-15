@@ -22,11 +22,12 @@
         type="password"
         required
       ></v-text-field>
+      <p class="text-center"><a @click="changeCmp('forgot')">Forgot password?</a></p>
     </div>
     <v-btn color="yellow darken-1" class="mx-auto" @click="login">LOG IN</v-btn>
     <p class="text-center mt-10">
       New user?
-      <a @click="changeCmp">Sign up here</a>
+      <a @click="changeCmp('signup')">Sign up here</a>
       or:
     </p>
     <v-btn @click="googleAuth" class="mx-auto mt-5 py-5" color="white">
@@ -63,8 +64,8 @@ export default {
     }
   },
   methods: {
-    changeCmp() {
-      this.$emit("change-cmp")
+    changeCmp(payload) {
+      this.$emit("change-cmp", payload)
     },
     login() {
       this.isLoading = true

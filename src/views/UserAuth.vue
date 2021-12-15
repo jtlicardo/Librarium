@@ -6,6 +6,10 @@
         v-if="activeComponent === 'login-form'"
         @change-cmp="changeComponent"
       ></login-form>
+      <forgot-password
+        v-else-if="activeComponent === 'forgot-password'"
+        @change-cmp="changeComponent"
+      ></forgot-password>
       <signup-form v-else @change-cmp="changeComponent"></signup-form>
     </transition>
   </div>
@@ -14,6 +18,7 @@
 <script>
 import LoginForm from "@/components/auth/LoginForm.vue"
 import SignupForm from "@/components/auth/SignupForm.vue"
+import ForgotPassword from "@/components/auth/ForgotPassword.vue"
 export default {
   data() {
     return {
@@ -23,6 +28,7 @@ export default {
   components: {
     LoginForm,
     SignupForm,
+    ForgotPassword,
   },
   computed: {
     imageWidth() {
@@ -38,8 +44,9 @@ export default {
     },
   },
   methods: {
-    changeComponent() {
-      if (this.activeComponent === "login-form") this.activeComponent = "signup-form"
+    changeComponent(payload) {
+      if (payload === "signup") this.activeComponent = "signup-form"
+      else if (payload === "forgot") this.activeComponent = "forgot-password"
       else this.activeComponent = "login-form"
     },
   },
