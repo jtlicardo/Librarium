@@ -1,19 +1,7 @@
 # Librarium
 
-## Project setup
-```
-npm install
-```
+[Fakultet informatike u Puli](https://fipu.unipu.hr/)  
+Kolegij: [Programsko inženjerstvo](http://ntankovic.unipu.hr/pi)  
+Mentor: [doc. dr. sc. Nikola Tanković](https://www.notion.so/fiputreca/Kontakt-stranica-875574d1b92248b1a8e90dae52cd29a9)  
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+[Link na Figma prototip](https://www.figma.com/proto/FDMiOCGla9YrwEDiIl3a8o/Librarium?node-id=0%3A1&scaling=contain&page-id=0%3A1&starting-point-node-id=10%3A5&show-proto-sidebar=1)
