@@ -11,60 +11,62 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    name: "auth",
+    name: "Authentication",
     path: "/auth",
     component: UserAuth,
     meta: {
       needsUnauth: true,
+      title: "Authentication",
     },
   },
   {
-    name: "all",
     path: "/",
     redirect: "/ubooks",
-    meta: {
-      needsAuth: true,
-    },
   },
   {
-    name: "ubooks",
+    name: "User Books",
     path: "/ubooks",
     component: UserBooks,
     meta: {
       needsAuth: true,
+      title: "Books",
     },
   },
   {
-    name: "ureservations",
+    name: "User Reservations",
     path: "/ureservations",
     component: UserReservations,
     meta: {
       needsAuth: true,
+      title: "Reservations",
     },
   },
   {
-    name: "uloans",
+    name: "User Loans",
     path: "/uloans",
     component: UserLoans,
     meta: {
       needsAuth: true,
+      title: "Loans",
     },
   },
   {
-    name: "search",
+    name: "User Search",
     path: "/search",
     component: BookSearch,
     meta: {
       needsAuth: true,
+      title: "Search",
     },
   },
   {
-    name: "bookdetails",
+    name: "Book Details",
     path: "/:id",
     component: BookDetails,
     props: true,
     meta: {
       needsAuth: true,
+      title: "Book Details",
     },
   },
 ]
@@ -76,6 +78,7 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  document.title = `${to.meta.title} | Librarium`
   const currentUserEmail = localStorage.getItem("currentUserEmail")
   const isAuthenticated = !!currentUserEmail
   if (to.meta.needsAuth && !isAuthenticated) next("/auth")
