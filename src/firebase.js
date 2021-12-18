@@ -9,8 +9,9 @@ import {
   GoogleAuthProvider,
   signInWithRedirect,
   getRedirectResult,
-  sendPasswordResetEmail 
+  sendPasswordResetEmail,
 } from "firebase/auth"
+import { getFirestore, collection, addDoc } from "firebase/firestore"
 
 const firebaseConfig = {
   apiKey: "AIzaSyDmpWucdj9MuwM5mvjA5_TKMCFlsUXUGpg",
@@ -22,6 +23,7 @@ const firebaseConfig = {
 }
 
 const app = initializeApp(firebaseConfig)
+const db = getFirestore()
 
 export {
   getAuth,
@@ -33,5 +35,8 @@ export {
   GoogleAuthProvider,
   signInWithRedirect,
   getRedirectResult,
-  sendPasswordResetEmail 
+  sendPasswordResetEmail,
+  db,
+  collection,
+  addDoc,
 }

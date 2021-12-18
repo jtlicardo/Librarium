@@ -48,6 +48,7 @@ import {
   signInWithRedirect,
   getRedirectResult,
 } from "firebase/auth"
+import { db, collection, addDoc } from "@/firebase.js"
 
 export default {
   emits: ["change-cmp"],
@@ -103,6 +104,7 @@ export default {
               text: `Logged in as ${user.email}`,
               isActive: true,
             })
+            this.addUserToCollection(user.uid, user.displayName, user.email)
             this.$router.replace("/ubooks")
           })
           .catch((error) => {
@@ -115,6 +117,20 @@ export default {
     },
     handleError() {
       this.loginError = null
+    },
+    async addUserToCollection(userId, displayName, email) {
+      try {
+        const docRef = await addDoc(collection(db, "users"), {
+          uid: userId,
+          fullname: displayName,
+          email: email,
+          isAdmin: false,
+        })
+        console.log("User successfully added to collection!")
+        console.log("Document written with ID: ", docRef.id)
+      } catch (e) {
+        console.error("Error adding user to collection: ", e)
+      }
     },
   },
   computed: {
@@ -136,6 +152,7 @@ export default {
         if (user) {
           this.isLoading = true
           console.log("Google mobile login successful!", user)
+          this.addUserToCollection(user.uid, user.displayName, user.email)
           setTimeout(() => {
             this.$store.dispatch("displaySnackbar", {
               text: `Logged in as ${user.email}`,

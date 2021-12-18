@@ -76,6 +76,7 @@
 import ErrorPopup from "@/components/ui/ErrorPopup.vue"
 import BaseDialog from "@/components/ui/BaseDialog.vue"
 import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth"
+import { db, collection, addDoc } from "@/firebase.js"
 
 export default {
   emits: ["change-cmp"],
@@ -132,6 +133,20 @@ export default {
         return false
       } else return true
     },
+    async addUserToCollection(userId) {
+      try {
+        const docRef = await addDoc(collection(db, "users"), {
+          uid: userId,
+          fullname: this.fullname,
+          email: this.email,
+          isAdmin: false,
+        })
+        console.log("User successfully added to collection!")
+        console.log("Document written with ID: ", docRef.id)
+      } catch (e) {
+        console.error("Error adding user to collection: ", e)
+      }
+    },
     signup() {
       if (!this.validate()) return
       this.isLoading = true
@@ -146,6 +161,7 @@ export default {
             })
               .then(() => {
                 console.log("Signed up with display name: ", auth.currentUser.displayName)
+                this.addUserToCollection(user.uid)
               })
               .catch((error) => {
                 console.log("Error on setting user display name! ", error)
