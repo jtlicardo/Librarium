@@ -9,6 +9,7 @@ import {
   GoogleAuthProvider,
   signInWithRedirect,
   getRedirectResult,
+  sendPasswordResetEmail 
 } from "firebase/auth"
 
 const firebaseConfig = {
@@ -32,4 +33,5 @@ export {
   GoogleAuthProvider,
   signInWithRedirect,
   getRedirectResult,
+  sendPasswordResetEmail 
 }

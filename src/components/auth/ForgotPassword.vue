@@ -23,19 +23,29 @@
       text="Please enter a valid email!"
       @close-dialog="validationError = false"
     />
+    <base-dialog
+      title="Sending email..."
+      color="primary"
+      loading
+      :active="isLoading"
+    ></base-dialog>
   </v-container>
 </template>
 
 <script>
 import ErrorPopup from "@/components/ui/ErrorPopup.vue"
+import BaseDialog from "@/components/ui/BaseDialog.vue"
+import { getAuth, sendPasswordResetEmail } from "@/firebase.js"
 export default {
   components: {
     ErrorPopup,
+    BaseDialog,
   },
   data() {
     return {
       email: "",
       validationError: null,
+      isLoading: false,
       rules: {
         required: (value) => !!value || "Required",
         email: (value) => {
@@ -63,7 +73,25 @@ export default {
     },
     send() {
       if (!this.validate()) return
-      //...
+      this.isLoading = true
+      setTimeout(() => {
+        const auth = getAuth()
+        sendPasswordResetEmail(auth, this.email)
+          .then(() => {
+            console.log("Password reset email sent!")
+            this.email = ""
+            this.$store.dispatch("displaySnackbar", {
+              text: "Reset password email sent!",
+              isActive: true,
+            })
+            this.changeCmp("login")
+          })
+          .catch((error) => {
+            const errorMessage = error.message
+            console.log("Error while sendining pw reset email! ", errorMessage)
+          })
+        this.isLoading = false
+      }, 1000)
     },
   },
 }
