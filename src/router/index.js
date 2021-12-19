@@ -134,7 +134,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   document.title = `${to.meta.title} | Librarium`
-  const currentUserEmail = localStorage.getItem("currentUserEmail")
+  const currentUserEmail = localStorage.getItem("userId")
   const isAuthenticated = !!currentUserEmail
   if (to.meta.needsAuth && !isAuthenticated) next("/auth")
   else if (to.meta.needsUnauth && isAuthenticated) next("/ubooks")

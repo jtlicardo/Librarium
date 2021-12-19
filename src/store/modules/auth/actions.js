@@ -1,10 +1,16 @@
 export default {
   setUser(context, payload) {
     context.commit("setUser", payload)
-    if (payload === null) {
-      localStorage.removeItem("currentUserEmail")
+    if (payload.uid === null) {
+      localStorage.removeItem("userId")
+      localStorage.removeItem("userFullname")
+      localStorage.removeItem("userEmail")
+      localStorage.removeItem("userIsAdmin")
     } else {
-      localStorage.setItem("currentUserEmail", payload)
+      localStorage.setItem("userId", payload.uid)
+      localStorage.setItem("userFullname", payload.fullname)
+      localStorage.setItem("userEmail", payload.email)
+      localStorage.setItem("userIsAdmin", payload.isAdmin)
     }
   },
 }

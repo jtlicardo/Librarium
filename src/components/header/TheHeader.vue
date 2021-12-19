@@ -76,7 +76,12 @@ export default {
               text: "Logout successful!",
               isActive: true,
             })
-            this.$store.dispatch("setUser", null)
+            this.$store.dispatch("setUser", {
+              uid: null,
+              email: null,
+              fullname: null,
+              isAdmin: null,
+            })
             this.$router.replace("/auth")
           })
           .catch((error) => {

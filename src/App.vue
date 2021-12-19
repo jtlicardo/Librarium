@@ -27,15 +27,44 @@
 import SidebarNav from "./components/nav/SidebarNav.vue"
 import TheHeader from "./components/header/TheHeader.vue"
 import BaseDialog from "@/components/ui/BaseDialog.vue"
-import { getAuth, onAuthStateChanged } from "@/firebase.js"
+import {
+  getAuth,
+  onAuthStateChanged,
+  db,
+  collection,
+  getDocs,
+  query,
+  where,
+} from "@/firebase.js"
 import store from "@/store/index.js"
+
+async function userIsAdmin(userId) {
+  const users = collection(db, "users")
+  const q = query(users, where("uid", "==", userId), where("isAdmin", "==", true))
+  const querySnapshot = await getDocs(q)
+  if (querySnapshot.empty === true) return false
+  else return true
+}
 
 const auth = getAuth()
 onAuthStateChanged(auth, (user) => {
   if (user) {
+    const uid = user.uid
+    const fullname = user.displayName
     const email = user.email
-    console.log("Auth state change, user logged in: ", email)
-    store.dispatch("setUser", email)
+    userIsAdmin(uid)
+      .then((result) => {
+        console.log("Auth state change, user logged in: ", email)
+        store.dispatch("setUser", {
+          uid: uid,
+          email: email,
+          fullname: fullname,
+          isAdmin: result,
+        })
+      })
+      .catch((e) => {
+        console.log(e)
+      })
   } else {
     console.log("Auth state change, no user.")
   }
