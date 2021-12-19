@@ -1,4 +1,6 @@
-<template></template>
+<template>
+  <p>Admin reservations</p>
+</template>
 
 <script>
 export default {}

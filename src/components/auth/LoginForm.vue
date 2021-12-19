@@ -115,10 +115,8 @@ export default {
                     console.log("Login - user is admin?", userIsAdmin)
                     if (userIsAdmin === "true") {
                       this.$router.replace("/adminbooks")
-                      console.log("User is admin !!!")
                     } else if (userIsAdmin === "false") {
                       this.$router.replace("/ubooks")
-                      console.log("User is NOT admin !!!")
                     }
                   })
                   .catch((error) => {

@@ -1,4 +1,6 @@
-<template></template>
+<template>
+    <p>Admin requests</p>
+</template>
 
 <script>
 export default {}

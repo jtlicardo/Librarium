@@ -141,9 +141,7 @@ router.beforeEach((to, from, next) => {
   const currentUserEmail = localStorage.getItem("userId")
   const userIsAdmin = localStorage.getItem("userIsAdmin")
   const isAdmin = userIsAdmin === "true"
-  console.log("Router - user is admin? (boolean)", isAdmin)
   const isAuthenticated = !!currentUserEmail
-  console.log("Router - user is admin? (string)", userIsAdmin)
   if (to.meta.needsAuth && !isAuthenticated) next("/auth")
   else if (to.meta.needsUnauth && !isAdmin && isAuthenticated) next("/ubooks")
   else if (to.meta.needsUnauth && isAdmin && isAuthenticated) next("/adminbooks")

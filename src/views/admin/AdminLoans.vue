@@ -1,4 +1,6 @@
-<template></template>
+<template>
+  <p>Admin loans</p>
+</template>
 
 <script>
 export default {}

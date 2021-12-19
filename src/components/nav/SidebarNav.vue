@@ -9,12 +9,25 @@
     :style="{ top: $vuetify.application.top + 'px', zIndex: 4 }"
   >
     <v-list>
-      <v-list-item-group active-class="link-active">
-        <v-list-item class="justify-center my-2" to="/ubooks">BOOKS</v-list-item>
-        <v-list-item class="justify-center my-2" to="/ureservations">
-          RESERVATIONS
+      <v-list-item-group v-if="sidebarLinks === 'user'" active-class="link-active">
+        <v-list-item
+          class="justify-center my-2"
+          v-for="item in userListItems"
+          :key="item.to"
+          :to="item.to"
+        >
+          {{ item.text }}
         </v-list-item>
-        <v-list-item class="justify-center my-2" to="/uloans">LOANS</v-list-item>
+      </v-list-item-group>
+      <v-list-item-group v-if="sidebarLinks === 'admin'" active-class="link-active">
+        <v-list-item
+          class="justify-center my-2"
+          v-for="item in adminListItems"
+          :key="item.to"
+          :to="item.to"
+        >
+          {{ item.text }}
+        </v-list-item>
       </v-list-item-group>
     </v-list>
   </v-navigation-drawer>
@@ -22,6 +35,22 @@
 
 <script>
 export default {
+  data() {
+    return {
+      userListItems: [
+        { text: "BOOKS", to: "/ubooks" },
+        { text: "RESERVATIONS", to: "/ureservations" },
+        { text: "LOANS", to: "/uloans" },
+      ],
+      adminListItems: [
+        { text: "BOOKS", to: "/adminbooks" },
+        { text: "LOANS", to: "/adminloans" },
+        { text: "RESERVATIONS", to: "/adminreservations" },
+        { text: "REQUESTS", to: "/adminrequests" },
+        { text: "USERS", to: "/adminusers" },
+      ],
+    }
+  },
   computed: {
     sidebarOpen: {
       get: function () {
@@ -30,6 +59,11 @@ export default {
       set: function (newValue) {
         this.$store.dispatch("setSidebarState", newValue)
       },
+    },
+    sidebarLinks() {
+      const userIsAdmin = localStorage.getItem("userIsAdmin")
+      if (userIsAdmin === "true") return "admin"
+      else return "user"
     },
   },
 }

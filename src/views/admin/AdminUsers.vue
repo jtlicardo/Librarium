@@ -1,4 +1,6 @@
-<template></template>
+<template>
+  <p>Admin users</p>
+</template>
 
 <script>
 export default {}
