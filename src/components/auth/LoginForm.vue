@@ -48,7 +48,7 @@ import {
   signInWithRedirect,
   getRedirectResult,
 } from "firebase/auth"
-import { db, collection, addDoc } from "@/firebase.js"
+import { db, collection, addDoc, getDocs, query, where } from "@/firebase.js"
 
 export default {
   emits: ["change-cmp"],
@@ -104,8 +104,16 @@ export default {
               text: `Logged in as ${user.email}`,
               isActive: true,
             })
-            this.addUserToCollection(user.uid, user.displayName, user.email)
-            this.$router.replace("/ubooks")
+            this.checkIfUserExists(user.uid)
+              .then((result) => {
+                if (!result) {
+                  this.addUserToCollection(user.uid, user.displayName, user.email)
+                }
+                this.$router.replace("/ubooks")
+              })
+              .catch((error) => {
+                console.log(error)
+              })
           })
           .catch((error) => {
             const errorMessage = error.message
@@ -117,6 +125,13 @@ export default {
     },
     handleError() {
       this.loginError = null
+    },
+    async checkIfUserExists(userUid) {
+      const users = collection(db, "users")
+      const q = query(users, where("uid", "==", userUid))
+      const querySnapshot = await getDocs(q)
+      if (querySnapshot.empty === true) return false
+      else return true
     },
     async addUserToCollection(userId, displayName, email) {
       try {

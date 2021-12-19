@@ -11,7 +11,7 @@ import {
   getRedirectResult,
   sendPasswordResetEmail,
 } from "firebase/auth"
-import { getFirestore, collection, addDoc } from "firebase/firestore"
+import { getFirestore, collection, addDoc, getDocs, query, where } from "firebase/firestore"
 
 const firebaseConfig = {
   apiKey: "AIzaSyDmpWucdj9MuwM5mvjA5_TKMCFlsUXUGpg",
@@ -39,4 +39,7 @@ export {
   db,
   collection,
   addDoc,
+  getDocs,
+  query,
+  where
 }
