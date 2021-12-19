@@ -5,7 +5,7 @@
       <v-col cols="12" md="10">
         <h1 class="mb-5">My reservations</h1>
         <p class="mb-10">A list of all your active reservations.</p>
-        <book-reservations-mobile v-if="mobile" />
+        <book-reservations-mobile v-if="isMobile" />
         <book-reservations v-else />
       </v-col>
     </v-row>
@@ -21,25 +21,16 @@ export default {
     BookReservations,
     BookReservationsMobile,
   },
-  methods: {
-    checkViewport() {
-      console.log("resize event listener triggered!")
-      if (window.innerWidth < 635) this.mobile = true
-      else this.mobile = false
+  computed: {
+    isMobile() {
+      switch (this.$vuetify.breakpoint.name) {
+        case "xs":
+        case "sm":
+          return true
+        default:
+          return false
+      }
     },
-  },
-  data() {
-    return {
-      mobile: false,
-      resizeTimer: null,
-    }
-  },
-  created() {
-    this.checkViewport()
-    addEventListener("resize", () => {
-      clearTimeout(this.resizeTimer)
-      this.resizeTimer = setTimeout(this.checkViewport, 100)
-    })
   },
 }
 </script>

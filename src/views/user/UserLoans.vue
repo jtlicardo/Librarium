@@ -8,7 +8,7 @@
         <p class="mb-10">
           The due date is closing near? Send a request to extend the loan period.
         </p>
-        <book-loans-mobile v-if="mobile" />
+        <book-loans-mobile v-if="isMobile" />
         <book-loans v-else />
       </v-col>
     </v-row>
@@ -24,25 +24,16 @@ export default {
     BookLoans,
     BookLoansMobile,
   },
-  methods: {
-    checkViewport() {
-      console.log("resize event listener triggered!")
-      if (window.innerWidth < 635) this.mobile = true
-      else this.mobile = false
+  computed: {
+    isMobile() {
+      switch (this.$vuetify.breakpoint.name) {
+        case "xs":
+        case "sm":
+          return true
+        default:
+          return false
+      }
     },
-  },
-  data() {
-    return {
-      mobile: false,
-      resizeTimer: null,
-    }
-  },
-  created() {
-    this.checkViewport()
-    addEventListener("resize", () => {
-      clearTimeout(this.resizeTimer)
-      this.resizeTimer = setTimeout(this.checkViewport, 100)
-    })
   },
 }
 </script>
