@@ -34,6 +34,7 @@ const routes = [
     component: UserBooks,
     meta: {
       needsAuth: true,
+      needsUser: true,
       title: "Books",
     },
   },
@@ -43,6 +44,7 @@ const routes = [
     component: UserReservations,
     meta: {
       needsAuth: true,
+      needsUser: true,
       title: "Reservations",
     },
   },
@@ -52,6 +54,7 @@ const routes = [
     component: UserLoans,
     meta: {
       needsAuth: true,
+      needsUser: true,
       title: "Loans",
     },
   },
@@ -61,17 +64,8 @@ const routes = [
     component: BookSearch,
     meta: {
       needsAuth: true,
+      needsUser: true,
       title: "Search",
-    },
-  },
-  {
-    name: "Book Details",
-    path: "/:id",
-    component: BookDetails,
-    props: true,
-    meta: {
-      needsAuth: true,
-      title: "Book Details",
     },
   },
   {
@@ -124,6 +118,16 @@ const routes = [
       title: "Users",
     },
   },
+  {
+    name: "Book Details",
+    path: "/:id",
+    component: BookDetails,
+    props: true,
+    meta: {
+      needsAuth: true,
+      title: "Book Details",
+    },
+  },
 ]
 
 const router = new VueRouter({
@@ -135,9 +139,16 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   document.title = `${to.meta.title} | Librarium`
   const currentUserEmail = localStorage.getItem("userId")
+  const userIsAdmin = localStorage.getItem("userIsAdmin")
+  const isAdmin = userIsAdmin === "true"
+  console.log("Router - user is admin? (boolean)", isAdmin)
   const isAuthenticated = !!currentUserEmail
+  console.log("Router - user is admin? (string)", userIsAdmin)
   if (to.meta.needsAuth && !isAuthenticated) next("/auth")
-  else if (to.meta.needsUnauth && isAuthenticated) next("/ubooks")
+  else if (to.meta.needsUnauth && !isAdmin && isAuthenticated) next("/ubooks")
+  else if (to.meta.needsUnauth && isAdmin && isAuthenticated) next("/adminbooks")
+  else if (to.meta.needsAdmin && !isAdmin && isAuthenticated) next("/ubooks")
+  else if (to.meta.needsUser && isAdmin && isAuthenticated) next("/adminbooks")
   else next()
   console.log(
     "Route change: ",

@@ -100,19 +100,30 @@ export default {
           .then((result) => {
             const user = result.user
             console.log("Successful Google login! ", user)
-            this.$store.dispatch("displaySnackbar", {
-              text: `Logged in as ${user.email}`,
-              isActive: true,
-            })
-            this.checkIfUserExists(user.uid)
-              .then((result) => {
-                if (!result) {
-                  this.addUserToCollection(user.uid, user.displayName, user.email)
-                }
-                this.$router.replace("/ubooks")
+            this.$store
+              .dispatch("displaySnackbar", {
+                text: `Logged in as ${user.email}`,
+                isActive: true,
               })
-              .catch((error) => {
-                console.log(error)
+              .then(() => {
+                this.checkIfUserExists(user.uid)
+                  .then((result) => {
+                    if (!result) {
+                      this.addUserToCollection(user.uid, user.displayName, user.email)
+                    }
+                    const userIsAdmin = localStorage.getItem("userIsAdmin")
+                    console.log("Login - user is admin?", userIsAdmin)
+                    if (userIsAdmin === "true") {
+                      this.$router.replace("/adminbooks")
+                      console.log("User is admin !!!")
+                    } else if (userIsAdmin === "false") {
+                      this.$router.replace("/ubooks")
+                      console.log("User is NOT admin !!!")
+                    }
+                  })
+                  .catch((error) => {
+                    console.log(error)
+                  })
               })
           })
           .catch((error) => {
