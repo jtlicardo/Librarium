@@ -31,8 +31,7 @@ Uskoro...
 <br />
 
 ### Organizacija
-[Sveučilište Jurja Dobrile u Puli](https://www.unipu.hr/)  
-[Fakultet informatike u Puli](https://fipu.unipu.hr/)  
-Kolegij: [Programsko inženjerstvo](http://ntankovic.unipu.hr/pi)  
-Programsko inženjerstvo, ak.god. 2021./2022.  
-Mentor: [doc. dr. sc. Nikola Tanković](https://fipu.unipu.hr/fipu/nikola.tankovic) (nikola.tankovic@unipu.hr)
+[**Sveučilište Jurja Dobrile u Puli**](https://www.unipu.hr/)  
+[**Fakultet informatike u Puli**](https://fipu.unipu.hr/)  
+Kolegij: [**Programsko inženjerstvo**](http://ntankovic.unipu.hr/pi), akad. god. 2021./2022.  
+Mentor: [**doc. dr. sc. Nikola Tanković**](https://fipu.unipu.hr/fipu/nikola.tankovic) (nikola.tankovic@unipu.hr)
