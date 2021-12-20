@@ -4,7 +4,7 @@
     height="80px"
     clipped-left
     app
-    class="d-flex justify-space-between"
+    class="d-flex justify-space-between header"
   >
     <hamburger-icon @click.native="toggleSidebar" v-if="!backButton"></hamburger-icon>
     <back-button v-else @click.native="removeBackButton"></back-button>
@@ -56,6 +56,14 @@ export default {
     backButton() {
       return this.$store.getters.backButton
     },
+    currentRoute() {
+      return this.$router.currentRoute.path
+    },
+  },
+  watch: {
+    $route(to, from) {
+      if (to.path === "/auth") this.headerAnimation("hide")
+    },
   },
   methods: {
     toggleSidebar() {
@@ -65,6 +73,16 @@ export default {
       this.$store.dispatch("removeBackButton")
       this.$store.dispatch("removeBackButtonActive")
     },
+    headerAnimation(payload) {
+      if (payload === "show")
+        document.querySelector(".header").classList.remove("hideheader")
+      else document.querySelector(".header").classList.add("hideheader")
+    },
+    // headerAnimationDelayed() {
+    //   setTimeout(() => {
+    //     document.querySelector(".header").classList.remove("hidden")
+    //   }, 500)
+    // },
     logout() {
       this.$store.dispatch("displayLogoutDialog", true)
       setTimeout(() => {
@@ -82,6 +100,7 @@ export default {
               fullname: null,
               isAdmin: null,
             })
+            document.querySelector(".header").classList.add("hideheader")
             this.$router.replace("/auth")
           })
           .catch((error) => {
@@ -92,6 +111,15 @@ export default {
     },
   },
   mounted() {
+    let userLoggedIn = this.$store.getters.currentUser
+    if (userLoggedIn) {
+      console.log("This runs")
+      document.querySelector(".header").classList.add("hidden")
+      document.querySelector(".header").classList.add("showheader")
+      setTimeout(() => {
+        document.querySelector(".header").classList.remove("hidden")
+      }, 100)
+    }
     // if back button is pressed
     window.onpopstate = (event) => {
       this.$store.dispatch("removeBackButton")
@@ -105,5 +133,23 @@ export default {
 .v-toolbar__content {
   width: 100%;
   justify-content: space-between;
+}
+
+.hidden {
+  transform: translateY(-100px) !important;
+}
+
+.showheader {
+  transform: translateY(0px);
+  transition: all 0.3s ease-out !important;
+}
+
+.hideheader {
+  transform: translateY(-100px) !important;
+  transition: all 2s ease-out !important;
+}
+
+.header {
+  transform: translateY(0px);
 }
 </style>

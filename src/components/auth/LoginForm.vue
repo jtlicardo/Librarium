@@ -24,13 +24,15 @@
       ></v-text-field>
       <p class="text-center"><a @click="changeCmp('forgot')">Forgot password?</a></p>
     </div>
-    <v-btn color="yellow darken-1" class="mx-auto" @click="login">LOG IN</v-btn>
-    <p class="text-center mt-10">
+    <v-btn color="yellow darken-1 loginbutton" class="mx-auto" @click="login">
+      LOG IN
+    </v-btn>
+    <p class="text-center mt-10 paragraph">
       New user?
       <a @click="changeCmp('signup')">Sign up here</a>
       or:
     </p>
-    <v-btn @click="googleAuth" class="mx-auto mt-5 py-5" color="white">
+    <v-btn @click="googleAuth" class="mx-auto mt-5 py-5 googlebutton" color="white">
       <v-img src="@/assets/google.png" max-width="20px"></v-img>
       <span class="googlelogin">Log in with Google</span>
     </v-btn>
@@ -67,6 +69,21 @@ export default {
   methods: {
     changeCmp(payload) {
       this.$emit("change-cmp", payload)
+    },
+    animation() {
+      return new Promise((resolve) => {
+        document.querySelector("h1").classList.toggle("fadeout")
+        document.querySelector(".inputs").classList.toggle("fadeout")
+        document.querySelector(".loginbutton").classList.toggle("fadeout")
+        document.querySelector(".paragraph").classList.toggle("fadeout")
+        document.querySelector(".googlebutton").classList.toggle("fadeout")
+        setTimeout(() => {
+          document.querySelector(".login").classList.toggle("scale")
+        }, 1500)
+        setTimeout(() => {
+          resolve()
+        }, 3500)
+      })
     },
     login() {
       this.isLoading = true
@@ -113,11 +130,13 @@ export default {
                     }
                     const userIsAdmin = localStorage.getItem("userIsAdmin")
                     console.log("Login - user is admin?", userIsAdmin)
-                    if (userIsAdmin === "true") {
-                      this.$router.replace("/adminbooks")
-                    } else if (userIsAdmin === "false") {
-                      this.$router.replace("/ubooks")
-                    }
+                    this.animation().then(() => {
+                      if (userIsAdmin === "true") {
+                        this.$router.replace("/adminbooks")
+                      } else if (userIsAdmin === "false") {
+                        this.$router.replace("/ubooks")
+                      }
+                    })
                   })
                   .catch((error) => {
                     console.log(error)
@@ -140,7 +159,10 @@ export default {
       const q = query(users, where("uid", "==", userUid))
       const querySnapshot = await getDocs(q)
       if (querySnapshot.empty === true) return false
-      else return true
+      else {
+        console.log("user already exists in collection")
+        return true
+      }
     },
     async addUserToCollection(userId, displayName, email) {
       try {
@@ -156,6 +178,37 @@ export default {
         console.error("Error adding user to collection: ", e)
       }
     },
+    redirectResult() {
+      const auth = getAuth()
+      getRedirectResult(auth)
+        .then((result) => {
+          const user = result.user
+          if (user) {
+            this.isLoading = true
+            console.log("Google mobile login successful!", user)
+            this.checkIfUserExists(user.uid).then((result) => {
+              if (!result) {
+                this.addUserToCollection(user.uid, user.displayName, user.email)
+              }
+            })
+            setTimeout(() => {
+              this.$store.dispatch("displaySnackbar", {
+                text: `Logged in as ${user.email}`,
+                isActive: true,
+              })
+              this.animation().then(() => {
+                this.$router.replace("/ubooks")
+              })
+              this.isLoading = false
+            }, 2000)
+          }
+        })
+        .catch((error) => {
+          const email = error.email
+          const errorMessage = error.message
+          if (email) console.log("Google mobile login error: ", errorMessage)
+        })
+    },
   },
   computed: {
     mobile() {
@@ -169,29 +222,7 @@ export default {
     },
   },
   created() {
-    const auth = getAuth()
-    getRedirectResult(auth)
-      .then((result) => {
-        const user = result.user
-        if (user) {
-          this.isLoading = true
-          console.log("Google mobile login successful!", user)
-          this.addUserToCollection(user.uid, user.displayName, user.email)
-          setTimeout(() => {
-            this.$store.dispatch("displaySnackbar", {
-              text: `Logged in as ${user.email}`,
-              isActive: true,
-            })
-            this.$router.replace("/ubooks")
-            this.isLoading = false
-          }, 2000)
-        }
-      })
-      .catch((error) => {
-        const email = error.email
-        const errorMessage = error.message
-        if (email) console.log("Google mobile login error: ", errorMessage)
-      })
+    this.redirectResult()
   },
 }
 </script>
@@ -205,6 +236,16 @@ export default {
   margin-top: 100px;
   border-radius: 20px;
   padding: 20px 50px 30px;
+}
+
+.fadeout {
+  opacity: 0;
+  transition: all 1.5s;
+}
+
+.scale {
+  transform: scale(4);
+  transition: all 2s ease-out;
 }
 
 .inputs {

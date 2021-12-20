@@ -1,10 +1,8 @@
 <template>
   <v-app>
-    <sidebar-nav v-if="showHeader"></sidebar-nav>
-    <transition name="fade" mode="out-in">
-      <the-header v-if="showHeader"></the-header>
-    </transition>
-    <v-main :class="{ authbg: !showHeader }">
+    <sidebar-nav v-if="showSidebar"></sidebar-nav>
+    <the-header v-if="showHeader"></the-header>
+    <v-main :class="{ authbg: showAuthBg }">
       <v-container fluid>
         <transition :name="transitionName" mode="out-in">
           <router-view></router-view>
@@ -79,13 +77,20 @@ export default {
   data() {
     return {
       transitionName: null,
+      showAuthBg: false,
+      showHeader: false,
     }
   },
   computed: {
-    showHeader() {
+    showSidebar() {
       const curRoute = this.$route.path
       if (curRoute === "/auth") return false
       else return true
+    },
+    showAuthBackground() {
+      const curRoute = this.$route.path
+      if (curRoute === "/auth") return true
+      else return false
     },
     snackbarActive: {
       get: function () {
@@ -102,11 +107,35 @@ export default {
       return this.$store.getters.logoutDialogActive
     },
   },
+  methods: {
+    showAuthBgDelayed() {
+      setTimeout(() => {
+        this.showAuthBg = true
+        this.showHeader = false
+      }, 2000)
+    },
+  },
   watch: {
     $route(to, from) {
-      if (from.path === "/auth" || to.path === "/auth") this.transitionName = "quickfade"
-      else this.transitionName = "fade"
+      if (from.path === "/auth") {
+        this.showAuthBg = false
+        this.showHeader = true
+        console.log("header prikazan!")
+      }
+      if (to.path === "/auth") {
+        this.transitionName = "logoutfade"
+        this.showAuthBgDelayed()
+      } else this.transitionName = "fade"
     },
+  },
+  mounted() {
+    if (this.showAuthBackground) {
+      this.showAuthBg = true
+      this.showHeader = false
+    } else {
+      this.showAuthBg = false
+      this.showHeader = true
+    }
   },
 }
 </script>
@@ -126,16 +155,6 @@ export default {
   background-size: cover;
 }
 
-.quickfade-enter-active,
-.quickfade-leave-active {
-  transition: all 0.1s ease-out;
-}
-
-.quickfade-enter,
-.quickfade-leave-active {
-  opacity: 0;
-}
-
 .fade-enter-active,
 .fade-leave-active {
   transition: all 0.3s ease-out;
@@ -143,6 +162,19 @@ export default {
 
 .fade-enter,
 .fade-leave-active {
+  opacity: 0;
+}
+
+.logoutfade-leave-active {
+  transition: all 2s ease-out;
+}
+
+.logoutfade-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+.logoutfade-enter,
+.logoutfade-leave-active {
   opacity: 0;
 }
 </style>

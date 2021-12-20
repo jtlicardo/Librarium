@@ -58,14 +58,14 @@
     />
     <v-btn
       color="yellow darken-1"
-      class="mx-auto"
+      class="mx-auto signupbutton"
       @click="signup"
       :disabled="isLoading"
       :loading="isLoading"
     >
       SIGN UP
     </v-btn>
-    <p class="text-center mt-10">
+    <p class="text-center mt-10 paragraph">
       Existing user?
       <a @click="changeCmp('login')">Log in here.</a>
     </p>
@@ -147,6 +147,20 @@ export default {
         console.error("Error adding user to collection: ", e)
       }
     },
+    animation() {
+      return new Promise((resolve) => {
+        document.querySelector("h1").classList.toggle("fadeout")
+        document.querySelector(".inputs").classList.toggle("fadeout")
+        document.querySelector(".signupbutton").classList.toggle("fadeout")
+        document.querySelector(".paragraph").classList.toggle("fadeout")
+        setTimeout(() => {
+          document.querySelector(".login").classList.toggle("scale")
+        }, 1500)
+        setTimeout(() => {
+          resolve()
+        }, 3500)
+      })
+    },
     signup() {
       if (!this.validate()) return
       this.isLoading = true
@@ -170,7 +184,9 @@ export default {
               text: "Signup successful!",
               isActive: true,
             })
-            this.$router.replace("/ubooks")
+            this.animation().then(() => {
+              this.$router.replace("/ubooks")
+            })
             setTimeout(() => {
               this.$store.dispatch("displaySnackbar", {
                 text: `Logged in as ${user.email}`,
@@ -205,6 +221,16 @@ export default {
 
 .inputs {
   padding: 5% 5%;
+}
+
+.fadeout {
+  opacity: 0;
+  transition: all 1.5s;
+}
+
+.scale {
+  transform: scale(4);
+  transition: all 2s ease-out;
 }
 
 p,
