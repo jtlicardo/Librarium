@@ -30,9 +30,18 @@
 
 <script>
 export default {
-  data() {
-    return {
-      headers: [
+  computed: {
+    filteredBooks() {
+      return this.$store.getters["books/filteredBooks"]
+    },
+    userIsAdmin() {
+      const userIsAdmin = localStorage.getItem("userIsAdmin")
+      const isAdmin = userIsAdmin === "true"
+      if (isAdmin) return true
+      else return false
+    },
+    headers() {
+      const headers = [
         {
           text: "LOGO",
           sortable: false,
@@ -43,19 +52,10 @@ export default {
         { text: "GENRE", value: "genres", sortable: false },
         { text: "# OF PAGES", value: "page_num", sortable: false },
         { text: "# OF COPIES", value: "copies", sortable: false },
-        { text: "DELETE", value: "delete", sortable: false, width: "100px" },
-      ],
-    }
-  },
-  computed: {
-    filteredBooks() {
-      return this.$store.getters["books/filteredBooks"]
-    },
-    userIsAdmin() {
-      const userIsAdmin = localStorage.getItem("userIsAdmin")
-      const isAdmin = userIsAdmin === "true"
-      if (isAdmin) return true
-      else return false
+      ]
+      if (this.userIsAdmin)
+        headers.push({ text: "DELETE", value: "delete", sortable: false, width: "100px" })
+      return headers
     },
   },
 }
