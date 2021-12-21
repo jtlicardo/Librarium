@@ -35,12 +35,10 @@
 </template>
 
 <script>
-import BookCard from "@/components/BookCard.vue"
-import RecentlyAdded from "@/components/RecentlyAdded.vue"
+import RecentlyAdded from "@/components/user/RecentlyAdded.vue"
 
 export default {
   components: {
-    BookCard,
     RecentlyAdded,
   },
   data() {

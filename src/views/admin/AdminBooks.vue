@@ -16,7 +16,7 @@
 
 <script>
 import FilteredBooks from "@/components/FilteredBooks.vue"
-import AddBook from "@/components/AddBook.vue"
+import AddBook from "@/components/admin/AddBook.vue"
 export default {
   components: {
     FilteredBooks,

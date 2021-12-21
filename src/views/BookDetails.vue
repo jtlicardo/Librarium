@@ -33,9 +33,9 @@
 </template>
 
 <script>
-import BookCopies from "@/components/BookCopies.vue"
-import BookReview from "@/components/BookReview.vue"
-import SubmitReview from "@/components/SubmitReview.vue"
+import BookCopies from "@/components/book-details/BookCopies.vue"
+import BookReview from "@/components/book-details/BookReview.vue"
+import SubmitReview from "@/components/book-details/SubmitReview.vue"
 
 export default {
   props: ["id"],

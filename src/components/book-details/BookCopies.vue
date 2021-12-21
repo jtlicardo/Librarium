@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import BookStatus from "@/components/BookStatus.vue"
+import BookStatus from "@/components/book-details/BookStatus.vue"
 
 export default {
   props: ["bookId"],
