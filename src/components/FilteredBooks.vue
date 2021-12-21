@@ -20,6 +20,11 @@
         {{ item.copies.length }}
       </p>
     </template>
+    <template v-slot:[`item.delete`] v-if="userIsAdmin">
+      <v-btn color="red darken-1" fab small elevation="1">
+        <v-icon color="white" @click="openDialog">mdi-trash-can-outline</v-icon>
+      </v-btn>
+    </template>
   </v-data-table>
 </template>
 
@@ -38,12 +43,19 @@ export default {
         { text: "GENRE", value: "genres", sortable: false },
         { text: "# OF PAGES", value: "page_num", sortable: false },
         { text: "# OF COPIES", value: "copies", sortable: false },
+        { text: "DELETE", value: "delete", sortable: false, width: "100px" },
       ],
     }
   },
   computed: {
     filteredBooks() {
       return this.$store.getters["books/filteredBooks"]
+    },
+    userIsAdmin() {
+      const userIsAdmin = localStorage.getItem("userIsAdmin")
+      const isAdmin = userIsAdmin === "true"
+      if (isAdmin) return true
+      else return false
     },
   },
 }
