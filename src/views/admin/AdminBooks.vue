@@ -6,7 +6,8 @@
         <h1 class="mb-5 d-inline-block">All books</h1>
         <v-btn class="ml-10 mb-4">Filter</v-btn>
         <filtered-books></filtered-books>
-        <v-btn class="mt-10" color="yellow darken-1">Add book</v-btn>
+        <v-btn class="mt-10" color="yellow darken-1" @click="addBook">Add book</v-btn>
+        <add-book :active="addBookDialogActive" @close-dialog="closeDialog"></add-book>
       </v-col>
       <v-col cols="12" md="1"></v-col>
     </v-row>
@@ -15,9 +16,24 @@
 
 <script>
 import FilteredBooks from "@/components/FilteredBooks.vue"
+import AddBook from "@/components/AddBook.vue"
 export default {
   components: {
     FilteredBooks,
+    AddBook,
+  },
+  data() {
+    return {
+      addBookDialogActive: false,
+    }
+  },
+  methods: {
+    addBook() {
+      this.addBookDialogActive = true
+    },
+    closeDialog() {
+      this.addBookDialogActive = false
+    },
   },
 }
 </script>

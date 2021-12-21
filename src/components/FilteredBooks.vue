@@ -22,7 +22,7 @@
     </template>
     <template v-slot:[`item.delete`] v-if="userIsAdmin">
       <v-btn color="red darken-1" fab small elevation="1">
-        <v-icon color="white" @click="openDialog">mdi-trash-can-outline</v-icon>
+        <v-icon color="white">mdi-trash-can-outline</v-icon>
       </v-btn>
     </template>
   </v-data-table>
