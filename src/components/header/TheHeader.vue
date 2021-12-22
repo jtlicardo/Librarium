@@ -113,7 +113,6 @@ export default {
   mounted() {
     let userLoggedIn = this.$store.getters.currentUser
     if (userLoggedIn) {
-      console.log("This runs")
       document.querySelector(".header").classList.add("hidden")
       document.querySelector(".header").classList.add("showheader")
       setTimeout(() => {

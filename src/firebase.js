@@ -11,7 +11,17 @@ import {
   getRedirectResult,
   sendPasswordResetEmail,
 } from "firebase/auth"
-import { getFirestore, collection, addDoc, getDocs, query, where } from "firebase/firestore"
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  where,
+  updateDoc,
+  doc,
+} from "firebase/firestore"
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage"
 
 const firebaseConfig = {
   apiKey: "AIzaSyDmpWucdj9MuwM5mvjA5_TKMCFlsUXUGpg",
@@ -24,6 +34,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig)
 const db = getFirestore()
+const storage = getStorage()
 
 export {
   getAuth,
@@ -41,5 +52,11 @@ export {
   addDoc,
   getDocs,
   query,
-  where
+  where,
+  storage,
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  updateDoc,
+  doc,
 }
