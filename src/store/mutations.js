@@ -3,6 +3,10 @@ export default {
     state.snackbarActive = payload.isActive
     state.snackbarText = payload.text
   },
+  displayErrorPopup(state, payload) {
+    state.errorPopup.errorPopupActive = payload.isActive
+    state.errorPopup.errorPopupText = payload.text
+  },
   displayLogoutDialog(state, payload) {
     state.logoutDialogActive = payload
   },

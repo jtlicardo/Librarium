@@ -15,6 +15,11 @@
       loading
       :active="logoutDialogActive"
     ></base-dialog>
+    <error-popup
+      :active="errorPopup.errorPopupActive"
+      :text="errorPopup.errorPopupText"
+      @close-dialog="closeErrorPopup"
+    />
     <v-snackbar content-class="text-center" v-model="snackbarActive" timeout="2000">
       {{ snackbarText }}
     </v-snackbar>
@@ -81,6 +86,8 @@ export default {
       transitionName: null,
       showAuthBg: false,
       showHeader: false,
+      errorPopupActive: false,
+      errorPopupText: "",
     }
   },
   computed: {
@@ -108,6 +115,9 @@ export default {
     logoutDialogActive() {
       return this.$store.getters.logoutDialogActive
     },
+    errorPopup() {
+      return this.$store.getters.errorPopup
+    },
   },
   methods: {
     showAuthBgDelayed() {
@@ -115,6 +125,12 @@ export default {
         this.showAuthBg = true
         this.showHeader = false
       }, 2000)
+    },
+    closeErrorPopup() {
+      this.$store.dispatch("displayErrorPopup", {
+        text: "",
+        isActive: false,
+      })
     },
   },
   watch: {

@@ -210,6 +210,10 @@ export default {
         })
       } catch (e) {
         console.log("Error while adding book: ", e)
+        this.$store.dispatch("displayErrorPopup", {
+          text: e,
+          isActive: true,
+        })
       }
       this.isLoading = false
       this.$emit("close-dialog")

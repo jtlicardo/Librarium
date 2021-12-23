@@ -24,6 +24,10 @@ export default new Vuex.Store({
       logoutDialogActive: false,
       backButton: false,
       backButtonActive: false,
+      errorPopup: {
+        errorPopupActive: false,
+        errorPopupText: "",
+      },
       searchInput: {
         title: "",
         author: "",
