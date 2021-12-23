@@ -144,13 +144,15 @@ export default {
       })
     },
     closeBaseDialog() {
-      this.$store.dispatch("displayBaseDialog", {
-        text: "",
-        title: "",
-        color: "",
-        loading: false,
-        active: false,
-      })
+      setTimeout(() => {
+        this.$store.dispatch("displayBaseDialog", {
+          text: "",
+          title: "",
+          color: "",
+          loading: false,
+          active: false,
+        })
+      }, 500)
     },
   },
   watch: {

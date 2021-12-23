@@ -1,13 +1,6 @@
 <template>
   <v-container class="login mx-auto d-flex flex-column justify-center">
     <base-dialog
-      title="Login error!"
-      :text="loginError"
-      color="red"
-      :active="!!loginError"
-      @close="handleError"
-    ></base-dialog>
-    <base-dialog
       title="Logging you in..."
       color="primary"
       loading
@@ -63,7 +56,6 @@ export default {
       email: "",
       password: "",
       isLoading: false,
-      loginError: null,
     }
   },
   methods: {
@@ -102,7 +94,13 @@ export default {
           .catch((error) => {
             console.log("Login error! ", error)
             const errorMessage = error.message
-            this.loginError = errorMessage
+            this.$store.dispatch("displayBaseDialog", {
+              text: errorMessage,
+              title: "Login error!",
+              color: "red",
+              loading: false,
+              active: true,
+            })
           })
         this.isLoading = false
       }, 1000)
@@ -150,9 +148,6 @@ export default {
             console.log("Google login error!", email, errorMessage, credential)
           })
       }
-    },
-    handleError() {
-      this.loginError = null
     },
     async checkIfUserExists(userUid) {
       const users = collection(db, "users")

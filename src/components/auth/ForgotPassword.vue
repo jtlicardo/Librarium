@@ -29,13 +29,6 @@
       loading
       :active="isLoading"
     ></base-dialog>
-    <base-dialog
-      title="Error!"
-      :text="errorMsg"
-      color="red"
-      :active="!!errorExists"
-      @close="handleError"
-    ></base-dialog>
   </v-container>
 </template>
 
@@ -53,8 +46,6 @@ export default {
       email: "",
       validationError: null,
       isLoading: false,
-      errorExists: null,
-      errorMsg: "",
       rules: {
         required: (value) => !!value || "Required",
         email: (value) => {
@@ -98,8 +89,13 @@ export default {
           .catch((error) => {
             const errorMessage = error.message
             console.log("Error while sending pw reset email! ", errorMessage)
-            this.errorExists = true
-            this.errorMsg = errorMessage
+            this.$store.dispatch("displayBaseDialog", {
+              text: errorMessage,
+              title: "Error!",
+              color: "red",
+              loading: false,
+              active: true,
+            })
           })
         this.isLoading = false
       }, 1000)

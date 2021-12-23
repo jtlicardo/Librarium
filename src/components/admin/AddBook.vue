@@ -101,13 +101,6 @@
         loading
         :active="isLoading"
       ></base-dialog>
-      <base-dialog
-        title="Error! Please try again later."
-        :text="addingBookErrorMsg"
-        color="red"
-        :active="addingBookError"
-        @close="handleError"
-      ></base-dialog>
     </v-dialog>
   </v-row>
 </template>
@@ -199,7 +192,7 @@ export default {
       if (!this.validate()) return
       this.isLoading = true
       try {
-        const docRef = await addDo(collection(db, "books"), {
+        const docRef = await addDoc(collection(db, "books"), {
           ...this.book,
         })
         console.log("Document written with ID: ", docRef.id)
@@ -219,8 +212,6 @@ export default {
         })
       } catch (e) {
         console.log("Error while adding book: ", e)
-        // this.addingBookError = true
-        // this.addingBookErrorMsg = e.toString()
         this.$store.dispatch("displayBaseDialog", {
           text: e.toString(),
           title: "Error! Please try again later.",

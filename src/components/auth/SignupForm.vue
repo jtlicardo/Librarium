@@ -1,13 +1,6 @@
 <template>
   <v-container class="login mx-auto d-flex flex-column justify-center">
     <base-dialog
-      title="Signup error!"
-      :text="signupError"
-      color="red"
-      :active="!!signupError"
-      @close="handleError"
-    ></base-dialog>
-    <base-dialog
       title="Signing you up..."
       color="primary"
       loading
@@ -93,7 +86,6 @@ export default {
       validationError: null,
       errorText: "",
       isLoading: false,
-      signupError: null,
       rules: {
         required: (value) => !!value || "Required",
         min: (value) => (value && value.length >= 6) || "6 characters minimum",
@@ -197,14 +189,17 @@ export default {
           .catch((error) => {
             console.log("Signup error! ", error)
             const errorMessage = error.message
-            this.signupError = errorMessage
+            this.$store.dispatch("displayBaseDialog", {
+              text: errorMessage,
+              title: "Signup error!",
+              color: "red",
+              loading: false,
+              active: true,
+            })
           })
 
         this.isLoading = false
       }, 1000)
-    },
-    handleError() {
-      this.signupError = null
     },
   },
 }
