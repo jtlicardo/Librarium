@@ -101,6 +101,13 @@
         loading
         :active="isLoading"
       ></base-dialog>
+      <base-dialog
+        title="Error! Please try again later."
+        :text="addingBookErrorMsg"
+        color="red"
+        :active="addingBookError"
+        @close="handleError"
+      ></base-dialog>
     </v-dialog>
   </v-row>
 </template>
@@ -150,6 +157,8 @@ export default {
       validationError: false,
       errorMsg: "",
       isLoading: false,
+      addingBookError: false,
+      addingBookErrorMsg: "",
     }
   },
   methods: {
@@ -210,13 +219,17 @@ export default {
         })
       } catch (e) {
         console.log("Error while adding book: ", e)
-        this.$store.dispatch("displayErrorPopup", {
-          text: e,
-          isActive: true,
-        })
+        this.addingBookError = true
+        this.addingBookErrorMsg = e.toString()
       }
       this.isLoading = false
       this.$emit("close-dialog")
+    },
+    handleError() {
+      setTimeout(() => {
+        this.addingBookError = false
+        this.addingBookErrorMsg = ""
+      }, 500)
     },
   },
 }

@@ -1,6 +1,6 @@
 <template>
   <div class="text-center">
-    <v-dialog v-model="active" persistent width="500" @click:outside="tryClose">
+    <v-dialog v-model="isActive" width="500" @click:outside="close">
       <v-card :color="color" dark>
         <v-card-title>{{ title }}</v-card-title>
         <v-card-text>
@@ -19,6 +19,12 @@
 
 <script>
 export default {
+  emits: ["close"],
+  data() {
+    return {
+      isActive: false,
+    }
+  },
   props: {
     title: {
       type: String,
@@ -42,8 +48,13 @@ export default {
       required: true,
     },
   },
+  watch: {
+    active(newValue) {
+      this.isActive = newValue
+    },
+  },
   methods: {
-    tryClose() {
+    close() {
       this.$emit("close")
     },
   },

@@ -15,6 +15,15 @@
       loading
       :active="logoutDialogActive"
     ></base-dialog>
+    <base-dialog
+      :title="baseDialog.title"
+      :text="baseDialog.text"
+      :color="baseDialog.color"
+      :loading="baseDialog.loading"
+      :active="baseDialog.active"
+      :persistent="baseDialog.persistent"
+      @close="closeBaseDialog"
+    ></base-dialog>
     <error-popup
       :active="errorPopup.errorPopupActive"
       :text="errorPopup.errorPopupText"
@@ -118,6 +127,9 @@ export default {
     errorPopup() {
       return this.$store.getters.errorPopup
     },
+    baseDialog() {
+      return this.$store.getters.baseDialog
+    },
   },
   methods: {
     showAuthBgDelayed() {
@@ -130,6 +142,16 @@ export default {
       this.$store.dispatch("displayErrorPopup", {
         text: "",
         isActive: false,
+      })
+    },
+    closeBaseDialog() {
+      this.$store.dispatch("displayBaseDialog", {
+        text: "",
+        title: "",
+        color: "",
+        loading: false,
+        active: false,
+        persistent: false,
       })
     },
   },

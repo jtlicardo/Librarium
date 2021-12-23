@@ -5,6 +5,9 @@ export default {
   displayErrorPopup(context, payload) {
     context.commit("displayErrorPopup", payload)
   },
+  displayBaseDialog(context, payload) {
+    context.commit("displayBaseDialog", payload)
+  },
   displayLogoutDialog(context, payload) {
     context.commit("displayLogoutDialog", payload)
   },

@@ -7,6 +7,14 @@ export default {
     state.errorPopup.errorPopupActive = payload.isActive
     state.errorPopup.errorPopupText = payload.text
   },
+  displayBaseDialog(state, payload) {
+    state.baseDialog.title = payload.title
+    state.baseDialog.text = payload.text
+    state.baseDialog.color = payload.color
+    state.baseDialog.loading = payload.loading
+    state.baseDialog.active = payload.active
+    state.baseDialog.persistent = payload.persistent
+  },
   displayLogoutDialog(state, payload) {
     state.logoutDialogActive = payload
   },

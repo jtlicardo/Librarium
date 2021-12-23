@@ -8,6 +8,9 @@ export default {
   errorPopup(state) {
     return state.errorPopup
   },
+  baseDialog(state) {
+    return state.baseDialog
+  },
   logoutDialogActive(state) {
     return state.logoutDialogActive
   },

@@ -24,6 +24,14 @@ export default new Vuex.Store({
       logoutDialogActive: false,
       backButton: false,
       backButtonActive: false,
+      baseDialog: {
+        title: "",
+        text: "",
+        color: "",
+        loading: false,
+        active: false,
+        persistent: false,
+      },
       errorPopup: {
         errorPopupActive: false,
         errorPopupText: "",
