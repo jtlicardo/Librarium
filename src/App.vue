@@ -25,6 +25,7 @@
 import SidebarNav from "./components/nav/SidebarNav.vue"
 import TheHeader from "./components/header/TheHeader.vue"
 import BaseDialog from "@/components/ui/BaseDialog.vue"
+import ErrorPopup from "@/components/ui/ErrorPopup.vue"
 import {
   getAuth,
   onAuthStateChanged,
@@ -73,6 +74,7 @@ export default {
     SidebarNav,
     TheHeader,
     BaseDialog,
+    ErrorPopup,
   },
   data() {
     return {

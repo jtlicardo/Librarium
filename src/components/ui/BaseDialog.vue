@@ -47,13 +47,6 @@ export default {
       this.$emit("close")
     },
   },
-  // watch: {
-  //   active(val) {
-  //     if (!val) return
-
-  //     setTimeout(() => (this.active = false), 4000)
-  //   },
-  // },
 }
 </script>
 

@@ -95,12 +95,19 @@
           @close-dialog="validationError = false"
         />
       </v-card>
+      <base-dialog
+        title="Adding book..."
+        color="primary"
+        loading
+        :active="isLoading"
+      ></base-dialog>
     </v-dialog>
   </v-row>
 </template>
 
 <script>
 import ErrorPopup from "@/components/ui/ErrorPopup.vue"
+import BaseDialog from "@/components/ui/BaseDialog.vue"
 import {
   db,
   collection,
@@ -117,6 +124,7 @@ export default {
   emits: ["close-dialog"],
   components: {
     ErrorPopup,
+    BaseDialog,
   },
   data() {
     return {
@@ -141,6 +149,7 @@ export default {
       },
       validationError: false,
       errorMsg: "",
+      isLoading: false,
     }
   },
   methods: {
@@ -179,24 +188,30 @@ export default {
     },
     async addBook() {
       if (!this.validate()) return
-      const docRef = await addDoc(collection(db, "books"), {
-        ...this.book,
-      })
-      console.log("Document written with ID: ", docRef.id)
-      const storageRef = ref(storage, docRef.id)
-      await uploadBytes(storageRef, this.logo)
-      console.log("Book logo successfully uploaded!")
-      const url = await getDownloadURL(ref(storage, docRef.id))
-      console.log(url)
-      const docReference = doc(db, "books", docRef.id)
-      await updateDoc(docReference, {
-        logoUrl: url,
-      })
-      console.log("Logo url successfully updated!")
-      this.$store.dispatch("displaySnackbar", {
-        text: "Book successfully added!",
-        isActive: true,
-      })
+      this.isLoading = true
+      try {
+        const docRef = await addDo(collection(db, "books"), {
+          ...this.book,
+        })
+        console.log("Document written with ID: ", docRef.id)
+        const storageRef = ref(storage, docRef.id)
+        await uploadBytes(storageRef, this.logo)
+        console.log("Book logo successfully uploaded!")
+        const url = await getDownloadURL(ref(storage, docRef.id))
+        console.log(url)
+        const docReference = doc(db, "books", docRef.id)
+        await updateDoc(docReference, {
+          logoUrl: url,
+        })
+        console.log("Logo url successfully updated!")
+        this.$store.dispatch("displaySnackbar", {
+          text: "Book successfully added!",
+          isActive: true,
+        })
+      } catch (e) {
+        console.log("Error while adding book: ", e)
+      }
+      this.isLoading = false
       this.$emit("close-dialog")
     },
   },
