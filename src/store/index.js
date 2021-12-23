@@ -30,7 +30,6 @@ export default new Vuex.Store({
         color: "",
         loading: false,
         active: false,
-        persistent: false,
       },
       errorPopup: {
         errorPopupActive: false,

@@ -21,7 +21,6 @@
       :color="baseDialog.color"
       :loading="baseDialog.loading"
       :active="baseDialog.active"
-      :persistent="baseDialog.persistent"
       @close="closeBaseDialog"
     ></base-dialog>
     <error-popup
@@ -151,7 +150,6 @@ export default {
         color: "",
         loading: false,
         active: false,
-        persistent: false,
       })
     },
   },

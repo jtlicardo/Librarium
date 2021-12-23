@@ -13,7 +13,6 @@ export default {
     state.baseDialog.color = payload.color
     state.baseDialog.loading = payload.loading
     state.baseDialog.active = payload.active
-    state.baseDialog.persistent = payload.persistent
   },
   displayLogoutDialog(state, payload) {
     state.logoutDialogActive = payload

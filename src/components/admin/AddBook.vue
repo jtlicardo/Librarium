@@ -219,8 +219,15 @@ export default {
         })
       } catch (e) {
         console.log("Error while adding book: ", e)
-        this.addingBookError = true
-        this.addingBookErrorMsg = e.toString()
+        // this.addingBookError = true
+        // this.addingBookErrorMsg = e.toString()
+        this.$store.dispatch("displayBaseDialog", {
+          text: e.toString(),
+          title: "Error! Please try again later.",
+          color: "red",
+          loading: false,
+          active: true,
+        })
       }
       this.isLoading = false
       this.$emit("close-dialog")
