@@ -9,12 +9,12 @@
         </transition>
       </v-container>
     </v-main>
-    <base-dialog
+    <!-- <base-dialog
       title="Logging you out..."
       color="primary"
       loading
       :active="logoutDialogActive"
-    ></base-dialog>
+    ></base-dialog> -->
     <base-dialog
       :title="baseDialog.title"
       :text="baseDialog.text"
@@ -28,6 +28,10 @@
       :text="errorPopup.errorPopupText"
       @close-dialog="closeErrorPopup"
     />
+    <loading-dialog
+      :active="loadingDialog.active"
+      :title="loadingDialog.title"
+    ></loading-dialog>
     <v-snackbar content-class="text-center" v-model="snackbarActive" timeout="2000">
       {{ snackbarText }}
     </v-snackbar>
@@ -39,6 +43,7 @@ import SidebarNav from "./components/nav/SidebarNav.vue"
 import TheHeader from "./components/header/TheHeader.vue"
 import BaseDialog from "@/components/ui/BaseDialog.vue"
 import ErrorPopup from "@/components/ui/ErrorPopup.vue"
+import LoadingDialog from "@/components/ui/LoadingDialog.vue"
 import {
   getAuth,
   onAuthStateChanged,
@@ -88,6 +93,7 @@ export default {
     TheHeader,
     BaseDialog,
     ErrorPopup,
+    LoadingDialog,
   },
   data() {
     return {
@@ -128,6 +134,9 @@ export default {
     },
     baseDialog() {
       return this.$store.getters.baseDialog
+    },
+    loadingDialog() {
+      return this.$store.getters.loadingDialog
     },
   },
   methods: {

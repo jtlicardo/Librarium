@@ -78,12 +78,7 @@ export default {
         document.querySelector(".header").classList.remove("hideheader")
       else document.querySelector(".header").classList.add("hideheader")
     },
-    // headerAnimationDelayed() {
-    //   setTimeout(() => {
-    //     document.querySelector(".header").classList.remove("hidden")
-    //   }, 500)
-    // },
-    logout() {
+    async logout() {
       this.$store.dispatch("displayLogoutDialog", true)
       setTimeout(() => {
         const auth = getAuth()

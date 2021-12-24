@@ -11,6 +11,9 @@ export default {
   baseDialog(state) {
     return state.baseDialog
   },
+  loadingDialog(state) {
+    return state.loadingDialog
+  },
   logoutDialogActive(state) {
     return state.logoutDialogActive
   },

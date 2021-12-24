@@ -35,6 +35,10 @@ export default new Vuex.Store({
         errorPopupActive: false,
         errorPopupText: "",
       },
+      loadingDialog: {
+        active: false,
+        title: "",
+      },
       searchInput: {
         title: "",
         author: "",

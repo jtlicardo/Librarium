@@ -8,6 +8,9 @@ export default {
   displayBaseDialog(context, payload) {
     context.commit("displayBaseDialog", payload)
   },
+  displayLoadingDialog(context, payload) {
+    context.commit("displayLoadingDialog", payload)
+  },
   displayLogoutDialog(context, payload) {
     context.commit("displayLogoutDialog", payload)
   },

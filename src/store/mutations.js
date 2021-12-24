@@ -14,6 +14,10 @@ export default {
     state.baseDialog.loading = payload.loading
     state.baseDialog.active = payload.active
   },
+  displayLoadingDialog(state, payload) {
+    state.loadingDialog.active = payload.active
+    state.loadingDialog.title = payload.title
+  },
   displayLogoutDialog(state, payload) {
     state.logoutDialogActive = payload
   },
