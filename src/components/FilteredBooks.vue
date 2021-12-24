@@ -1,12 +1,13 @@
 <template>
   <v-data-table
     :headers="headers"
-    :items="filteredBooks"
+    :items="books"
     :items-per-page="5"
     class="elevation-1"
+    no-data-text="No books found"
   >
     <template v-slot:[`item.logo`]="{ item }">
-      <v-img :src="item.logo" contain height="100px"></v-img>
+      <v-img :src="item.logoUrl" contain height="100px"></v-img>
     </template>
     <template v-slot:[`item.genres`]="{ item }">
       <ul>
@@ -29,11 +30,15 @@
 </template>
 
 <script>
+import { collection, getDocs, db } from "@/firebase.js"
+
 export default {
+  data() {
+    return {
+      books: [],
+    }
+  },
   computed: {
-    filteredBooks() {
-      return this.$store.getters["books/filteredBooks"]
-    },
     userIsAdmin() {
       const userIsAdmin = localStorage.getItem("userIsAdmin")
       const isAdmin = userIsAdmin === "true"
@@ -50,13 +55,24 @@ export default {
         { text: "BOOK TITLE", value: "title", sortable: false },
         { text: "AUTHOR", value: "author", sortable: false },
         { text: "GENRE", value: "genres", sortable: false },
-        { text: "# OF PAGES", value: "page_num", sortable: false },
+        { text: "# OF PAGES", value: "numOfPages", sortable: false },
         { text: "# OF COPIES", value: "copies", sortable: false },
       ]
       if (this.userIsAdmin)
         headers.push({ text: "DELETE", value: "delete", sortable: false, width: "100px" })
       return headers
     },
+  },
+  methods: {
+    async getBooks() {
+      const querySnapshot = await getDocs(collection(db, "books"))
+      querySnapshot.forEach((doc) => {
+        this.books.push(doc.data())
+      })
+    },
+  },
+  async created() {
+    await this.getBooks()
   },
 }
 </script>

@@ -61,7 +61,7 @@
                     :rules="[rules.required, rules.positive, rules.max]"
                     validate-on-blur
                     required
-                    v-model="book.inventoryNumber"
+                    v-model="book.copies[0].inventoryNumber"
                   ></v-text-field>
                   <v-file-input
                     label="Logo"
@@ -95,19 +95,12 @@
           @close-dialog="validationError = false"
         />
       </v-card>
-      <base-dialog
-        title="Adding book..."
-        color="primary"
-        loading
-        :active="isLoading"
-      ></base-dialog>
     </v-dialog>
   </v-row>
 </template>
 
 <script>
 import ErrorPopup from "@/components/ui/ErrorPopup.vue"
-import BaseDialog from "@/components/ui/BaseDialog.vue"
 import {
   db,
   collection,
@@ -124,7 +117,6 @@ export default {
   emits: ["close-dialog"],
   components: {
     ErrorPopup,
-    BaseDialog,
   },
   data() {
     return {
@@ -137,7 +129,12 @@ export default {
           tertiaryGenre: "",
         },
         numOfPages: "",
-        inventoryNumber: "",
+        copies: [
+          {
+            inventoryNumber: "",
+            status: "Available",
+          },
+        ],
         logoUrl: "",
         added_at: Date.now(),
       },
@@ -168,7 +165,7 @@ export default {
         this.book.author === "" ||
         this.book.genres.mainGenre === "" ||
         this.book.numOfPages === "" ||
-        this.book.inventoryNumber === "" ||
+        this.book.copies[0].inventoryNumber === "" ||
         this.logo === null
       ) {
         this.validationError = true
@@ -178,11 +175,11 @@ export default {
         this.validationError = true
         this.errorMsg = "Number of pages needs to be a positive number!"
         return false
-      } else if (this.book.inventoryNumber <= 0) {
+      } else if (this.book.copies[0].inventoryNumber <= 0) {
         this.validationError = true
         this.errorMsg = "Inventory number needs to be a positive number!"
         return false
-      } else if (this.book.inventoryNumber.length >= 8) {
+      } else if (this.book.copies[0].inventoryNumber.length >= 8) {
         this.validationError = true
         this.errorMsg = "Inventory number is too long!"
         return false
@@ -190,7 +187,10 @@ export default {
     },
     async addBook() {
       if (!this.validate()) return
-      this.isLoading = true
+      this.$store.dispatch("displayLoadingDialog", {
+        active: true,
+        title: "Adding book...",
+      })
       try {
         const docRef = await addDoc(collection(db, "books"), {
           ...this.book,
@@ -220,7 +220,10 @@ export default {
           active: true,
         })
       }
-      this.isLoading = false
+      this.$store.dispatch("displayLoadingDialog", {
+        active: false,
+        title: "",
+      })
       this.$emit("close-dialog")
     },
     handleError() {
