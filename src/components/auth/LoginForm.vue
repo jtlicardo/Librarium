@@ -77,33 +77,41 @@ export default {
         }, 3500)
       })
     },
-    login() {
+    timeout(miliseconds) {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(miliseconds)
+        })
+      })
+    },
+    async login() {
       this.isLoading = true
-      setTimeout(() => {
+      try {
         const auth = getAuth()
-        signInWithEmailAndPassword(auth, this.email, this.password)
-          .then((userCredential) => {
-            const user = userCredential.user
-            console.log("Login successful! ", user)
-            this.$store.dispatch("displaySnackbar", {
-              text: "Login successful!",
-              isActive: true,
-            })
-            this.$router.replace("/ubooks")
-          })
-          .catch((error) => {
-            console.log("Login error! ", error)
-            const errorMessage = error.message
-            this.$store.dispatch("displayBaseDialog", {
-              text: errorMessage,
-              title: "Login error!",
-              color: "red",
-              loading: false,
-              active: true,
-            })
-          })
-        this.isLoading = false
-      }, 1000)
+        let userCredential = await signInWithEmailAndPassword(
+          auth,
+          this.email,
+          this.password
+        )
+        const user = userCredential.user
+        await this.animation()
+        console.log("Login successful! ", user)
+        this.$store.dispatch("displaySnackbar", {
+          text: "Login successful!",
+          isActive: true,
+        })
+        this.$router.replace("/ubooks")
+      } catch (e) {
+        console.log("Login error!", e)
+        this.$store.dispatch("displayBaseDialog", {
+          text: e.toString(),
+          title: "Login error!",
+          color: "red",
+          loading: false,
+          active: true,
+        })
+      }
+      this.isLoading = false
     },
     async googleAuth() {
       const provider = new GoogleAuthProvider()
