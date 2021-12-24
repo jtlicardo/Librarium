@@ -77,13 +77,6 @@ export default {
         }, 3500)
       })
     },
-    timeout(miliseconds) {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          resolve(miliseconds)
-        })
-      })
-    },
     async login() {
       this.isLoading = true
       try {
@@ -168,36 +161,36 @@ export default {
         console.error("Error adding user to collection: ", e)
       }
     },
-    redirectResult() {
-      const auth = getAuth()
-      getRedirectResult(auth)
-        .then((result) => {
-          const user = result.user
-          if (user) {
-            this.isLoading = true
-            console.log("Google mobile login successful!", user)
-            this.checkIfUserExists(user.uid).then((result) => {
-              if (!result) {
-                this.addUserToCollection(user.uid, user.displayName, user.email)
-              }
-            })
-            setTimeout(() => {
-              this.$store.dispatch("displaySnackbar", {
-                text: `Logged in as ${user.email}`,
-                isActive: true,
-              })
-              this.animation().then(() => {
-                this.$router.replace("/ubooks")
-              })
-              this.isLoading = false
-            }, 2000)
+    async redirectResult() {
+      try {
+        const auth = getAuth()
+        let result = await getRedirectResult(auth)
+        const user = result.user
+        if (user) {
+          this.isLoading = true
+          console.log("Google mobile login successful!", user)
+          let result = await this.checkIfUserExists(user.uid)
+          if (!result) {
+            this.addUserToCollection(user.uid, user.displayName, user.email)
           }
-        })
-        .catch((error) => {
-          const email = error.email
-          const errorMessage = error.message
-          if (email) console.log("Google mobile login error: ", errorMessage)
-        })
+          const userIsAdmin = localStorage.getItem("userIsAdmin")
+          console.log("Login - user is admin?", userIsAdmin)
+          await this.animation()
+          if (userIsAdmin === "true") {
+            this.$router.replace("/adminbooks")
+          } else if (userIsAdmin === "false") {
+            this.$router.replace("/ubooks")
+          }
+          this.isLoading = false
+          this.$store.dispatch("displaySnackbar", {
+            text: `Logged in as ${user.email}`,
+            isActive: true,
+          })
+        }
+      } catch (e) {
+        const email = e.email
+        if (email) console.log("Google mobile login error: ", e)
+      }
     },
   },
   computed: {
@@ -211,8 +204,8 @@ export default {
       }
     },
   },
-  created() {
-    this.redirectResult()
+  async created() {
+    await this.redirectResult()
   },
 }
 </script>

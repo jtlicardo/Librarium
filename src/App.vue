@@ -160,7 +160,6 @@ export default {
       if (from.path === "/auth") {
         this.showAuthBg = false
         this.showHeader = true
-        console.log("header prikazan!")
       }
       if (to.path === "/auth") {
         this.transitionName = "logoutfade"
