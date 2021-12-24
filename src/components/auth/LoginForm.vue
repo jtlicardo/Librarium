@@ -105,48 +105,35 @@ export default {
         this.isLoading = false
       }, 1000)
     },
-    googleAuth() {
+    async googleAuth() {
       const provider = new GoogleAuthProvider()
       const auth = getAuth()
       if (this.mobile) {
         signInWithRedirect(auth, provider)
       } else {
-        signInWithPopup(auth, provider)
-          .then((result) => {
-            const user = result.user
-            console.log("Successful Google login! ", user)
-            this.$store
-              .dispatch("displaySnackbar", {
-                text: `Logged in as ${user.email}`,
-                isActive: true,
-              })
-              .then(() => {
-                this.checkIfUserExists(user.uid)
-                  .then((result) => {
-                    if (!result) {
-                      this.addUserToCollection(user.uid, user.displayName, user.email)
-                    }
-                    const userIsAdmin = localStorage.getItem("userIsAdmin")
-                    console.log("Login - user is admin?", userIsAdmin)
-                    this.animation().then(() => {
-                      if (userIsAdmin === "true") {
-                        this.$router.replace("/adminbooks")
-                      } else if (userIsAdmin === "false") {
-                        this.$router.replace("/ubooks")
-                      }
-                    })
-                  })
-                  .catch((error) => {
-                    console.log(error)
-                  })
-              })
+        try {
+          let result = await signInWithPopup(auth, provider)
+          const user = result.user
+          console.log("Successful Google login! ", user)
+          this.$store.dispatch("displaySnackbar", {
+            text: `Logged in as ${user.email}`,
+            isActive: true,
           })
-          .catch((error) => {
-            const errorMessage = error.message
-            const email = error.email
-            const credential = GoogleAuthProvider.credentialFromError(error)
-            console.log("Google login error!", email, errorMessage, credential)
-          })
+          await this.checkIfUserExists(user.uid)
+          if (!result) {
+            this.addUserToCollection(user.uid, user.displayName, user.email)
+          }
+          const userIsAdmin = localStorage.getItem("userIsAdmin")
+          console.log("Login - user is admin?", userIsAdmin)
+          await this.animation()
+          if (userIsAdmin === "true") {
+            this.$router.replace("/adminbooks")
+          } else if (userIsAdmin === "false") {
+            this.$router.replace("/ubooks")
+          }
+        } catch (e) {
+          console.log("Google login error: ", e)
+        }
       }
     },
     async checkIfUserExists(userUid) {
