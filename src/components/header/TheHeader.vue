@@ -78,31 +78,38 @@ export default {
         document.querySelector(".header").classList.remove("hideheader")
       else document.querySelector(".header").classList.add("hideheader")
     },
+    timeout(miliseconds) {
+      return new Promise((resolve) => setTimeout(resolve, miliseconds))
+    },
     async logout() {
-      this.$store.dispatch("displayLogoutDialog", true)
-      setTimeout(() => {
-        const auth = getAuth()
-        signOut(auth)
-          .then(() => {
-            console.log("Logout successful!")
-            this.$store.dispatch("displaySnackbar", {
-              text: "Logout successful!",
-              isActive: true,
-            })
-            this.$store.dispatch("setUser", {
-              uid: null,
-              email: null,
-              fullname: null,
-              isAdmin: null,
-            })
-            document.querySelector(".header").classList.add("hideheader")
-            this.$router.replace("/auth")
-          })
-          .catch((error) => {
-            console.log("Logout error!", error)
-          })
-        this.$store.dispatch("displayLogoutDialog", false)
-      }, 1000)
+      const auth = getAuth()
+      this.$store.dispatch("displayLoadingDialog", {
+        active: true,
+        title: "Logging you out...",
+      })
+      try {
+        await signOut(auth)
+        console.log("Logout successful!")
+        this.$store.dispatch("setUser", {
+          uid: null,
+          email: null,
+          fullname: null,
+          isAdmin: null,
+        })
+        document.querySelector(".header").classList.add("hideheader")
+        this.$router.replace("/auth")
+        await this.timeout(2000)
+        this.$store.dispatch("displayLoadingDialog", {
+          active: false,
+          title: "",
+        })
+        this.$store.dispatch("displaySnackbar", {
+          text: "Logout successful!",
+          isActive: true,
+        })
+      } catch (e) {
+        console.log("Logout error", e)
+      }
     },
   },
   mounted() {

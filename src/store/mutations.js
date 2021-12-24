@@ -18,9 +18,6 @@ export default {
     state.loadingDialog.active = payload.active
     state.loadingDialog.title = payload.title
   },
-  displayLogoutDialog(state, payload) {
-    state.logoutDialogActive = payload
-  },
   toggleSidebar(state) {
     state.sidebarOpen = !state.sidebarOpen
   },

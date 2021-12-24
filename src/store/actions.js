@@ -11,9 +11,6 @@ export default {
   displayLoadingDialog(context, payload) {
     context.commit("displayLoadingDialog", payload)
   },
-  displayLogoutDialog(context, payload) {
-    context.commit("displayLogoutDialog", payload)
-  },
   toggleSidebar(context) {
     context.commit("toggleSidebar")
   },

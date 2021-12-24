@@ -21,7 +21,6 @@ export default new Vuex.Store({
       sidebarOpen: false,
       snackbarActive: false,
       snackbarText: "",
-      logoutDialogActive: false,
       backButton: false,
       backButtonActive: false,
       baseDialog: {

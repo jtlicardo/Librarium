@@ -1,6 +1,6 @@
 <template>
   <div class="text-center">
-    <v-dialog v-model="isActive" persistent width="500">
+    <v-dialog v-model="active" persistent width="500">
       <v-card color="primary" dark>
         <v-card-title>{{ title }}</v-card-title>
         <v-card-text>
@@ -13,11 +13,6 @@
 
 <script>
 export default {
-  data() {
-    return {
-      isActive: false,
-    }
-  },
   props: {
     title: {
       type: String,
