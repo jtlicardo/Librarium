@@ -99,10 +99,6 @@ export default {
         document.querySelector(".header").classList.add("hideheader")
         this.$router.replace("/auth")
         await this.timeout(2000)
-        this.$store.dispatch("displayLoadingDialog", {
-          active: false,
-          title: "",
-        })
         this.$store.dispatch("displaySnackbar", {
           text: "Logout successful!",
           isActive: true,
@@ -110,6 +106,10 @@ export default {
       } catch (e) {
         console.log("Logout error", e)
       }
+      this.$store.dispatch("displayLoadingDialog", {
+        active: false,
+        title: "",
+      })
     },
   },
   mounted() {

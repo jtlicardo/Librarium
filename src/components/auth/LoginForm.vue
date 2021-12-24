@@ -1,11 +1,5 @@
 <template>
   <v-container class="login mx-auto d-flex flex-column justify-center">
-    <base-dialog
-      title="Logging you in..."
-      color="primary"
-      loading
-      :active="isLoading"
-    ></base-dialog>
     <h1 class="text-center">LOGIN</h1>
     <div class="inputs">
       <v-text-field v-model="email" label="Email" type="email" required></v-text-field>
@@ -34,7 +28,6 @@
 
 <script>
 import ErrorPopup from "@/components/ui/ErrorPopup.vue"
-import BaseDialog from "@/components/ui/BaseDialog.vue"
 import {
   getAuth,
   signInWithEmailAndPassword,
@@ -49,13 +42,11 @@ export default {
   emits: ["change-cmp"],
   components: {
     ErrorPopup,
-    BaseDialog,
   },
   data() {
     return {
       email: "",
       password: "",
-      isLoading: false,
     }
   },
   methods: {
@@ -79,7 +70,10 @@ export default {
       })
     },
     async login() {
-      this.isLoading = true
+      this.$store.dispatch("displayLoadingDialog", {
+        active: true,
+        title: "Logging you in...",
+      })
       try {
         const auth = getAuth()
         let userCredential = await signInWithEmailAndPassword(
@@ -105,7 +99,10 @@ export default {
           active: true,
         })
       }
-      this.isLoading = false
+      this.$store.dispatch("displayLoadingDialog", {
+        active: false,
+        title: "",
+      })
     },
     async googleAuth() {
       const provider = new GoogleAuthProvider()
@@ -115,12 +112,12 @@ export default {
       } else {
         try {
           let result = await signInWithPopup(auth, provider)
+          this.$store.dispatch("displayLoadingDialog", {
+            active: true,
+            title: "Logging you in...",
+          })
           const user = result.user
           console.log("Successful Google login! ", user)
-          this.$store.dispatch("displaySnackbar", {
-            text: `Logged in as ${user.email}`,
-            isActive: true,
-          })
           await this.checkIfUserExists(user.uid)
           if (!result) {
             this.addUserToCollection(user.uid, user.displayName, user.email)
@@ -133,9 +130,17 @@ export default {
           } else if (userIsAdmin === "false") {
             this.$router.replace("/ubooks")
           }
+          this.$store.dispatch("displaySnackbar", {
+            text: `Logged in as ${user.email}`,
+            isActive: true,
+          })
         } catch (e) {
           console.log("Google login error: ", e)
         }
+        this.$store.dispatch("displayLoadingDialog", {
+          active: false,
+          title: "",
+        })
       }
     },
     async checkIfUserExists(userUid) {
@@ -168,7 +173,10 @@ export default {
         let result = await getRedirectResult(auth)
         const user = result.user
         if (user) {
-          this.isLoading = true
+          this.$store.dispatch("displayLoadingDialog", {
+            active: true,
+            title: "Logging you in...",
+          })
           console.log("Google mobile login successful!", user)
           let result = await this.checkIfUserExists(user.uid)
           if (!result) {
@@ -182,7 +190,6 @@ export default {
           } else if (userIsAdmin === "false") {
             this.$router.replace("/ubooks")
           }
-          this.isLoading = false
           this.$store.dispatch("displaySnackbar", {
             text: `Logged in as ${user.email}`,
             isActive: true,
@@ -192,6 +199,10 @@ export default {
         const email = e.email
         if (email) console.log("Google mobile login error: ", e)
       }
+      this.$store.dispatch("displayLoadingDialog", {
+        active: false,
+        title: "",
+      })
     },
   },
   computed: {

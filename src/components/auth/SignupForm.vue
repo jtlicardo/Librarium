@@ -1,11 +1,5 @@
 <template>
   <v-container class="login mx-auto d-flex flex-column justify-center">
-    <base-dialog
-      title="Signing you up..."
-      color="primary"
-      loading
-      :active="isLoading"
-    ></base-dialog>
     <h1 class="text-center">SIGNUP</h1>
     <v-form ref="form">
       <div class="inputs">
@@ -67,7 +61,6 @@
 
 <script>
 import ErrorPopup from "@/components/ui/ErrorPopup.vue"
-import BaseDialog from "@/components/ui/BaseDialog.vue"
 import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth"
 import { db, collection, addDoc } from "@/firebase.js"
 
@@ -75,7 +68,6 @@ export default {
   emits: ["change-cmp"],
   components: {
     ErrorPopup,
-    BaseDialog,
   },
   data() {
     return {
@@ -140,66 +132,72 @@ export default {
       }
     },
     animation() {
-      return new Promise((resolve) => {
+      return new Promise(async (resolve) => {
         document.querySelector("h1").classList.toggle("fadeout")
         document.querySelector(".inputs").classList.toggle("fadeout")
         document.querySelector(".signupbutton").classList.toggle("fadeout")
         document.querySelector(".paragraph").classList.toggle("fadeout")
-        setTimeout(() => {
-          document.querySelector(".login").classList.toggle("scale")
-        }, 1500)
-        setTimeout(() => {
-          resolve()
-        }, 3500)
+        await this.timeout(1500)
+        document.querySelector(".login").classList.toggle("scale")
+        await this.timeout(2000)
+        resolve()
       })
     },
-    signup() {
+    timeout(miliseconds) {
+      return new Promise((resolve) => setTimeout(resolve, miliseconds))
+    },
+    async signup() {
       if (!this.validate()) return
       this.isLoading = true
-      setTimeout(() => {
+      this.$store.dispatch("displayLoadingDialog", {
+        active: true,
+        title: "Signing you up...",
+      })
+      try {
         const auth = getAuth()
-        createUserWithEmailAndPassword(auth, this.email, this.password)
-          .then((userCredential) => {
-            const user = userCredential.user
-            console.log("Signup successful! ", user)
-            updateProfile(auth.currentUser, {
-              displayName: this.fullname,
-            })
-              .then(() => {
-                console.log("Signed up with display name: ", auth.currentUser.displayName)
-                this.addUserToCollection(user.uid)
-              })
-              .catch((error) => {
-                console.log("Error on setting user display name! ", error)
-              })
-            this.$store.dispatch("displaySnackbar", {
-              text: "Signup successful!",
-              isActive: true,
-            })
-            this.animation().then(() => {
-              this.$router.replace("/ubooks")
-            })
-            setTimeout(() => {
-              this.$store.dispatch("displaySnackbar", {
-                text: `Logged in as ${user.email}`,
-                isActive: true,
-              })
-            }, 2500)
-          })
-          .catch((error) => {
-            console.log("Signup error! ", error)
-            const errorMessage = error.message
-            this.$store.dispatch("displayBaseDialog", {
-              text: errorMessage,
-              title: "Signup error!",
-              color: "red",
-              loading: false,
-              active: true,
-            })
-          })
-
-        this.isLoading = false
-      }, 1000)
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          this.email,
+          this.password
+        )
+        const user = userCredential.user
+        console.log("Signup successful! ", user)
+        await updateProfile(auth.currentUser, {
+          displayName: this.fullname,
+        })
+        console.log("Signed up with display name: ", auth.currentUser.displayName)
+        this.addUserToCollection(user.uid)
+        await this.animation()
+        this.$router.replace("/ubooks")
+        this.$store.dispatch("displaySnackbar", {
+          text: "Signup successful!",
+          isActive: true,
+        })
+        this.$store.dispatch("displayLoadingDialog", {
+          active: false,
+          title: "",
+        })
+        await this.timeout(2100)
+        this.$store.dispatch("displaySnackbar", {
+          text: `Logged in as ${user.email}`,
+          isActive: true,
+        })
+      } catch (error) {
+        const errorMessage = error.message
+        console.log("Signup error! ", errorMessage)
+        this.$store.dispatch("displayLoadingDialog", {
+          active: false,
+          title: "",
+        })
+        this.$store.dispatch("displayBaseDialog", {
+          text: errorMessage,
+          title: "Signup error!",
+          color: "red",
+          loading: false,
+          active: true,
+        })
+      }
+      this.isLoading = false
     },
   },
 }
