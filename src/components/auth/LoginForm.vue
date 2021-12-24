@@ -62,19 +62,20 @@ export default {
     changeCmp(payload) {
       this.$emit("change-cmp", payload)
     },
+    timeout(miliseconds) {
+      return new Promise((resolve) => setTimeout(resolve, miliseconds))
+    },
     animation() {
-      return new Promise((resolve) => {
+      return new Promise(async (resolve) => {
         document.querySelector("h1").classList.toggle("fadeout")
         document.querySelector(".inputs").classList.toggle("fadeout")
         document.querySelector(".loginbutton").classList.toggle("fadeout")
         document.querySelector(".paragraph").classList.toggle("fadeout")
         document.querySelector(".googlebutton").classList.toggle("fadeout")
-        setTimeout(() => {
-          document.querySelector(".login").classList.toggle("scale")
-        }, 1500)
-        setTimeout(() => {
-          resolve()
-        }, 3500)
+        await this.timeout(1500)
+        document.querySelector(".login").classList.toggle("scale")
+        await this.timeout(2000)
+        resolve()
       })
     },
     async login() {
