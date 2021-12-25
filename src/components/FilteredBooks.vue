@@ -76,6 +76,12 @@ export default {
       this.loading = false
     },
   },
+  mounted() {
+    this.$root.$on("getBooks", () => {
+      this.books = []
+      this.getBooks()
+    })
+  },
   async created() {
     await this.getBooks()
   },

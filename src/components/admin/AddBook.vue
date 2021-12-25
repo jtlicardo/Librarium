@@ -137,6 +137,7 @@ export default {
         ],
         logoUrl: "",
         added_at: Date.now(),
+        reviews: [],
       },
       logo: null,
       rules: {
@@ -210,6 +211,7 @@ export default {
           text: "Book successfully added!",
           isActive: true,
         })
+        this.$root.$emit("getBooks")
       } catch (e) {
         console.log("Error while adding book: ", e)
         this.$store.dispatch("displayBaseDialog", {
