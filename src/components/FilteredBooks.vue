@@ -5,6 +5,8 @@
     :items-per-page="5"
     class="elevation-1"
     no-data-text="No books found"
+    :loading="loading"
+    loading-text="Loading books..."
   >
     <template v-slot:[`item.logo`]="{ item }">
       <v-img :src="item.logoUrl" contain height="100px"></v-img>
@@ -36,6 +38,7 @@ export default {
   data() {
     return {
       books: [],
+      loading: false,
     }
   },
   computed: {
@@ -65,10 +68,12 @@ export default {
   },
   methods: {
     async getBooks() {
+      this.loading = true
       const querySnapshot = await getDocs(collection(db, "books"))
       querySnapshot.forEach((doc) => {
         this.books.push(doc.data())
       })
+      this.loading = false
     },
   },
   async created() {
