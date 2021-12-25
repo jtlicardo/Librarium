@@ -1,6 +1,6 @@
 <template>
   <v-container class="mt-md-10">
-    <v-row>
+    <v-row v-if="selectedBook">
       <v-col cols="12" md="2"></v-col>
       <v-col cols="12" md="8">
         <h1 class="mb-3 text-center">{{ bookTitle }}</h1>
@@ -10,7 +10,7 @@
           All copies for
           <b>{{ bookTitle }}</b>
         </h3>
-        <book-copies class="mt-5 mx-auto" :bookId="id" />
+        <book-copies class="mt-5 mx-auto" :id="id" />
         <div class="d-flex mt-14 pt-10 mb-10 justify-space-between">
           <h3>Reviews by users</h3>
           <h3 v-if="hasReviews">Average rating</h3>
@@ -36,6 +36,7 @@
 import BookCopies from "@/components/book-details/BookCopies.vue"
 import BookReview from "@/components/book-details/BookReview.vue"
 import SubmitReview from "@/components/book-details/SubmitReview.vue"
+import { doc, getDoc, db } from "@/firebase.js"
 
 export default {
   props: ["id"],
@@ -57,7 +58,7 @@ export default {
       return this.selectedBook.author
     },
     bookLogo() {
-      return this.selectedBook.logo
+      return this.selectedBook.logoUrl
     },
     hasReviews() {
       return this.selectedBook.reviews && this.selectedBook.reviews.length > 0
@@ -66,10 +67,20 @@ export default {
       return this.selectedBook.reviews
     },
   },
-  created() {
-    this.selectedBook = this.$store.getters["books/allBooks"].find(
-      (book) => book.id === this.id
-    )
+  methods: {
+    async getBookData() {
+      const docRef = doc(db, "books", this.id)
+      const docSnap = await getDoc(docRef)
+      if (docSnap.exists()) {
+        this.selectedBook = docSnap.data()
+        console.log("Book data: ", this.selectedBook)
+      } else {
+        console.log("No such document!")
+      }
+    },
+  },
+  beforeMount() {
+    this.getBookData()
   },
 }
 </script>

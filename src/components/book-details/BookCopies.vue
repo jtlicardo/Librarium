@@ -4,6 +4,7 @@
     :items="bookCopies"
     hide-default-footer
     class="elevation-1 grey lighten-5"
+    v-if="selectedBook"
   >
     <template v-slot:[`item.status`]="{ item }">
       <book-status :type="item.status" class="mx-auto" />
@@ -18,9 +19,10 @@
 
 <script>
 import BookStatus from "@/components/book-details/BookStatus.vue"
+import { doc, getDoc, db } from "@/firebase.js"
 
 export default {
-  props: ["bookId"],
+  props: ["id"],
   components: {
     BookStatus,
   },
@@ -39,10 +41,19 @@ export default {
       ],
     }
   },
-  created() {
-    this.selectedBook = this.$store.getters["books/allBooks"].find(
-      (book) => book.id === this.bookId
-    )
+  methods: {
+    async getBookData() {
+      const docRef = doc(db, "books", this.id)
+      const docSnap = await getDoc(docRef)
+      if (docSnap.exists()) {
+        this.selectedBook = docSnap.data()
+      } else {
+        console.log("No such document!")
+      }
+    },
+  },
+  beforeMount() {
+    this.getBookData()
   },
   computed: {
     bookCopies() {

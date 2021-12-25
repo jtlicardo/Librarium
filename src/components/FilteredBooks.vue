@@ -7,6 +7,7 @@
     no-data-text="No books found"
     :loading="loading"
     loading-text="Loading books..."
+    @click:row="displayBookDetails"
   >
     <template v-slot:[`item.logo`]="{ item }">
       <v-img :src="item.logoUrl" contain height="100px"></v-img>
@@ -32,7 +33,7 @@
 </template>
 
 <script>
-import { collection, getDocs, db } from "@/firebase.js"
+import { collection, getDocs, db, query, where } from "@/firebase.js"
 
 export default {
   data() {
@@ -54,15 +55,22 @@ export default {
           text: "LOGO",
           sortable: false,
           value: "logo",
+          align: "center",
         },
-        { text: "BOOK TITLE", value: "title", sortable: false },
-        { text: "AUTHOR", value: "author", sortable: false },
-        { text: "GENRE", value: "genres", sortable: false },
-        { text: "# OF PAGES", value: "numOfPages", sortable: false },
-        { text: "# OF COPIES", value: "copies", sortable: false },
+        { text: "BOOK TITLE", value: "title", sortable: false, align: "center" },
+        { text: "AUTHOR", value: "author", sortable: false, align: "center" },
+        { text: "GENRE", value: "genres", sortable: false, align: "center" },
+        { text: "# OF PAGES", value: "numOfPages", sortable: false, align: "center" },
+        { text: "# OF COPIES", value: "copies", sortable: false, align: "center" },
       ]
       if (this.userIsAdmin)
-        headers.push({ text: "DELETE", value: "delete", sortable: false, width: "100px" })
+        headers.push({
+          text: "DELETE",
+          value: "delete",
+          sortable: false,
+          width: "100px",
+          align: "center",
+        })
       return headers
     },
   },
@@ -74,6 +82,17 @@ export default {
         this.books.push(doc.data())
       })
       this.loading = false
+    },
+    async displayBookDetails(data) {
+      let bookId = ""
+      const booksRef = collection(db, "books")
+      const q = query(booksRef, where("title", "==", data.title))
+      const querySnapshot = await getDocs(q)
+      querySnapshot.forEach((doc) => {
+        console.log("Book id: ", doc.id)
+        bookId = doc.id
+      })
+      this.$router.push("/" + bookId)
     },
   },
   mounted() {
@@ -110,5 +129,15 @@ ul li span::after {
   height: 1px;
   border-bottom: 1px solid rgb(0, 0, 0, 0.2);
   content: "";
+}
+
+.v-data-table >>> .v-data-table__wrapper > table > tbody > tr {
+  transition: all 0.3s ease;
+}
+
+.v-data-table >>> .v-data-table__wrapper > table > tbody > tr:hover {
+  color: black;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+  cursor: pointer;
 }
 </style>
