@@ -1,5 +1,5 @@
 <template>
-  <v-card max-width="500px">
+  <v-card max-width="500px" @click="emitBookTitle">
     <div class="d-flex flex-no-wrap justify-space-between mt-3">
       <div>
         <v-card-title
@@ -30,6 +30,11 @@ export default {
       }
     },
   },
+  methods: {
+    emitBookTitle(){
+      this.$emit("book-title", this.title)
+    }
+  }
 }
 </script>
 
