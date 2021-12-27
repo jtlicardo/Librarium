@@ -1,7 +1,6 @@
 <template>
-  <v-form class="form mt-5">
-    <v-text-field label="Title" v-model="title" counter="40"></v-text-field>
-    <p class="d-inline">Rating</p>
+  <v-form class="form mt-5 elevation-1">
+    <p class="text-center mb-2 rating-text">RATING</p>
     <v-rating
       background-color="grey lighten-1"
       color="yellow darken-1"
@@ -11,16 +10,21 @@
       size="36"
       value="5"
       v-model="rating"
-      class="d-inline ml-5"
+      class="text-center mb-5"
     ></v-rating>
+
+    <v-text-field v-model="title" counter maxlength="40" label="Title"></v-text-field>
     <v-textarea
       name="input-7-1"
       label="Comment"
       v-model="comment"
-      counter="300"
+      counter
+      maxlength="300"
       no-resize
     ></v-textarea>
-    <v-btn elevation="2" color="yellow darken-1" class="mt-5 mb-5">Submit</v-btn>
+    <div class="text-center">
+      <v-btn elevation="2" color="yellow darken-1" class="my-5">Submit</v-btn>
+    </div>
   </v-form>
 </template>
 
@@ -39,5 +43,23 @@ export default {
 <style scoped>
 .form {
   max-width: 50%;
+  margin: 0 auto;
+  border-radius: 5px;
+  padding: 20px 30px;
+  background-color: #fafafa;
+}
+
+.theme--light.v-input >>> input {
+  font-weight: 500;
+}
+
+/* .theme--light.v-input >>> label {
+  color: rgba(0, 0, 0, 0.6);
+} */
+
+.rating-text {
+  font-weight: 700;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 0.8rem;
 }
 </style>

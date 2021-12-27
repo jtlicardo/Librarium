@@ -12,10 +12,10 @@
         </h3>
         <book-copies class="mt-5 mx-auto" :id="id" />
         <div class="d-flex mt-14 pt-10 mb-10 justify-space-between">
-          <h3>Reviews by users</h3>
+          <h3 class="mx-auto">Reviews by users</h3>
           <h3 v-if="hasReviews">Average rating</h3>
         </div>
-        <h4 v-if="!hasReviews">No reviews yet :(</h4>
+        <h4 v-if="!hasReviews" class="text-center">No reviews yet :(</h4>
         <book-review
           v-for="review in bookReviews"
           :key="review.id"
@@ -24,7 +24,7 @@
           :comment="review.comment"
           :rating="review.rating"
         />
-        <h3 class="mt-14 pt-10">Submit your own review</h3>
+        <h3 class="mt-14 pt-10 text-center">Submit your own review</h3>
         <submit-review />
       </v-col>
       <v-col cols="12" md="2"></v-col>
