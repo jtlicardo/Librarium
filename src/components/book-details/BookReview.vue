@@ -1,5 +1,5 @@
 <template>
-  <v-card elevation="2" max-width="45%" class="mx-2 my-2">
+  <v-card elevation="2" width="45%" class="mx-2 my-2">
     <v-card-title>{{ title }}</v-card-title>
     <v-card-subtitle class="d-flex align-center">
       <b class="mr-1">{{ name }}</b>
@@ -22,22 +22,7 @@
 
 <script>
 export default {
-  props: ["title", "userId", "comment", "rating"],
-  data() {
-    return {
-      selectedUser: null,
-    }
-  },
-  computed: {
-    name() {
-      return this.selectedUser.fullname
-    },
-  },
-  created() {
-    this.selectedUser = this.$store.getters["users/allUsers"].find(
-      (user) => user.id === this.userId
-    )
-  },
+  props: ["title", "name", "comment", "rating"],
 }
 </script>
 

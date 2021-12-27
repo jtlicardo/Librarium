@@ -11,16 +11,28 @@
           <b>{{ bookTitle }}</b>
         </h3>
         <book-copies class="mt-5 mx-auto" :id="id" />
-        <div class="d-flex mt-14 pt-10 mb-10 justify-space-between">
-          <h3 class="mx-auto">Reviews by users</h3>
-          <h3 v-if="hasReviews">Average rating</h3>
+        <div class="mt-14 pt-10 mb-15">
+          <h3 class="text-center">Reviews by users</h3>
+          <div class="d-flex justify-center mt-10" v-if="hasReviews">
+            <h3 class="align-self-center">Average rating</h3>
+            <v-progress-circular
+              class="ml-5"
+              size="60"
+              color="yellow darken-2"
+              width="6"
+              rotate="-90"
+              :value="avgRatingValue"
+            >
+              {{ avgRating }}
+            </v-progress-circular>
+          </div>
         </div>
         <h4 v-if="!hasReviews" class="text-center">No reviews yet :(</h4>
         <book-review
           v-for="review in bookReviews"
-          :key="review.id"
+          :key="review.userId"
           :title="review.title"
-          :userId="review.userId"
+          :name="review.displayName"
           :comment="review.comment"
           :rating="review.rating"
         />
@@ -66,6 +78,18 @@ export default {
     bookReviews() {
       return this.selectedBook.reviews
     },
+    avgRating() {
+      const reviews = this.selectedBook.reviews
+      const numOfReviews = this.selectedBook.reviews.length
+      let ratingSum = 0
+      for (let review of reviews) {
+        ratingSum += review.rating
+      }
+      return (ratingSum / numOfReviews).toFixed(1)
+    },
+    avgRatingValue() {
+      return (this.avgRating / 5) * 100
+    },
   },
   methods: {
     async getBookData() {
@@ -89,5 +113,10 @@ export default {
 h2,
 h3 {
   font-weight: 400;
+}
+
+.v-progress-circular >>> .v-progress-circular__info {
+  color: black;
+  font-weight: 700;
 }
 </style>
