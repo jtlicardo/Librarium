@@ -1,5 +1,11 @@
 <template>
-  <v-card max-width="500px" @click="emitBookTitle">
+  <v-card
+    max-width="500px"
+    @click="
+      emitBookTitle()
+      toggleBackButton()
+    "
+  >
     <div class="d-flex flex-no-wrap justify-space-between mt-3">
       <div>
         <v-card-title
@@ -31,10 +37,14 @@ export default {
     },
   },
   methods: {
-    emitBookTitle(){
+    emitBookTitle() {
       this.$emit("book-title", this.title)
-    }
-  }
+    },
+    toggleBackButton() {
+      this.$store.dispatch("showBackButton")
+      this.$store.dispatch("showBackButtonActive")
+    },
+  },
 }
 </script>
 
