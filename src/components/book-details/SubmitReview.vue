@@ -13,13 +13,13 @@
       class="text-center mb-5"
     ></v-rating>
 
-    <v-text-field v-model="title" counter maxlength="40" label="Title"></v-text-field>
+    <v-text-field v-model="title" counter maxlength="30" label="Title"></v-text-field>
     <v-textarea
       name="input-7-1"
       label="Comment"
       v-model="comment"
       counter
-      maxlength="300"
+      maxlength="250"
       no-resize
     ></v-textarea>
     <div class="text-center">

@@ -1,5 +1,5 @@
 <template>
-  <v-card elevation="2" width="45%" class="mx-2 my-2">
+  <v-card elevation="2" height="220px" width="100%" class="mx-2 my-2">
     <v-card-title>{{ title }}</v-card-title>
     <v-card-subtitle class="d-flex align-center">
       <b class="mr-1">{{ name }}</b>
@@ -32,5 +32,11 @@ export default {
 }
 .v-rating--dense >>> .v-icon {
   padding: 0;
+}
+
+.v-card >>> .v-card__text {
+  
+  height: 120px;
+  overflow: hidden;
 }
 </style>

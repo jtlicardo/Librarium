@@ -10,37 +10,54 @@
           All copies for
           <b>{{ bookTitle }}</b>
         </h3>
-        <book-copies class="mt-5 mx-auto" :id="id" />
-        <div class="mt-14 pt-10 mb-15">
-          <h3 class="text-center">Reviews by users</h3>
-          <div class="d-flex justify-center mt-10" v-if="hasReviews">
-            <h3 class="align-self-center">Average rating</h3>
-            <v-progress-circular
-              class="ml-5"
-              size="60"
-              color="yellow darken-2"
-              width="6"
-              rotate="-90"
-              :value="avgRatingValue"
-            >
-              {{ avgRating }}
-            </v-progress-circular>
-          </div>
-        </div>
-        <h4 v-if="!hasReviews" class="text-center">No reviews yet :(</h4>
+      </v-col>
+      <v-col cols="12" md="2"></v-col>
+    </v-row>
+    <book-copies class="mt-5 mx-auto" :id="id" />
+    <div class="mt-14 pt-10 mb-15">
+      <h3 class="text-center">Reviews by users</h3>
+      <div class="d-flex justify-center mt-10" v-if="hasReviews">
+        <h3 class="align-self-center">Average rating</h3>
+        <v-progress-circular
+          class="ml-5"
+          size="60"
+          color="yellow darken-2"
+          width="6"
+          rotate="-90"
+          :value="avgRatingValue"
+        >
+          {{ avgRating }}
+        </v-progress-circular>
+      </div>
+    </div>
+    <h4 v-if="!hasReviews" class="text-center">No reviews yet :(</h4>
+    <v-row>
+      <v-col cols="12" lg="1"></v-col>
+      <v-col cols="12" lg="5">
         <book-review
-          v-for="review in bookReviews"
+          v-for="review in bookReviewsFirstHalf"
           :key="review.userId"
           :title="review.title"
           :name="review.displayName"
           :comment="review.comment"
           :rating="review.rating"
         />
-        <h3 class="mt-14 pt-10 text-center">Submit your own review</h3>
-        <submit-review :id="id" />
       </v-col>
-      <v-col cols="12" md="2"></v-col>
+      <v-col cols="12" lg="5">
+        <book-review
+          v-for="review in bookReviewsSecondHalf"
+          :key="review.userId"
+          :title="review.title"
+          :name="review.displayName"
+          :comment="review.comment"
+          :rating="review.rating"
+        />
+      </v-col>
+      <v-col cols="12" lg="1"></v-col>
     </v-row>
+
+    <h3 class="mt-14 pt-10 text-center">Submit your own review</h3>
+    <submit-review :id="id" />
   </v-container>
 </template>
 
@@ -75,8 +92,18 @@ export default {
     hasReviews() {
       return this.selectedBook.reviews && this.selectedBook.reviews.length > 0
     },
-    bookReviews() {
-      return this.selectedBook.reviews
+    bookReviewsFirstHalf() {
+      const reviews = this.selectedBook.reviews
+      const half = Math.ceil(reviews.length / 2)
+      return reviews.slice(0, half)
+    },
+    bookReviewsSecondHalf() {
+      const reviews = this.selectedBook.reviews
+      const half = Math.ceil(reviews.length / 2)
+      if (reviews.length === 1) return []
+      else if (reviews.length % 2 === 0) {
+        return reviews.slice(-half)
+      } else return reviews.slice(-half + 1)
     },
     avgRating() {
       const reviews = this.selectedBook.reviews
