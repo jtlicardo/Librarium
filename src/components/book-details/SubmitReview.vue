@@ -42,7 +42,7 @@ export default {
 
 <style scoped>
 .form {
-  max-width: 50%;
+  max-width: 600px;
   margin: 0 auto;
   border-radius: 5px;
   padding: 20px 30px;
@@ -52,10 +52,6 @@ export default {
 .theme--light.v-input >>> input {
   font-weight: 500;
 }
-
-/* .theme--light.v-input >>> label {
-  color: rgba(0, 0, 0, 0.6);
-} */
 
 .rating-text {
   font-weight: 700;
