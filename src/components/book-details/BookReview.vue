@@ -1,6 +1,10 @@
 <template>
   <v-card elevation="2" height="220px" width="100%" class="mx-2 my-2">
-    <v-card-title>{{ title }}</v-card-title>
+    <v-card-title>
+      {{ title }}
+      <v-spacer></v-spacer>
+      <v-icon color="red" v-if="userIsAdmin">mdi-trash-can-outline</v-icon>
+    </v-card-title>
     <v-card-subtitle class="d-flex align-center">
       <b class="mr-1">{{ name }}</b>
       rated it
@@ -23,6 +27,14 @@
 <script>
 export default {
   props: ["title", "name", "comment", "rating"],
+  computed: {
+    userIsAdmin() {
+      const userIsAdmin = localStorage.getItem("userIsAdmin")
+      const isAdmin = userIsAdmin === "true"
+      if (isAdmin) return true
+      else return false
+    },
+  },
 }
 </script>
 
@@ -35,8 +47,11 @@ export default {
 }
 
 .v-card >>> .v-card__text {
-  
   height: 120px;
   overflow: hidden;
+}
+
+.trash-icon {
+  margin-left: 500px;
 }
 </style>

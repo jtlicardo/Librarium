@@ -9,7 +9,7 @@
     <template v-slot:[`item.status`]="{ item }">
       <book-status :type="item.status" class="mx-auto" />
     </template>
-    <template v-slot:[`item.reserve`]="{ item }">
+    <template v-slot:[`item.reserve`]="{ item }" v-if="!userIsAdmin">
       <v-btn color="yellow darken-1" elevation="1" v-if="item.status === 'Available'">
         RESERVE
       </v-btn>
@@ -58,6 +58,12 @@ export default {
   computed: {
     bookCopies() {
       return this.selectedBook.copies
+    },
+    userIsAdmin() {
+      const userIsAdmin = localStorage.getItem("userIsAdmin")
+      const isAdmin = userIsAdmin === "true"
+      if (isAdmin) return true
+      else return false
     },
   },
 }

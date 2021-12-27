@@ -13,7 +13,10 @@
       </v-col>
       <v-col cols="12" md="2"></v-col>
     </v-row>
-    <book-copies class="mt-5 mx-auto" :id="id" />
+    <book-copies class="mx-auto mt-5" :id="id" />
+    <v-row class="mt-5" v-if="userIsAdmin">
+      <v-btn class="mx-auto" color="yellow darken-1">Add copy</v-btn>
+    </v-row>
     <div class="mt-14 pt-10 mb-15">
       <h3 class="text-center">Reviews by users</h3>
       <div class="d-flex justify-center mt-10" v-if="hasReviews">
@@ -30,7 +33,7 @@
         </v-progress-circular>
       </div>
     </div>
-    <h4 v-if="!hasReviews" class="text-center">No reviews yet :(</h4>
+    <h4 v-if="!hasReviews" class="text-center mb-10">No reviews yet :(</h4>
     <v-row>
       <v-col cols="12" lg="1"></v-col>
       <v-col cols="12" lg="5">
@@ -55,9 +58,10 @@
       </v-col>
       <v-col cols="12" lg="1"></v-col>
     </v-row>
-
-    <h3 class="mt-14 pt-10 text-center">Submit your own review</h3>
-    <submit-review :id="id" />
+    <div v-if="!userIsAdmin">
+      <h3 class="mt-14 pt-10 text-center">Submit your own review</h3>
+      <submit-review :id="id" />
+    </div>
   </v-container>
 </template>
 
@@ -80,6 +84,12 @@ export default {
     }
   },
   computed: {
+    userIsAdmin() {
+      const userIsAdmin = localStorage.getItem("userIsAdmin")
+      const isAdmin = userIsAdmin === "true"
+      if (isAdmin) return true
+      else return false
+    },
     bookTitle() {
       return this.selectedBook.title
     },
