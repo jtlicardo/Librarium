@@ -25,7 +25,7 @@
           :rating="review.rating"
         />
         <h3 class="mt-14 pt-10 text-center">Submit your own review</h3>
-        <submit-review />
+        <submit-review :id="id" />
       </v-col>
       <v-col cols="12" md="2"></v-col>
     </v-row>

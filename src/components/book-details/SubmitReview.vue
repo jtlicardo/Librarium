@@ -23,19 +23,40 @@
       no-resize
     ></v-textarea>
     <div class="text-center">
-      <v-btn elevation="2" color="yellow darken-1" class="my-5">Submit</v-btn>
+      <v-btn elevation="2" color="yellow darken-1" class="my-5" @click="submitReview">
+        Submit
+      </v-btn>
     </div>
   </v-form>
 </template>
 
 <script>
+import { db, doc, updateDoc, arrayUnion } from "@/firebase.js"
+
 export default {
+  props: ["id"],
   data() {
     return {
       title: "",
       rating: null,
       comment: "",
     }
+  },
+  methods: {
+    async submitReview() {
+      const userId = localStorage.getItem("userId")
+      const displayName = localStorage.getItem("userFullname")
+      const booksRef = doc(db, "books", this.id)
+      await updateDoc(booksRef, {
+        reviews: arrayUnion({
+          userId: userId,
+          displayName: displayName,
+          title: this.title,
+          comment: this.comment,
+          rating: this.rating,
+        }),
+      })
+    },
   },
 }
 </script>

@@ -21,6 +21,7 @@ import {
   where,
   updateDoc,
   doc,
+  arrayUnion
 } from "firebase/firestore"
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage"
 
@@ -61,4 +62,5 @@ export {
   getDownloadURL,
   updateDoc,
   doc,
+  arrayUnion
 }
