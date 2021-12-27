@@ -29,7 +29,6 @@
     </div>
   </v-form>
 </template>
-
 <script>
 import { db, doc, updateDoc, arrayUnion } from "@/firebase.js"
 
@@ -43,19 +42,59 @@ export default {
     }
   },
   methods: {
+    validate() {
+      if (this.rating === null) {
+        this.$store.dispatch("displayErrorPopup", {
+          isActive: true,
+          text: "Please enter a rating!",
+        })
+        return false
+      } else if (this.title === "") {
+        this.$store.dispatch("displayErrorPopup", {
+          isActive: true,
+          text: "Please enter a title!",
+        })
+        return false
+      } else if (this.comment === "") {
+        this.$store.dispatch("displayErrorPopup", {
+          isActive: true,
+          text: "Please enter a comment!",
+        })
+        return false
+      } else return true
+    },
     async submitReview() {
+      if (!this.validate()) return
       const userId = localStorage.getItem("userId")
       const displayName = localStorage.getItem("userFullname")
       const booksRef = doc(db, "books", this.id)
-      await updateDoc(booksRef, {
-        reviews: arrayUnion({
-          userId: userId,
-          displayName: displayName,
-          title: this.title,
-          comment: this.comment,
-          rating: this.rating,
-        }),
-      })
+      try {
+        await updateDoc(booksRef, {
+          reviews: arrayUnion({
+            userId: userId,
+            displayName: displayName,
+            title: this.title,
+            comment: this.comment,
+            rating: this.rating,
+          }),
+        })
+        this.$store.dispatch("displaySnackbar", {
+          text: "Review successfully added!",
+          isActive: true,
+        })
+      } catch (e) {
+        console.log(e)
+        this.$store.dispatch("displayBaseDialog", {
+          text: e.toString(),
+          title: "Error! Please try again later.",
+          color: "red",
+          loading: false,
+          active: true,
+        })
+      }
+      this.title = ""
+      this.rating = null
+      this.comment = ""
     },
   },
 }
