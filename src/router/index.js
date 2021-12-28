@@ -11,6 +11,7 @@ import AdminLoans from "@/views/admin/AdminLoans.vue"
 import AdminReservations from "@/views/admin/AdminReservations.vue"
 import AdminRequests from "@/views/admin/AdminRequests.vue"
 import AdminUsers from "@/views/admin/AdminUsers.vue"
+import AccountInfo from "@/views/AccountInfo.vue"
 
 Vue.use(VueRouter)
 
@@ -126,6 +127,16 @@ const routes = [
     meta: {
       needsAuth: true,
       title: "Book Details",
+    },
+  },
+  {
+    name: "Account Info",
+    path: "/account/:id",
+    component: AccountInfo,
+    props: true,
+    meta: {
+      needsAuth: true,
+      title: "Account Info",
     },
   },
 ]

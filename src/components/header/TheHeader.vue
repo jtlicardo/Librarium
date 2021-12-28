@@ -23,7 +23,7 @@
         </v-icon>
       </template>
       <v-list>
-        <v-list-item link>
+        <v-list-item @click="accountInfo" link>
           <v-list-item-title class="text-center py-2">Account info</v-list-item-title>
         </v-list-item>
         <v-list-item @click="logout" link>
@@ -110,6 +110,12 @@ export default {
         active: false,
         title: "",
       })
+    },
+    accountInfo() {
+      const userId = localStorage.getItem("userId")
+      this.$router.push({ name: "Account Info", params: { id: userId } })
+      this.$store.dispatch("showBackButton")
+      this.$store.dispatch("showBackButtonActive")
     },
   },
   mounted() {

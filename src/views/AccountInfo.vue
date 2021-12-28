@@ -1,0 +1,46 @@
+<template>
+  <div class="text-center mt-14">
+    <h1 class="mb-10">Account info</h1>
+    <h2 class="mb-5">Full name: {{ displayName }}</h2>
+    <h2 class="mb-5">Email: {{ email }}</h2>
+    <h2>Status: {{ userStatus }}</h2>
+    <v-btn class="mt-14" color="red white--text">Delete account</v-btn>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      email: "",
+      displayName: "",
+      isAdmin: null,
+    }
+  },
+  methods: {
+    getUserInfo() {
+      const email = localStorage.getItem("userEmail")
+      const displayName = localStorage.getItem("userFullname")
+      const isAdmin = localStorage.getItem("userIsAdmin")
+      this.email = email
+      this.displayName = displayName
+      this.isAdmin = isAdmin
+    },
+  },
+  computed: {
+    userStatus() {
+      if (this.isAdmin === true) return "admin"
+      else return "user"
+    },
+  },
+  created() {
+    this.getUserInfo()
+  },
+}
+</script>
+
+<style scoped>
+h2 {
+  font-weight: 400;
+}
+</style>
