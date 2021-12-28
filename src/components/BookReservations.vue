@@ -7,13 +7,14 @@
   >
     <template v-slot:[`item.cancel`]>
       <v-btn class="mx-2" color="red darken-1" fab x-small elevation="1">
-        <v-icon color="white" @click="openDialog">mdi-trash-can-outline</v-icon>
+        <v-icon color="white">mdi-trash-can-outline</v-icon>
       </v-btn>
     </template>
   </v-data-table>
 </template>
 
 <script>
+import { db, collection, query, where, getDocs } from "@/firebase.js"
 export default {
   data() {
     return {
@@ -21,7 +22,7 @@ export default {
         {
           text: "BOOK TITLE",
           sortable: false,
-          value: "bookTitle",
+          value: "title",
         },
         { text: "AUTHOR", value: "author", sortable: false },
         { text: "INVENTORY NUMBER", value: "inventoryNumber", sortable: false },
@@ -29,26 +30,39 @@ export default {
         { text: "END DATE", value: "endDate", sortable: false },
         { text: "CANCEL", value: "cancel", sortable: false },
       ],
-      reservations: [
-        {
-          bookTitle: "Crime and Punishment",
-          author: "Fyodor Dostoevsky",
-          inventoryNumber: "26008",
-          startDate: "16.11.2021.",
-          endDate: "19.11.2021.",
-        },
-        {
-          bookTitle: "Sapiens - A Brief History of Humankind",
-          author: "Yuval Noah Harari",
-          inventoryNumber: "57961",
-          startDate: "15.11.2021.",
-          endDate: "18.11.2021.",
-        },
-      ],
+      reservations: [],
     }
   },
   methods: {
-    openDialog() {},
+    milisecondsToDate(miliseconds) {
+      let date = new Date(miliseconds)
+      const day = date.getDate()
+      const month = date.getMonth() + 1
+      const year = date.getFullYear()
+      const result = day + "." + month + "." + year + "."
+      return result
+    },
+    async getUserReservations() {
+      const userId = localStorage.getItem("userId")
+      const reservationsRef = collection(db, "reservations")
+      const q = query(reservationsRef, where("userId", "==", userId))
+      const querySnapshot = await getDocs(q)
+      querySnapshot.forEach((doc) => {
+        const startDate = this.milisecondsToDate(doc.data().start_time)
+        const endDate = this.milisecondsToDate(doc.data().end_time)
+        console.log(startDate)
+        this.reservations.push({
+          title: doc.data().title,
+          author: doc.data().author,
+          inventoryNumber: doc.data().copyInvNumber,
+          startDate,
+          endDate,
+        })
+      })
+    },
+  },
+  created() {
+    this.getUserReservations()
   },
 }
 </script>

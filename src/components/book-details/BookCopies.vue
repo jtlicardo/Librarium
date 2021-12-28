@@ -44,7 +44,7 @@ import {
 } from "@/firebase.js"
 
 export default {
-  props: ["id"],
+  props: ["id", "title", "author"],
   emits: ["copy-deleted", "copy-reserved"],
   components: {
     BookStatus,
@@ -108,12 +108,16 @@ export default {
     async reserveCopy(item) {
       const userId = localStorage.getItem("userId")
       const bookId = this.id
+      const title = this.title
+      const author = this.author
       const copyInvNumber = item.inventoryNumber
       const start_time = Date.now()
       const end_time = Date.now() + 604800000
       try {
         const docRef = await addDoc(collection(db, "reservations"), {
           userId,
+          title,
+          author,
           bookId,
           copyInvNumber,
           start_time,

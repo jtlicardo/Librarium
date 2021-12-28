@@ -19,6 +19,8 @@
         <book-copies
           class="mx-auto mt-5"
           :id="id"
+          :title="bookTitle"
+          :author="bookAuthor"
           @copy-deleted="getBookData"
           @copy-reserved="getBookData"
         />
