@@ -14,8 +14,8 @@
         RESERVE
       </v-btn>
     </template>
-    <template v-slot:[`item.delete`] v-if="userIsAdmin">
-      <v-btn color="red white--text" elevation="1">
+    <template v-slot:[`item.delete`]="{ item }" v-if="userIsAdmin">
+      <v-btn color="red white--text" elevation="1" @click="deleteCopy(item)">
         DELETE
       </v-btn>
     </template>
@@ -24,10 +24,11 @@
 
 <script>
 import BookStatus from "@/components/book-details/BookStatus.vue"
-import { doc, getDoc, db } from "@/firebase.js"
+import { doc, getDoc, db, updateDoc, arrayRemove } from "@/firebase.js"
 
 export default {
   props: ["id"],
+  emits: ["copy-deleted"],
   components: {
     BookStatus,
   },
@@ -55,6 +56,36 @@ export default {
         this.selectedBook = docSnap.data()
       } else {
         console.log("No such document!")
+      }
+    },
+    async deleteCopy(item) {
+      const inventoryNumber = item.inventoryNumber
+      const status = item.status
+      try {
+        const booksRef = doc(db, "books", this.id)
+        await updateDoc(booksRef, {
+          copiesInvNums: arrayRemove(inventoryNumber),
+        })
+        await updateDoc(booksRef, {
+          copies: arrayRemove({
+            inventoryNumber: inventoryNumber,
+            status: status,
+          }),
+        })
+        this.$store.dispatch("displaySnackbar", {
+          text: "Copy successfully deleted!",
+          isActive: true,
+        })
+        this.$emit("copy-deleted")
+      } catch (e) {
+        console.log(e)
+        this.$store.dispatch("displayBaseDialog", {
+          text: e.toString(),
+          title: "Error! Please try again later.",
+          color: "red",
+          loading: false,
+          active: true,
+        })
       }
     },
   },
