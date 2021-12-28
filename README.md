@@ -19,7 +19,7 @@ Web aplikacija namijenjena lakšem upravljanju knjižnicom, kao i lakšem koriš
 * pregled svih knjiga, filtriranje
 * slanje zahtjeva za uvrštavanjem određene knjige u fond knjižnice
 * rezerviranje kopije knjige
-* pregled vlastitih posudbi
+* pregled vlastitih posudbi i rezervacija
 * mogućnost slanja zahtjeva za produženjem roka posudbe
 * mogućnost ostavljanja recenzije u obliku komentara i ocjene
 
