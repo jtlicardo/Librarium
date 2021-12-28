@@ -18,8 +18,16 @@
         </v-row>
         <book-copies class="mx-auto mt-5" :id="id" />
         <v-row class="mt-5" v-if="userIsAdmin">
-          <v-btn class="mx-auto" color="yellow darken-1">Add copy</v-btn>
+          <v-btn class="mx-auto" color="yellow darken-1" @click="openDialog">
+            Add copy
+          </v-btn>
         </v-row>
+        <add-copy
+          :active="addCopyDialogActive"
+          :title="bookTitle"
+          :author="bookAuthor"
+          @close-dialog="closeDialog"
+        ></add-copy>
         <div class="mt-14 pt-10 mb-15">
           <h3 class="text-center">Reviews by users</h3>
           <div class="d-flex justify-center mt-10" v-if="hasReviews">
@@ -79,6 +87,7 @@ import BookCopies from "@/components/book-details/BookCopies.vue"
 import BookReview from "@/components/book-details/BookReview.vue"
 import SubmitReview from "@/components/book-details/SubmitReview.vue"
 import BookDetailsLoading from "@/components/book-details/BookDetailsLoading.vue"
+import AddCopy from "@/components/book-details/AddCopy.vue"
 import { doc, getDoc, db } from "@/firebase.js"
 
 export default {
@@ -88,12 +97,14 @@ export default {
     BookReview,
     SubmitReview,
     BookDetailsLoading,
+    AddCopy,
   },
   data() {
     return {
       selectedBook: null,
       loading: true,
       reviewExists: false,
+      addCopyDialogActive: false,
     }
   },
   computed: {
@@ -177,6 +188,12 @@ export default {
           if (reviewer === userId) this.reviewExists = true
         }
       }
+    },
+    openDialog() {
+      this.addCopyDialogActive = true
+    },
+    closeDialog() {
+      this.addCopyDialogActive = false
     },
   },
   async created() {

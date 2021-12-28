@@ -38,7 +38,7 @@ export default {
   },
   computed: {
     userStatus() {
-      if (this.isAdmin === true) return "admin"
+      if (this.isAdmin === "true") return "admin"
       else return "user"
     },
   },
