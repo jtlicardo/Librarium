@@ -1,35 +1,47 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="books"
-    :items-per-page="5"
-    class="elevation-1"
-    no-data-text="No books found"
-    :loading="loading"
-    loading-text="Loading books..."
-    @click:row="displayBookDetails"
-  >
-    <template v-slot:[`item.logo`]="{ item }">
-      <v-img :src="item.logoUrl" contain height="100px"></v-img>
-    </template>
-    <template v-slot:[`item.genres`]="{ item }">
-      <ul>
-        <li v-for="genre in item.genres" :key="genre">
-          <span>{{ genre }}</span>
-        </li>
-      </ul>
-    </template>
-    <template v-slot:[`item.copies`]="{ item }">
-      <p>
-        {{ item.copies.length }}
-      </p>
-    </template>
-    <template v-slot:[`item.delete`] v-if="userIsAdmin">
-      <v-btn color="red darken-1" fab small elevation="1">
-        <v-icon color="white">mdi-trash-can-outline</v-icon>
-      </v-btn>
-    </template>
-  </v-data-table>
+  <v-card>
+    <v-card-title>
+      <v-text-field
+        v-model="search"
+        append-icon="mdi-magnify"
+        label="Filter"
+        single-line
+        hide-details
+      ></v-text-field>
+    </v-card-title>
+    <v-data-table
+      :headers="headers"
+      :items="books"
+      :items-per-page="5"
+      class="elevation-1"
+      no-data-text="No books found"
+      :loading="loading"
+      loading-text="Loading books..."
+      @click:row="displayBookDetails"
+      :search="search"
+    >
+      <template v-slot:[`item.logo`]="{ item }">
+        <v-img :src="item.logoUrl" contain height="100px"></v-img>
+      </template>
+      <template v-slot:[`item.genres`]="{ item }">
+        <ul>
+          <li v-for="genre in item.genres" :key="genre">
+            <span>{{ genre }}</span>
+          </li>
+        </ul>
+      </template>
+      <template v-slot:[`item.copies`]="{ item }">
+        <p>
+          {{ item.copies.length }}
+        </p>
+      </template>
+      <template v-slot:[`item.delete`] v-if="userIsAdmin">
+        <v-btn color="red darken-1" fab small elevation="1">
+          <v-icon color="white">mdi-trash-can-outline</v-icon>
+        </v-btn>
+      </template>
+    </v-data-table>
+  </v-card>
 </template>
 
 <script>
@@ -40,6 +52,7 @@ export default {
     return {
       books: [],
       loading: false,
+      search: "",
     }
   },
   computed: {
