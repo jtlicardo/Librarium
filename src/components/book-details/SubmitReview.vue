@@ -23,29 +23,14 @@
       no-resize
     ></v-textarea>
     <div class="text-center">
-      <v-btn
-        elevation="2"
-        color="yellow darken-1"
-        class="my-5"
-        @click="checkIfReviewExists"
-      >
+      <v-btn elevation="2" color="yellow darken-1" class="my-5" @click="submitReview">
         Submit
       </v-btn>
     </div>
   </v-form>
 </template>
 <script>
-import {
-  db,
-  doc,
-  updateDoc,
-  arrayUnion,
-  collection,
-  query,
-  where,
-  getDocs,
-  getDoc,
-} from "@/firebase.js"
+import { db, doc, updateDoc, arrayUnion } from "@/firebase.js"
 
 export default {
   props: ["id"],

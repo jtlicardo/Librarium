@@ -9,7 +9,7 @@
     <v-card-title>
       {{ title }}
       <v-spacer></v-spacer>
-      <v-icon color="red" v-if="userIsAdmin" @click="deleteReview">
+      <v-icon color="red" v-if="userIsAdmin || userIsReviewer" @click="deleteReview">
         mdi-trash-can-outline
       </v-icon>
     </v-card-title>
@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { doc, getDoc, db, updateDoc, arrayRemove } from "@/firebase.js"
+import { doc, db, updateDoc, arrayRemove } from "@/firebase.js"
 export default {
   props: ["userId", "title", "name", "comment", "rating"],
   emits: ["deleted"],
@@ -42,6 +42,11 @@ export default {
       const userIsAdmin = localStorage.getItem("userIsAdmin")
       const isAdmin = userIsAdmin === "true"
       if (isAdmin) return true
+      else return false
+    },
+    userIsReviewer() {
+      const userId = localStorage.getItem("userId")
+      if (userId === this.userId) return true
       else return false
     },
     mobile() {
@@ -57,6 +62,7 @@ export default {
   methods: {
     async deleteReview() {
       const bookId = this.$router.currentRoute.params.id
+      const userId = localStorage.getItem("userId")
       const docRef = doc(db, "books", bookId)
       await updateDoc(docRef, {
         reviews: arrayRemove({
@@ -66,6 +72,9 @@ export default {
           comment: this.comment,
           rating: this.rating,
         }),
+      })
+      await updateDoc(docRef, {
+        reviewsUserIds: arrayRemove(userId),
       })
       this.$store.dispatch("displaySnackbar", {
         text: "Review deleted!",
