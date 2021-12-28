@@ -16,8 +16,8 @@
 </template>
 
 <script>
-import BookLoansMobile from "@/components/BookLoansMobile.vue"
-import BookLoans from "@/components/BookLoans.vue"
+import BookLoansMobile from "@/components/user/BookLoansMobile.vue"
+import BookLoans from "@/components/user/BookLoans.vue"
 
 export default {
   components: {

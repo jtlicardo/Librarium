@@ -13,8 +13,8 @@
 </template>
 
 <script>
-import BookReservationsMobile from "@/components/BookReservationsMobile.vue"
-import BookReservations from "@/components/BookReservations.vue"
+import BookReservationsMobile from "@/components/user/BookReservationsMobile.vue"
+import BookReservations from "@/components/user/BookReservations.vue"
 
 export default {
   components: {
