@@ -1,9 +1,17 @@
 <template>
-  <v-card elevation="2" height="220px" width="100%" class="mx-2 my-2">
+  <v-card
+    elevation="2"
+    height="220px"
+    width="100%"
+    class="my-2"
+    :class="{ 'mx-2': !mobile }"
+  >
     <v-card-title>
       {{ title }}
       <v-spacer></v-spacer>
-      <v-icon color="red" v-if="userIsAdmin">mdi-trash-can-outline</v-icon>
+      <v-icon color="red" v-if="userIsAdmin" @click="deleteReview">
+        mdi-trash-can-outline
+      </v-icon>
     </v-card-title>
     <v-card-subtitle class="d-flex align-center">
       <b class="mr-1">{{ name }}</b>
@@ -25,14 +33,45 @@
 </template>
 
 <script>
+import { doc, getDoc, db, updateDoc, arrayRemove } from "@/firebase.js"
 export default {
-  props: ["title", "name", "comment", "rating"],
+  props: ["userId", "title", "name", "comment", "rating"],
+  emits: ["deleted"],
   computed: {
     userIsAdmin() {
       const userIsAdmin = localStorage.getItem("userIsAdmin")
       const isAdmin = userIsAdmin === "true"
       if (isAdmin) return true
       else return false
+    },
+    mobile() {
+      switch (this.$vuetify.breakpoint.name) {
+        case "xs":
+        case "sm":
+          return true
+        default:
+          return false
+      }
+    },
+  },
+  methods: {
+    async deleteReview() {
+      const bookId = this.$router.currentRoute.params.id
+      const docRef = doc(db, "books", bookId)
+      await updateDoc(docRef, {
+        reviews: arrayRemove({
+          userId: this.userId,
+          displayName: this.name,
+          title: this.title,
+          comment: this.comment,
+          rating: this.rating,
+        }),
+      })
+      this.$store.dispatch("displaySnackbar", {
+        text: "Review deleted!",
+        isActive: true,
+      })
+      this.$emit("deleted")
     },
   },
 }
@@ -48,10 +87,11 @@ export default {
 
 .v-card >>> .v-card__text {
   height: 120px;
-  overflow: hidden;
 }
 
-.trash-icon {
-  margin-left: 500px;
+@media only screen and (max-width: 600px) {
+  .v-card >>> .v-card__text {
+    height: 160px;
+  }
 }
 </style>
