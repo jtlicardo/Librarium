@@ -137,6 +137,7 @@ export default {
         ],
         logoUrl: "",
         added_at: Date.now(),
+        reviewsUserIds: [],
         reviews: [],
       },
       logo: null,

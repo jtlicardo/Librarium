@@ -65,7 +65,7 @@
           </v-col>
           <v-col cols="12" lg="1"></v-col>
         </v-row>
-        <div v-if="!userIsAdmin">
+        <div v-if="!userIsAdmin && !reviewExists">
           <h3 class="mt-14 pt-10 text-center">Submit your own review</h3>
           <submit-review :id="id" />
         </div>
@@ -93,6 +93,7 @@ export default {
     return {
       selectedBook: null,
       loading: true,
+      reviewExists: false,
     }
   },
   computed: {
@@ -165,9 +166,22 @@ export default {
       await this.timeout(1000)
       this.loading = false
     },
+    async checkIfReviewExists() {
+      const booksRef = doc(db, "books", this.id)
+      const userId = localStorage.getItem("userId")
+      const docSnap = await getDoc(booksRef)
+      if (docSnap.exists()) {
+        console.log("Reviewers for this book:", docSnap.data().reviewsUserIds)
+        const reviewers = docSnap.data().reviewsUserIds
+        for (let reviewer of reviewers) {
+          if (reviewer === userId) this.reviewExists = true
+        }
+      }
+    },
   },
   async created() {
     await this.getBookData()
+    await this.checkIfReviewExists()
   },
 }
 </script>
