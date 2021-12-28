@@ -24,9 +24,11 @@
         </v-row>
         <add-copy
           :active="addCopyDialogActive"
+          :bookId="id"
           :title="bookTitle"
           :author="bookAuthor"
           @close-dialog="closeDialog"
+          @copy-added="getBookData"
         ></add-copy>
         <div class="mt-14 pt-10 mb-15">
           <h3 class="text-center">Reviews by users</h3>
