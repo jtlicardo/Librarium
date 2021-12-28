@@ -111,6 +111,7 @@ import {
   getDownloadURL,
   updateDoc,
   doc,
+  arrayUnion,
 } from "@/firebase.js"
 export default {
   props: ["active"],
@@ -129,6 +130,7 @@ export default {
           tertiaryGenre: "",
         },
         numOfPages: "",
+        copiesInvNums: [],
         copies: [
           {
             inventoryNumber: "",
@@ -200,14 +202,13 @@ export default {
         console.log("Document written with ID: ", docRef.id)
         const storageRef = ref(storage, docRef.id)
         await uploadBytes(storageRef, this.logo)
-        console.log("Book logo successfully uploaded!")
         const url = await getDownloadURL(ref(storage, docRef.id))
         console.log(url)
         const docReference = doc(db, "books", docRef.id)
         await updateDoc(docReference, {
           logoUrl: url,
+          copiesInvNums: arrayUnion(this.book.copies[0].inventoryNumber),
         })
-        console.log("Logo url successfully updated!")
         this.$store.dispatch("displaySnackbar", {
           text: "Book successfully added!",
           isActive: true,
