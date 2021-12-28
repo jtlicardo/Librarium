@@ -105,6 +105,7 @@ export default {
           email: null,
           fullname: null,
           isAdmin: null,
+          backButtonActive: null,
         })
         document.querySelector(".header").classList.add("hideheader")
         this.$router.replace("/auth")
@@ -126,22 +127,34 @@ export default {
       this.$router.push({ name: "Account Info", params: { id: userId } })
       this.$store.dispatch("showBackButton")
       this.$store.dispatch("showBackButtonActive")
+      localStorage.setItem("backButtonActive", true)
       this.menuVisible = false
     },
     clickedBack() {
       this.menuVisible = true
     },
+    checkIfUserIsLoggedIn() {
+      let userLoggedIn = this.$store.getters.currentUser
+      if (userLoggedIn) {
+        document.querySelector(".header").classList.add("hidden")
+        document.querySelector(".header").classList.add("showheader")
+        setTimeout(() => {
+          document.querySelector(".header").classList.remove("hidden")
+        }, 100)
+      }
+    },
+    checkCurrentRoute() {
+      if (this.$route.name === "Account Info") {
+        this.menuVisible = false
+        this.$store.dispatch("showBackButton")
+        this.$store.dispatch("showBackButtonActive")
+      }
+    },
   },
   mounted() {
-    let userLoggedIn = this.$store.getters.currentUser
-    if (userLoggedIn) {
-      document.querySelector(".header").classList.add("hidden")
-      document.querySelector(".header").classList.add("showheader")
-      setTimeout(() => {
-        document.querySelector(".header").classList.remove("hidden")
-      }, 100)
-    }
-    // if back button is pressed
+    this.checkIfUserIsLoggedIn()
+    this.checkCurrentRoute()
+    // if back button is pressed (in browser)
     window.onpopstate = (event) => {
       this.$store.dispatch("removeBackButton")
       this.$store.dispatch("removeBackButtonActive")
