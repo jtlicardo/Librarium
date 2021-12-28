@@ -124,6 +124,8 @@ export default {
           fullname: this.fullname,
           email: this.email,
           isAdmin: false,
+          loans: [],
+          reservations: [],
         })
         console.log("User successfully added to collection!")
         console.log("Document written with ID: ", docRef.id)

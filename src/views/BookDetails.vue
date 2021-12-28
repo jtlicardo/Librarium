@@ -16,7 +16,12 @@
           </v-col>
           <v-col cols="12" md="2"></v-col>
         </v-row>
-        <book-copies class="mx-auto mt-5" :id="id" @copy-deleted="getBookData" />
+        <book-copies
+          class="mx-auto mt-5"
+          :id="id"
+          @copy-deleted="getBookData"
+          @copy-reserved="getBookData"
+        />
         <v-row class="mt-5" v-if="userIsAdmin">
           <v-btn class="mx-auto" color="yellow darken-1" @click="openDialog">
             Add copy

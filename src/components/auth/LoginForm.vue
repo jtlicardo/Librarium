@@ -160,6 +160,8 @@ export default {
           fullname: displayName,
           email: email,
           isAdmin: false,
+          loans: [],
+          reservations: []
         })
         console.log("User successfully added to collection!")
         console.log("Document written with ID: ", docRef.id)

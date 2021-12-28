@@ -10,7 +10,12 @@
       <book-status :type="item.status" class="mx-auto" />
     </template>
     <template v-slot:[`item.reserve`]="{ item }" v-if="!userIsAdmin">
-      <v-btn color="yellow darken-1" elevation="1" v-if="item.status === 'Available'">
+      <v-btn
+        color="yellow darken-1"
+        elevation="1"
+        v-if="item.status === 'Available'"
+        @click="reserveCopy(item)"
+      >
         RESERVE
       </v-btn>
     </template>
@@ -24,11 +29,23 @@
 
 <script>
 import BookStatus from "@/components/book-details/BookStatus.vue"
-import { doc, getDoc, db, updateDoc, arrayRemove } from "@/firebase.js"
+import {
+  doc,
+  getDoc,
+  db,
+  updateDoc,
+  arrayRemove,
+  collection,
+  addDoc,
+  arrayUnion,
+  query,
+  where,
+  getDocs,
+} from "@/firebase.js"
 
 export default {
   props: ["id"],
-  emits: ["copy-deleted"],
+  emits: ["copy-deleted", "copy-reserved"],
   components: {
     BookStatus,
   },
@@ -77,6 +94,61 @@ export default {
           isActive: true,
         })
         this.$emit("copy-deleted")
+      } catch (e) {
+        console.log(e)
+        this.$store.dispatch("displayBaseDialog", {
+          text: e.toString(),
+          title: "Error! Please try again later.",
+          color: "red",
+          loading: false,
+          active: true,
+        })
+      }
+    },
+    async reserveCopy(item) {
+      const userId = localStorage.getItem("userId")
+      const bookId = this.id
+      const copyInvNumber = item.inventoryNumber
+      const start_time = Date.now()
+      const end_time = Date.now() + 604800000
+      try {
+        const docRef = await addDoc(collection(db, "reservations"), {
+          userId,
+          bookId,
+          copyInvNumber,
+          start_time,
+          end_time,
+        })
+        console.log("Document written with ID: ", docRef.id)
+        const users = collection(db, "users")
+        const q = query(users, where("uid", "==", userId))
+        const querySnapshot = await getDocs(q)
+        let userDocId = ""
+        querySnapshot.forEach((doc) => {
+          userDocId = doc.id
+        })
+        const usersRef = doc(db, "users", userDocId)
+        await updateDoc(usersRef, {
+          reservations: arrayUnion(docRef.id),
+        })
+        const booksRef = doc(db, "books", this.id)
+        await updateDoc(booksRef, {
+          copies: arrayRemove({
+            inventoryNumber: item.inventoryNumber,
+            status: item.status,
+          }),
+        })
+        await updateDoc(booksRef, {
+          copies: arrayUnion({
+            inventoryNumber: item.inventoryNumber,
+            status: "Reserved",
+          }),
+        })
+        this.$store.dispatch("displaySnackbar", {
+          text: "Copy reserved!",
+          isActive: true,
+        })
+        this.$emit("copy-reserved")
       } catch (e) {
         console.log(e)
         this.$store.dispatch("displayBaseDialog", {
