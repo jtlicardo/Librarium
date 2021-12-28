@@ -20,6 +20,7 @@
 
 <script>
 export default {
+  emits: ["clicked-back"],
   computed: {
     backButton() {
       return this.$store.getters.backButton
@@ -31,6 +32,7 @@ export default {
   methods: {
     goBack() {
       this.$router.go(-1)
+      this.$emit("clicked-back")
     },
   },
 }

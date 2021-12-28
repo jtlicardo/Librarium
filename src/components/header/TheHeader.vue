@@ -7,7 +7,11 @@
     class="d-flex justify-space-between header"
   >
     <hamburger-icon @click.native="toggleSidebar" v-if="!backButton"></hamburger-icon>
-    <back-button v-else @click.native="removeBackButton"></back-button>
+    <back-button
+      v-else
+      @click.native="removeBackButton"
+      @clicked-back="clickedBack"
+    ></back-button>
 
     <v-img
       src="../../assets/logo.png"
@@ -16,7 +20,7 @@
       :max-width="imageWidth"
     ></v-img>
 
-    <v-menu offset-y>
+    <v-menu offset-y v-if="menuVisible">
       <template v-slot:activator="{ on, attrs }">
         <v-icon color="white" large class="ml-3 mr-2" v-bind="attrs" v-on="on">
           mdi-account-circle
@@ -31,6 +35,7 @@
         </v-list-item>
       </v-list>
     </v-menu>
+    <div class="menu-replacement" v-else></div>
   </v-app-bar>
 </template>
 
@@ -43,6 +48,11 @@ export default {
   components: {
     HamburgerIcon,
     BackButton,
+  },
+  data() {
+    return {
+      menuVisible: true,
+    }
   },
   computed: {
     imageWidth() {
@@ -116,6 +126,10 @@ export default {
       this.$router.push({ name: "Account Info", params: { id: userId } })
       this.$store.dispatch("showBackButton")
       this.$store.dispatch("showBackButtonActive")
+      this.menuVisible = false
+    },
+    clickedBack() {
+      this.menuVisible = true
     },
   },
   mounted() {
@@ -131,6 +145,7 @@ export default {
     window.onpopstate = (event) => {
       this.$store.dispatch("removeBackButton")
       this.$store.dispatch("removeBackButtonActive")
+      this.menuVisible = true
     }
   },
 }
@@ -158,5 +173,10 @@ export default {
 
 .header {
   transform: translateY(0px);
+}
+
+.menu-replacement {
+  width: 56px;
+  height: 36px;
 }
 </style>

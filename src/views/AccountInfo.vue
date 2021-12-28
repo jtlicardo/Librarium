@@ -1,9 +1,18 @@
 <template>
   <div class="text-center mt-14">
     <h1 class="mb-10">Account info</h1>
-    <h2 class="mb-5">Full name: {{ displayName }}</h2>
-    <h2 class="mb-5">Email: {{ email }}</h2>
-    <h2>Status: {{ userStatus }}</h2>
+    <h2 class="mb-5">
+      <div class="info-label">DISPLAY NAME</div>
+      {{ displayName }}
+    </h2>
+    <h2 class="mb-5">
+      <div class="info-label">EMAIL</div>
+      {{ email }}
+    </h2>
+    <h2>
+      <div class="info-label">STATUS</div>
+      {{ userStatus }}
+    </h2>
     <v-btn class="mt-14" color="red white--text">Delete account</v-btn>
   </div>
 </template>
@@ -42,5 +51,13 @@ export default {
 <style scoped>
 h2 {
   font-weight: 400;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 1.3rem;
+}
+
+.info-label {
+  font-weight: 700;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 0.9rem;
 }
 </style>
