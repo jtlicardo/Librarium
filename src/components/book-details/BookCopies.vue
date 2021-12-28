@@ -14,6 +14,11 @@
         RESERVE
       </v-btn>
     </template>
+    <template v-slot:[`item.delete`] v-if="userIsAdmin">
+      <v-btn color="red white--text" elevation="1">
+        DELETE
+      </v-btn>
+    </template>
   </v-data-table>
 </template>
 
@@ -38,6 +43,7 @@ export default {
         },
         { text: "STATUS", value: "status", sortable: false, align: "center" },
         { text: "", value: "reserve", sortable: false, align: "right" },
+        { text: "", value: "delete", sortable: false, align: "right" },
       ],
     }
   },
