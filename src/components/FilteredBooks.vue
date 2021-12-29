@@ -4,7 +4,7 @@
       <v-text-field
         v-model="search"
         append-icon="mdi-magnify"
-        label="Filter"
+        label="Filter (by title or author)"
         single-line
         hide-details
       ></v-text-field>
@@ -83,12 +83,44 @@ export default {
           sortable: false,
           value: "logo",
           align: "center",
+          filterable: false,
         },
-        { text: "BOOK TITLE", value: "title", sortable: false, align: "center" },
-        { text: "AUTHOR", value: "author", sortable: false, align: "center" },
-        { text: "GENRE", value: "genres", sortable: false, align: "center" },
-        { text: "# OF PAGES", value: "numOfPages", sortable: false, align: "center" },
-        { text: "# OF COPIES", value: "copies", sortable: false, align: "center" },
+        {
+          text: "BOOK TITLE",
+          value: "title",
+          sortable: false,
+          align: "center",
+          filterable: true,
+        },
+        {
+          text: "AUTHOR",
+          value: "author",
+          sortable: false,
+          align: "center",
+          filterable: true,
+        },
+        {
+          text: "GENRE",
+          value: "genres",
+          sortable: false,
+          align: "center",
+          filterable: false,
+        },
+        {
+          text: "# OF PAGES",
+          value: "numOfPages",
+          sortable: false,
+          align: "center",
+          filterable: false,
+          sortable: true,
+        },
+        {
+          text: "# OF COPIES",
+          value: "copies",
+          sortable: false,
+          align: "center",
+          filterable: false,
+        },
       ]
       if (this.userIsAdmin)
         headers.push({
