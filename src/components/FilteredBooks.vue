@@ -110,19 +110,27 @@ export default {
       })
       this.loading = false
     },
-    async getFilteredBooks() {
-      this.loading = true
-      const booksRef = collection(db, "books")
-      const q = query(
-        booksRef,
-        where("title", ">=", this.title),
-        where("title", "<=", this.title + "\uf8ff")
-      )
-      const querySnapshot = await getDocs(q)
-      querySnapshot.forEach((doc) => {
-        this.books.push(doc.data())
-      })
-      this.loading = false
+    filterBooks() {
+      let filteredBooks = []
+      let searchedTitle = this.title.toUpperCase()
+      let searchedAuthor = this.author.toUpperCase()
+      let searchedGenre = this.genre.toUpperCase()
+      for (let book of this.books) {
+        let title = book.title.toUpperCase()
+        let author = book.author.toUpperCase()
+        let mainGenre = book.genres.mainGenre.toUpperCase()
+        let secondaryGenre = book.genres.secondaryGenre.toUpperCase()
+        let tertiaryGenre = book.genres.tertiaryGenre.toUpperCase()
+        if (
+          (searchedTitle !== "" && title.includes(searchedTitle)) ||
+          (searchedAuthor !== "" && author.includes(searchedAuthor)) ||
+          (searchedGenre !== "" && mainGenre.includes(searchedGenre)) ||
+          (searchedGenre !== "" && secondaryGenre.includes(searchedGenre)) ||
+          (searchedGenre !== "" && tertiaryGenre.includes(searchedGenre))
+        )
+          filteredBooks.push(book)
+      }
+      this.books = filteredBooks
     },
     async displayBookDetails(data) {
       let bookId = ""
@@ -142,8 +150,8 @@ export default {
     })
   },
   async created() {
-    if (this.title || this.author || this.genre) await this.getFilteredBooks()
-    else await this.getAllBooks()
+    await this.getAllBooks()
+    if (this.title || this.author || this.genre) this.filterBooks()
   },
 }
 </script>
