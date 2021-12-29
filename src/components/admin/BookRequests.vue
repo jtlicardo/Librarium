@@ -42,7 +42,6 @@ export default {
     async getBookRequests() {
       const querySnapshot = await getDocs(collection(db, "bookRequests"))
       querySnapshot.forEach((doc) => {
-        console.log(doc.id, " => ", doc.data())
         this.requests.push(doc.data())
       })
     },

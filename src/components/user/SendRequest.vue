@@ -13,8 +13,20 @@
           </h3>
         </v-card-subtitle>
         <v-card-text>
-          <v-text-field label="Title" required v-model.trim="title"></v-text-field>
-          <v-text-field label="Author" required v-model.trim="author"></v-text-field>
+          <v-text-field
+            label="Title"
+            counter
+            maxlength="30"
+            required
+            v-model.trim="title"
+          ></v-text-field>
+          <v-text-field
+            label="Author"
+            counter
+            maxlength="30"
+            required
+            v-model.trim="author"
+          ></v-text-field>
         </v-card-text>
         <v-card-actions>
           <v-btn color="gray darken-1" class="px-4 mx-auto" text @click="closeDialog">
