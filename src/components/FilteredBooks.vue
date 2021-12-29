@@ -48,6 +48,20 @@
 import { collection, getDocs, db, query, where } from "@/firebase.js"
 
 export default {
+  props: {
+    title: {
+      type: String,
+      required: false,
+    },
+    author: {
+      type: String,
+      required: false,
+    },
+    genre: {
+      type: String,
+      required: false,
+    },
+  },
   data() {
     return {
       books: [],
@@ -88,9 +102,23 @@ export default {
     },
   },
   methods: {
-    async getBooks() {
+    async getAllBooks() {
       this.loading = true
       const querySnapshot = await getDocs(collection(db, "books"))
+      querySnapshot.forEach((doc) => {
+        this.books.push(doc.data())
+      })
+      this.loading = false
+    },
+    async getFilteredBooks() {
+      this.loading = true
+      const booksRef = collection(db, "books")
+      const q = query(
+        booksRef,
+        where("title", ">=", this.title),
+        where("title", "<=", this.title + "\uf8ff")
+      )
+      const querySnapshot = await getDocs(q)
       querySnapshot.forEach((doc) => {
         this.books.push(doc.data())
       })
@@ -102,20 +130,20 @@ export default {
       const q = query(booksRef, where("title", "==", data.title))
       const querySnapshot = await getDocs(q)
       querySnapshot.forEach((doc) => {
-        console.log("Book id: ", doc.id)
         bookId = doc.id
       })
       this.$router.push("/" + bookId)
     },
   },
   mounted() {
-    this.$root.$on("getBooks", () => {
+    this.$root.$on("getAllBooks", () => {
       this.books = []
-      this.getBooks()
+      this.getAllBooks()
     })
   },
   async created() {
-    await this.getBooks()
+    if (this.title || this.author || this.genre) await this.getFilteredBooks()
+    else await this.getAllBooks()
   },
 }
 </script>
