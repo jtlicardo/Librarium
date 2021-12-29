@@ -30,6 +30,8 @@
 </template>
 
 <script>
+import { db, collection, addDoc } from "@/firebase.js"
+
 export default {
   props: ["active"],
   data() {
@@ -44,8 +46,44 @@ export default {
       this.author = ""
       this.$emit("close-dialog")
     },
-    sendRequest() {
-      this.closeDialog()
+    validate() {
+      if (this.title === "") {
+        this.$store.dispatch("displayErrorPopup", {
+          isActive: true,
+          text: "Please enter the title!",
+        })
+        return false
+      } else if (this.author === "") {
+        this.$store.dispatch("displayErrorPopup", {
+          isActive: true,
+          text: "Please enter the author!",
+        })
+        return false
+      } else return true
+    },
+    async sendRequest() {
+      if (!this.validate) return
+      try {
+        const docRef = await addDoc(collection(db, "bookRequests"), {
+          title: this.title,
+          author: this.author,
+        })
+        this.$store.dispatch("displaySnackbar", {
+          text: "Request sent!",
+          isActive: true,
+        })
+        console.log("Document written with ID: ", docRef.id)
+        this.closeDialog()
+      } catch (e) {
+        console.log(e)
+        this.$store.dispatch("displayBaseDialog", {
+          text: e.toString(),
+          title: "Error! Please try again later.",
+          color: "red",
+          loading: false,
+          active: true,
+        })
+      }
     },
   },
 }
