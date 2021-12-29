@@ -7,27 +7,34 @@
         <filtered-books :title="title" :author="author" :genre="genre" />
         <p class="mt-15">Can't find the book you're looking for?</p>
         <p>
-          <a>Send a request</a>
+          <a @click="openDialog">Send a request</a>
           to add a book to the library's collection.
         </p>
       </v-col>
       <v-col cols="12" md="1"></v-col>
     </v-row>
+    <send-request
+      :active="sendRequestDialogActive"
+      @close-dialog="closeDialog"
+    ></send-request>
   </v-container>
 </template>
 
 <script>
 import FilteredBooks from "@/components/FilteredBooks.vue"
+import SendRequest from "@/components/user/SendRequest.vue"
 
 export default {
   components: {
     FilteredBooks,
+    SendRequest,
   },
   data() {
     return {
       title: "",
       author: "",
       genre: "",
+      sendRequestDialogActive: false,
     }
   },
   methods: {
@@ -35,6 +42,12 @@ export default {
       this.title = this.$route.query.title
       this.author = this.$route.query.author
       this.genre = this.$route.query.genre
+    },
+    openDialog() {
+      this.sendRequestDialogActive = true
+    },
+    closeDialog() {
+      this.sendRequestDialogActive = false
     },
   },
   created() {
