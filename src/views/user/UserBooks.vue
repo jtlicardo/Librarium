@@ -13,9 +13,7 @@
           </v-btn>
           <h3 class="mt-5">
             ...or
-            <router-link to="/search" @click.native="toggleBackButton">
-              see all books.
-            </router-link>
+            <a @click="search">see all books.</a>
           </h3>
         </v-form>
       </v-col>
@@ -70,7 +68,13 @@ h3 {
   font-weight: 400;
 }
 
+h3,
 h3 a {
-  color: black;
+  color: gray;
+}
+
+h3 a {
+  text-decoration: underline;
+  font-weight: 500;
 }
 </style>
