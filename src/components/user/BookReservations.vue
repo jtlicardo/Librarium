@@ -111,6 +111,17 @@ export default {
             status: "Available",
           }),
         })
+        const usersRef = collection(db, "users")
+        const q = query(usersRef, where("uid", "==", selectedReservation.userId))
+        const querySnapshot = await getDocs(q)
+        let selectedUser = ""
+        querySnapshot.forEach((doc) => {
+          selectedUser = doc.id
+        })
+        const users = doc(db, "users", selectedUser)
+        await updateDoc(users, {
+          reservations: arrayRemove(selectedReservation.reservationId),
+        })
         await deleteDoc(doc(db, "reservations", selectedReservation.reservationId))
         this.$store.dispatch("displaySnackbar", {
           text: "Reservation canceled!",
@@ -119,7 +130,7 @@ export default {
         this.reservations = []
         await this.getUserReservations()
       } catch (e) {
-        console.log("Error while adding book: ", e)
+        console.log("Error: ", e)
         this.$store.dispatch("displayBaseDialog", {
           text: e.toString(),
           title: "Error! Please try again later.",

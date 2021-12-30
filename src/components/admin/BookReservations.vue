@@ -6,16 +6,25 @@
     class="elevation-1"
     :loading="loading"
   >
-    <template v-slot:[`item.delete`]>
-      <v-btn class="mx-2" color="red darken-1" fab x-small elevation="1">
-        <v-icon color="white">mdi-trash-can-outline</v-icon>
-      </v-btn>
+    <template v-slot:[`item.delete`]="{ item }">
+      <v-icon color="red" @click="deleteReservation(item)">mdi-trash-can-outline</v-icon>
     </template>
   </v-data-table>
 </template>
 
 <script>
-import { db, collection, getDocs, query, where } from "@/firebase.js"
+import {
+  db,
+  collection,
+  getDocs,
+  query,
+  where,
+  deleteDoc,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+  doc,
+} from "@/firebase.js"
 export default {
   data() {
     return {
@@ -54,6 +63,14 @@ export default {
         const startDate = this.milisecondsToDate(doc.data().start_time)
         const endDate = this.milisecondsToDate(doc.data().end_time)
         this.reservations.push({
+          firebaseReservationId: doc.id,
+          firebaseTitle: doc.data().title,
+          firebaseAuthor: doc.data().author,
+          firebaseCopyInvNumber: doc.data().copyInvNumber,
+          firebaseUserId: userId,
+          firebaseBookId: doc.data().bookId,
+          firebaseStartTime: doc.data().start_time,
+          firebaseEndTime: doc.data().end_time,
           copy,
           user: userId,
           startDate,
@@ -78,6 +95,53 @@ export default {
         const userId = reservation.user
         const email = await this.userIdToEmail(userId)
         reservation.user = email
+      }
+    },
+    async deleteReservation(item) {
+      try {
+        // set copy status to "Available"
+        const booksRef = doc(db, "books", item.firebaseBookId)
+        await updateDoc(booksRef, {
+          copies: arrayRemove({
+            inventoryNumber: item.firebaseCopyInvNumber,
+            status: "Reserved",
+          }),
+        })
+        await updateDoc(booksRef, {
+          copies: arrayUnion({
+            inventoryNumber: item.firebaseCopyInvNumber,
+            status: "Available",
+          }),
+        })
+        // remove reservation id from users collection
+        const usersRef = collection(db, "users")
+        const q = query(usersRef, where("uid", "==", item.firebaseUserId))
+        const querySnapshot = await getDocs(q)
+        let selectedUser = ""
+        querySnapshot.forEach((doc) => {
+          selectedUser = doc.id
+        })
+        const users = doc(db, "users", selectedUser)
+        await updateDoc(users, {
+          reservations: arrayRemove(item.firebaseReservationId),
+        })
+        // delete reservation
+        await deleteDoc(doc(db, "reservations", item.firebaseReservationId))
+        this.$store.dispatch("displaySnackbar", {
+          text: "Reservation deleted!",
+          isActive: true,
+        })
+        this.reservations = []
+        await this.getAllReservations()
+      } catch (e) {
+        console.log("Error: ", e)
+        this.$store.dispatch("displayBaseDialog", {
+          text: e.toString(),
+          title: "Error! Please try again later.",
+          color: "red",
+          loading: false,
+          active: true,
+        })
       }
     },
   },
