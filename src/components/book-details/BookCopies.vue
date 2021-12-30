@@ -112,7 +112,7 @@ export default {
       const author = this.author
       const copyInvNumber = item.inventoryNumber
       const start_time = Date.now()
-      const end_time = Date.now() + 604800000
+      const end_time = Date.now() + 259200000
       try {
         const docRef = await addDoc(collection(db, "reservations"), {
           userId,

@@ -3,12 +3,11 @@
     :headers="headers"
     :items="reservations"
     hide-default-footer
-    class="elevation-1 grey lighten-4"
+    class="elevation-1"
+    :loading="loading"
   >
     <template v-slot:[`item.cancel`]>
-      <v-btn class="mx-2" color="red darken-1" fab x-small elevation="1">
-        <v-icon color="white">mdi-trash-can-outline</v-icon>
-      </v-btn>
+      <v-icon color="red">mdi-trash-can-outline</v-icon>
     </template>
   </v-data-table>
 </template>
@@ -23,14 +22,21 @@ export default {
           text: "BOOK TITLE",
           sortable: false,
           value: "title",
+          align: "center",
         },
-        { text: "AUTHOR", value: "author", sortable: false },
-        { text: "INVENTORY NUMBER", value: "inventoryNumber", sortable: false },
-        { text: "START DATE", value: "startDate", sortable: false },
-        { text: "END DATE", value: "endDate", sortable: false },
-        { text: "CANCEL", value: "cancel", sortable: false },
+        { text: "AUTHOR", value: "author", sortable: false, align: "center" },
+        {
+          text: "INVENTORY NUMBER",
+          value: "inventoryNumber",
+          sortable: false,
+          align: "center",
+        },
+        { text: "START DATE", value: "startDate", sortable: false, align: "center" },
+        { text: "END DATE", value: "endDate", sortable: false, align: "center" },
+        { text: "CANCEL", value: "cancel", sortable: false, align: "center" },
       ],
       reservations: [],
+      loading: false,
     }
   },
   methods: {
@@ -43,6 +49,7 @@ export default {
       return result
     },
     async getUserReservations() {
+      this.loading = true
       const userId = localStorage.getItem("userId")
       const reservationsRef = collection(db, "reservations")
       const q = query(reservationsRef, where("userId", "==", userId))
@@ -59,6 +66,7 @@ export default {
           endDate,
         })
       })
+      this.loading = false
     },
   },
   created() {

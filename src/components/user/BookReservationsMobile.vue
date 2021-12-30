@@ -7,7 +7,7 @@
     show-expand
     hide-default-header
     hide-default-footer
-    class="elevation-1 grey lighten-4"
+    class="elevation-1"
     @click:row="(item, slot) => slot.expand(!slot.isExpanded)"
   >
     <template v-slot:expanded-item="{ headers, item }">
