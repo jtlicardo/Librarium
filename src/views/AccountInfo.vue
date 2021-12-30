@@ -13,7 +13,9 @@
       <div class="info-label">STATUS</div>
       {{ userStatus }}
     </h2>
-    <v-btn class="mt-14" color="red white--text">Delete account</v-btn>
+    <v-btn class="mt-14" color="red white--text" v-if="userStatus === 'user'">
+      Delete account
+    </v-btn>
   </div>
 </template>
 

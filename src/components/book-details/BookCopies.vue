@@ -20,7 +20,12 @@
       </v-btn>
     </template>
     <template v-slot:[`item.delete`]="{ item }" v-if="userIsAdmin">
-      <v-btn color="red white--text" elevation="1" @click="deleteCopy(item)">
+      <v-btn
+        color="red white--text"
+        elevation="1"
+        @click="deleteCopy(item)"
+        v-if="item.status === 'Available'"
+      >
         DELETE
       </v-btn>
     </template>
