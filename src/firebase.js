@@ -23,6 +23,7 @@ import {
   doc,
   arrayUnion,
   arrayRemove,
+  deleteDoc,
 } from "firebase/firestore"
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage"
 
@@ -65,4 +66,5 @@ export {
   doc,
   arrayUnion,
   arrayRemove,
+  deleteDoc,
 }

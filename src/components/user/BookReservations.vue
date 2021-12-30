@@ -6,14 +6,25 @@
     class="elevation-1"
     :loading="loading"
   >
-    <template v-slot:[`item.cancel`]>
-      <v-icon color="red">mdi-trash-can-outline</v-icon>
+    <template v-slot:[`item.cancel`]="{ item }">
+      <v-icon color="red" @click="cancelReservation(item)">mdi-trash-can-outline</v-icon>
     </template>
   </v-data-table>
 </template>
 
 <script>
-import { db, collection, query, where, getDocs } from "@/firebase.js"
+import {
+  db,
+  collection,
+  query,
+  where,
+  getDocs,
+  deleteDoc,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+  doc,
+} from "@/firebase.js"
 export default {
   data() {
     return {
@@ -35,6 +46,7 @@ export default {
         { text: "END DATE", value: "endDate", sortable: false, align: "center" },
         { text: "CANCEL", value: "cancel", sortable: false, align: "center" },
       ],
+      firebaseReservations: [],
       reservations: [],
       loading: false,
     }
@@ -55,9 +67,18 @@ export default {
       const q = query(reservationsRef, where("userId", "==", userId))
       const querySnapshot = await getDocs(q)
       querySnapshot.forEach((doc) => {
+        this.firebaseReservations.push({
+          reservationId: doc.id,
+          author: doc.data().author,
+          title: doc.data().title,
+          bookId: doc.data().bookId,
+          copyInvNumber: doc.data().copyInvNumber,
+          userId: doc.data().userId,
+          start_time: doc.data().start_time,
+          end_time: doc.data().end_time,
+        })
         const startDate = this.milisecondsToDate(doc.data().start_time)
         const endDate = this.milisecondsToDate(doc.data().end_time)
-        console.log(startDate)
         this.reservations.push({
           title: doc.data().title,
           author: doc.data().author,
@@ -68,9 +89,49 @@ export default {
       })
       this.loading = false
     },
+    async cancelReservation(item) {
+      const selectedReservation = this.firebaseReservations.find(
+        (el) =>
+          el.author === item.author &&
+          el.title === item.title &&
+          el.copyInvNumber === item.inventoryNumber
+      )
+      console.log(selectedReservation)
+      try {
+        const booksRef = doc(db, "books", selectedReservation.bookId)
+        await updateDoc(booksRef, {
+          copies: arrayRemove({
+            inventoryNumber: selectedReservation.copyInvNumber,
+            status: "Reserved",
+          }),
+        })
+        await updateDoc(booksRef, {
+          copies: arrayUnion({
+            inventoryNumber: selectedReservation.copyInvNumber,
+            status: "Available",
+          }),
+        })
+        await deleteDoc(doc(db, "reservations", selectedReservation.reservationId))
+        this.$store.dispatch("displaySnackbar", {
+          text: "Reservation canceled!",
+          isActive: true,
+        })
+        this.reservations = []
+        await this.getUserReservations()
+      } catch (e) {
+        console.log("Error while adding book: ", e)
+        this.$store.dispatch("displayBaseDialog", {
+          text: e.toString(),
+          title: "Error! Please try again later.",
+          color: "red",
+          loading: false,
+          active: true,
+        })
+      }
+    },
   },
-  created() {
-    this.getUserReservations()
+  async created() {
+    await this.getUserReservations()
   },
 }
 </script>
