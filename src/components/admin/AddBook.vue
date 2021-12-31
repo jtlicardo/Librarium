@@ -213,7 +213,7 @@ export default {
           text: "Book successfully added!",
           isActive: true,
         })
-        this.$root.$emit("getBooks")
+        this.$root.$emit("getAllBooks")
       } catch (e) {
         console.log("Error while adding book: ", e)
         this.$store.dispatch("displayBaseDialog", {
@@ -228,7 +228,7 @@ export default {
         active: false,
         title: "",
       })
-      this.$emit("close-dialog")
+      this.closeDialog()
     },
     handleError() {
       setTimeout(() => {

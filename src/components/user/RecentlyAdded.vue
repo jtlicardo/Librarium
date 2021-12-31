@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { collection, getDocs, db, query, where } from "@/firebase.js"
+import { collection, getDocs, db, query, where, orderBy, limit } from "@/firebase.js"
 import BookCard from "@/components/user/BookCard.vue"
 export default {
   data() {
@@ -25,7 +25,9 @@ export default {
   },
   methods: {
     async getBooks() {
-      const querySnapshot = await getDocs(collection(db, "books"))
+      const booksRef = collection(db, "books")
+      const q = query(booksRef, orderBy("added_at", "desc"), limit(4))
+      const querySnapshot = await getDocs(q)
       querySnapshot.forEach((doc) => {
         this.books.push(doc.data())
       })
