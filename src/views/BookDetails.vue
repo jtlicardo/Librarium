@@ -93,7 +93,7 @@
         </div>
         <div v-if="!userIsAdmin && !reviewExists">
           <h3 class="mt-14 pt-10 text-center">Submit your own review</h3>
-          <submit-review :id="id" />
+          <submit-review :id="id" @submitted="addReview" />
         </div>
       </div>
     </transition>
@@ -223,6 +223,18 @@ export default {
     },
     removeReview(userId) {
       this.allReviews = this.allReviews.filter((review) => review.userId !== userId)
+      this.page = 1
+      this.checkIfReviewExists()
+      this.splitReviews(1)
+    },
+    addReview(payload) {
+      this.allReviews.push({
+        userId: payload.userId,
+        title: payload.title,
+        displayName: payload.name,
+        comment: payload.comment,
+        rating: payload.rating,
+      })
       this.page = 1
       this.checkIfReviewExists()
       this.splitReviews(1)
