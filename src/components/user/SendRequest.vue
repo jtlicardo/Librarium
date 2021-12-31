@@ -74,7 +74,7 @@ export default {
       } else return true
     },
     async sendRequest() {
-      if (!this.validate) return
+      if (!this.validate()) return
       try {
         const docRef = await addDoc(collection(db, "bookRequests"), {
           title: this.title,

@@ -10,6 +10,9 @@ import {
   signInWithRedirect,
   getRedirectResult,
   sendPasswordResetEmail,
+  deleteUser,
+  reauthenticateWithCredential,
+  EmailAuthProvider
 } from "firebase/auth"
 import {
   getFirestore,
@@ -71,4 +74,7 @@ export {
   deleteDoc,
   orderBy,
   limit,
+  deleteUser,
+  reauthenticateWithCredential,
+  EmailAuthProvider
 }
