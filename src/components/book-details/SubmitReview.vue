@@ -30,7 +30,16 @@
   </v-form>
 </template>
 <script>
-import { db, doc, updateDoc, arrayUnion } from "@/firebase.js"
+import {
+  db,
+  doc,
+  updateDoc,
+  arrayUnion,
+  collection,
+  query,
+  where,
+  getDocs,
+} from "@/firebase.js"
 
 export default {
   props: ["id"],
@@ -66,13 +75,19 @@ export default {
     async submitReview() {
       if (!this.validate()) return
       const userId = localStorage.getItem("userId")
-      const displayName = localStorage.getItem("userFullname")
+      const usersRef = collection(db, "users")
+      const q = query(usersRef, where("uid", "==", userId))
+      const querySnapshot = await getDocs(q)
+      let displayName = ""
+      querySnapshot.forEach((doc) => {
+        displayName = doc.data().fullname
+      })
       const booksRef = doc(db, "books", this.id)
       try {
         await updateDoc(booksRef, {
           reviews: arrayUnion({
-            userId: userId,
-            displayName: displayName,
+            userId,
+            displayName,
             title: this.title,
             comment: this.comment,
             rating: this.rating,
