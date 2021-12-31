@@ -38,7 +38,7 @@
           @copy-added="getBookData"
         ></add-copy>
         <div class="mt-14 pt-10 mb-15">
-          <h3 class="text-center">Reviews by users</h3>
+          <h3 class="text-center" id="reviews">Reviews by users</h3>
           <div class="d-flex justify-center mt-10" v-if="hasReviews">
             <h3 class="align-self-center">Average rating</h3>
             <v-progress-circular
@@ -54,7 +54,7 @@
           </div>
         </div>
         <h4 v-if="!hasReviews" class="text-center mb-10">No reviews yet :(</h4>
-        <v-row>
+        <v-row class="reviews">
           <v-col cols="12" lg="1"></v-col>
           <v-col cols="12" lg="5">
             <book-review
@@ -82,6 +82,15 @@
           </v-col>
           <v-col cols="12" lg="1"></v-col>
         </v-row>
+        <div class="text-center">
+          <v-pagination
+            v-model="page"
+            :length="numOfPages"
+            class="my-10"
+            @previous="changePage"
+            @next="changePage"
+          ></v-pagination>
+        </div>
         <div v-if="!userIsAdmin && !reviewExists">
           <h3 class="mt-14 pt-10 text-center">Submit your own review</h3>
           <submit-review :id="id" />
@@ -111,9 +120,13 @@ export default {
   data() {
     return {
       selectedBook: null,
+      allReviews: [],
+      reviewsGroup: [],
       loading: true,
       reviewExists: false,
       addCopyDialogActive: false,
+      page: 1,
+      arrowPageChange: false,
     }
   },
   computed: {
@@ -136,16 +149,19 @@ export default {
       if (!!this.selectedBook)
         return this.selectedBook.reviews && this.selectedBook.reviews.length > 0
     },
+    numOfPages() {
+      if (!!this.selectedBook) return Math.ceil(this.selectedBook.reviews.length / 6)
+    },
     bookReviewsFirstHalf() {
       if (!!this.selectedBook) {
-        const reviews = this.selectedBook.reviews
+        const reviews = this.reviewsGroup
         const half = Math.ceil(reviews.length / 2)
         return reviews.slice(0, half)
       }
     },
     bookReviewsSecondHalf() {
       if (!!this.selectedBook) {
-        const reviews = this.selectedBook.reviews
+        const reviews = this.reviewsGroup
         const half = Math.ceil(reviews.length / 2)
         if (reviews.length === 1) return []
         else if (reviews.length % 2 === 0) {
@@ -172,19 +188,44 @@ export default {
     timeout(miliseconds) {
       return new Promise((resolve) => setTimeout(resolve, miliseconds))
     },
+    async changePage() {
+      this.arrowPageChange = true
+      document.querySelector(".reviews").classList.toggle("fadeout")
+      await this.timeout(500)
+      this.splitReviews(this.page)
+      document.querySelector(".reviews").classList.toggle("fadein")
+      await this.timeout(500)
+      document.querySelector(".reviews").classList.remove("fadeout")
+      document.querySelector(".reviews").classList.remove("fadein")
+      document
+        .querySelector("#reviews")
+        .scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" })
+      this.arrowPageChange = false
+    },
     async getBookData() {
       this.loading = true
       this.selectedBook = null
+      this.reviews = []
+      this.reviewsGroup = []
       const docRef = doc(db, "books", this.id)
       const docSnap = await getDoc(docRef)
       if (docSnap.exists()) {
         this.selectedBook = docSnap.data()
+        for (let review of docSnap.data().reviews) {
+          this.allReviews.push(review)
+        }
         console.log("Book data: ", this.selectedBook)
       } else {
         console.log("No such document!")
       }
       await this.timeout(1000)
       this.loading = false
+    },
+    splitReviews(pageNum) {
+      this.reviewsGroup = []
+      let startSliceNum = 0
+      if (pageNum > 1) startSliceNum = 6 * (pageNum - 1)
+      this.reviewsGroup = this.allReviews.slice(startSliceNum, startSliceNum + 6)
     },
     async checkIfReviewExists() {
       const booksRef = doc(db, "books", this.id)
@@ -204,9 +245,28 @@ export default {
       this.addCopyDialogActive = false
     },
   },
+  watch: {
+    page(newValue) {
+      if (!this.arrowPageChange) {
+        document.querySelector(".reviews").classList.toggle("fadeout")
+        this.timeout(500).then(() => {
+          this.splitReviews(newValue)
+          document.querySelector(".reviews").classList.toggle("fadein")
+          this.timeout(500).then(() => {
+            document.querySelector(".reviews").classList.remove("fadeout")
+            document.querySelector(".reviews").classList.remove("fadein")
+            document
+              .querySelector("#reviews")
+              .scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" })
+          })
+        })
+      }
+    },
+  },
   async created() {
     await this.getBookData()
     await this.checkIfReviewExists()
+    this.splitReviews(1)
   },
 }
 </script>
@@ -220,5 +280,15 @@ h3 {
 .v-progress-circular >>> .v-progress-circular__info {
   color: black;
   font-weight: 700;
+}
+
+.fadeout {
+  opacity: 0;
+  transition: all 0.5s;
+}
+
+.fadein {
+  opacity: 1;
+  transition: all 0.5s;
 }
 </style>
