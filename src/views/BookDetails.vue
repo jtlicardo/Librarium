@@ -65,7 +65,7 @@
               :name="review.displayName"
               :comment="review.comment"
               :rating="review.rating"
-              @deleted="getBookData"
+              @deleted="removeReview"
             />
           </v-col>
           <v-col cols="12" lg="5">
@@ -77,7 +77,7 @@
               :name="review.displayName"
               :comment="review.comment"
               :rating="review.rating"
-              @deleted="getBookData"
+              @deleted="removeReview"
             />
           </v-col>
           <v-col cols="12" lg="1"></v-col>
@@ -205,7 +205,7 @@ export default {
     async getBookData() {
       this.loading = true
       this.selectedBook = null
-      this.reviews = []
+      this.allReviews = []
       this.reviewsGroup = []
       const docRef = doc(db, "books", this.id)
       const docSnap = await getDoc(docRef)
@@ -220,6 +220,12 @@ export default {
       }
       await this.timeout(1000)
       this.loading = false
+    },
+    removeReview(userId) {
+      this.allReviews = this.allReviews.filter((review) => review.userId !== userId)
+      this.page = 1
+      this.checkIfReviewExists()
+      this.splitReviews(1)
     },
     splitReviews(pageNum) {
       this.reviewsGroup = []

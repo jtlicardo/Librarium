@@ -80,7 +80,7 @@ export default {
         text: "Review deleted!",
         isActive: true,
       })
-      this.$emit("deleted")
+      this.$emit("deleted", userId)
     },
   },
 }
