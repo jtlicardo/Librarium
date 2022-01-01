@@ -13,8 +13,18 @@
           </h3>
         </v-card-subtitle>
         <v-card-text>
-          <v-text-field label="Email" required v-model.trim="email"></v-text-field>
-          <v-text-field label="Password" required v-model.trim="password"></v-text-field>
+          <v-text-field
+            label="Email"
+            type="email"
+            required
+            v-model.trim="email"
+          ></v-text-field>
+          <v-text-field
+            label="Password"
+            type="password"
+            required
+            v-model.trim="password"
+          ></v-text-field>
         </v-card-text>
         <v-card-actions>
           <v-btn color="gray darken-1" class="px-4 mx-auto" text @click="closeDialog">
@@ -55,10 +65,17 @@ export default {
       this.$emit("close-dialog")
     },
     validate() {
+      const userEmail = localStorage.getItem("userEmail")
       if (this.email === "") {
         this.$store.dispatch("displayErrorPopup", {
           isActive: true,
           text: "Please enter your email!",
+        })
+        return false
+      } else if (this.email !== userEmail) {
+        this.$store.dispatch("displayErrorPopup", {
+          isActive: true,
+          text: "Email address is incorrect!",
         })
         return false
       } else if (this.password === "") {
@@ -72,12 +89,12 @@ export default {
     async deleteAccount() {
       if (!this.validate()) return
       try {
-        await deleteDoc(doc(db, "users", this.docId))
-        console.log("User deleted from collection!")
         const auth = getAuth()
         const user = auth.currentUser
         const authCredential = EmailAuthProvider.credential(this.email, this.password)
         await reauthenticateWithCredential(user, authCredential)
+        await deleteDoc(doc(db, "users", this.docId))
+        console.log("User deleted from collection!")
         await deleteUser(user)
         console.log("User deleted (auth)!")
         this.$store.dispatch("setUser", {
