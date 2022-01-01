@@ -84,6 +84,7 @@
         </v-row>
         <div class="text-center">
           <v-pagination
+            v-if="hasReviews"
             v-model="page"
             :length="numOfPages"
             class="my-10"
