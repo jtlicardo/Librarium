@@ -21,12 +21,22 @@
       <div class="info-label">NUMBER OF LOANS</div>
       {{ numOfLoans }}
     </h2>
+    <h2 class="mb-5">
+      <div class="info-label">AUTHENTICATION METHOD</div>
+      <v-img
+        v-if="authMethod === 'google'"
+        src="@/assets/google.png"
+        max-width="40px"
+        class="mx-auto mt-4"
+      ></v-img>
+      <v-icon v-else large class="mx-auto mt-3">mdi-email</v-icon>
+    </h2>
     <p v-if="hasLoansOrReservations">
       You currently cannot delete your account because you have at least one active loan
       or reservation.
     </p>
     <v-btn
-      class="mt-14"
+      class="mt-14 mb-10"
       color="red white--text"
       v-if="userStatus === 'user' && !hasLoansOrReservations"
       @click="openDialog"
@@ -42,7 +52,7 @@
 </template>
 
 <script>
-import { db, collection, query, where, getDocs } from "@/firebase.js"
+import { db, collection, query, where, getDocs, getAuth } from "@/firebase.js"
 import DeleteAccount from "@/components/user/DeleteAccount.vue"
 
 export default {
@@ -53,6 +63,7 @@ export default {
   data() {
     return {
       dialogActive: false,
+      user: null,
       userDocumentId: "",
       email: "",
       displayName: "",
@@ -74,6 +85,8 @@ export default {
         this.loans = doc.data().loans
         this.reservations = doc.data().reservations
       })
+      const auth = getAuth()
+      this.user = auth.currentUser
     },
     openDialog() {
       this.dialogActive = true
@@ -84,7 +97,7 @@ export default {
   },
   computed: {
     userStatus() {
-      if (this.isAdmin === "true") return "admin"
+      if (this.isAdmin) return "admin"
       else return "user"
     },
     numOfReservations() {
@@ -96,6 +109,10 @@ export default {
     hasLoansOrReservations() {
       if (this.numOfReservations > 0 || this.numOfLoans > 0) return true
       else return false
+    },
+    authMethod() {
+      if (this.user.providerData[0].providerId === "google.com") return "google"
+      else return "email"
     },
   },
   created() {

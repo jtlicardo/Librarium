@@ -118,8 +118,8 @@ export default {
           })
           const user = result.user
           console.log("Successful Google login! ", user)
-          await this.checkIfUserExists(user.uid)
-          if (!result) {
+          let check = await this.checkIfUserExists(user.uid)
+          if (!check) {
             this.addUserToCollection(user.uid, user.displayName, user.email)
           }
           const userIsAdmin = localStorage.getItem("userIsAdmin")
@@ -161,7 +161,7 @@ export default {
           email: email,
           isAdmin: false,
           loans: [],
-          reservations: []
+          reservations: [],
         })
         console.log("User successfully added to collection!")
         console.log("Document written with ID: ", docRef.id)
