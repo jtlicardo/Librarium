@@ -25,7 +25,17 @@
 </template>
 
 <script>
-import { db, collection, query, where, getDocs, deleteDoc, doc } from "@/firebase.js"
+import {
+  db,
+  collection,
+  query,
+  where,
+  getDocs,
+  deleteDoc,
+  doc,
+  updateDoc,
+  arrayRemove,
+} from "@/firebase.js"
 export default {
   props: ["active", "book"],
   emits: ["close-dialog", "deleted"],
@@ -60,10 +70,45 @@ export default {
         })
       }
     },
+    async checkForReservations(bookDocumentId) {
+      const reservationsRef = collection(db, "reservations")
+      const q = query(reservationsRef, where("bookId", "==", bookDocumentId))
+      const querySnapshot = await getDocs(q)
+      let reservationIds = []
+      querySnapshot.forEach((doc) => {
+        reservationIds.push(doc.id)
+      })
+      return reservationIds
+    },
+    async deleteReservation(reservationId) {
+      const usersRef = collection(db, "users")
+      const q = query(usersRef, where("reservations", "array-contains", reservationId))
+      const querySnapshot = await getDocs(q)
+      let userDocumentId = ""
+      querySnapshot.forEach((doc) => {
+        userDocumentId = doc.id
+      })
+      if (userDocumentId !== "") {
+        const user = doc(db, "users", userDocumentId)
+        await updateDoc(user, {
+          reservations: arrayRemove(reservationId),
+        })
+      }
+      await deleteDoc(doc(db, "reservations", reservationId))
+    },
     async deleteBook() {
+      this.$store.dispatch("displayLoadingDialog", {
+        active: true,
+        title: "Deleting book...",
+      })
       try {
         const bookDocumentId = await this.findBook()
-        console.log(bookDocumentId)
+        const reservationIds = await this.checkForReservations(bookDocumentId)
+        if (reservationIds.length > 0) {
+          for (let id of reservationIds) {
+            await this.deleteReservation(id)
+          }
+        }
         await deleteDoc(doc(db, "books", bookDocumentId))
         this.$store.dispatch("displaySnackbar", {
           text: "Book deleted!",
@@ -81,6 +126,10 @@ export default {
           active: true,
         })
       }
+      this.$store.dispatch("displayLoadingDialog", {
+        active: false,
+        title: "",
+      })
     },
   },
   computed: {
