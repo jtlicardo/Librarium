@@ -6,7 +6,7 @@
         <h1 class="mb-5 d-inline-block">All books</h1>
         <p class="mb-10">Click on a book to see more details</p>
         <filtered-books></filtered-books>
-        <v-btn class="mt-10" color="yellow darken-1" @click="addBook">Add book</v-btn>
+        <v-btn class="my-14" color="yellow darken-1" @click="addBook">Add book</v-btn>
         <add-book :active="addBookDialogActive" @close-dialog="closeDialog"></add-book>
       </v-col>
       <v-col cols="12" md="1"></v-col>

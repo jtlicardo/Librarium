@@ -25,7 +25,7 @@
       </template>
       <template v-slot:[`item.genres`]="{ item }">
         <ul>
-          <li v-for="genre in item.genres" :key="genre">
+          <li v-for="(genre, index) in item.genres" :key="index">
             <span>{{ genre }}</span>
           </li>
         </ul>
@@ -35,16 +35,26 @@
           {{ item.copies.length }}
         </p>
       </template>
-      <template v-slot:[`item.delete`] v-if="userIsAdmin">
-        <v-btn color="red darken-1" fab small elevation="1">
-          <v-icon color="white">mdi-trash-can-outline</v-icon>
+      <template v-slot:[`item.delete`]="{ item }" v-if="userIsAdmin">
+        <v-btn color="white" fab small elevation="1">
+          <v-icon color="red" @click.stop="openDialog(item)">
+            mdi-trash-can-outline
+          </v-icon>
         </v-btn>
       </template>
     </v-data-table>
+    <delete-book
+      :active="dialogActive"
+      :book="bookToBeDeleted"
+      @close-dialog="closeDialog"
+      @deleted="getAllBooks"
+    ></delete-book>
   </v-card>
 </template>
 
 <script>
+import DeleteBook from "@/components/admin/DeleteBook.vue"
+
 import { collection, getDocs, db, query, where } from "@/firebase.js"
 
 export default {
@@ -62,11 +72,16 @@ export default {
       required: false,
     },
   },
+  components: {
+    DeleteBook,
+  },
   data() {
     return {
       books: [],
       loading: false,
       search: "",
+      dialogActive: false,
+      bookToBeDeleted: null,
     }
   },
   computed: {
@@ -136,6 +151,7 @@ export default {
   methods: {
     async getAllBooks() {
       this.loading = true
+      this.books = []
       const querySnapshot = await getDocs(collection(db, "books"))
       querySnapshot.forEach((doc) => {
         this.books.push(doc.data())
@@ -173,6 +189,14 @@ export default {
         bookId = doc.id
       })
       this.$router.push("/" + bookId)
+    },
+    openDialog(data) {
+      this.bookToBeDeleted = data
+      this.dialogActive = true
+    },
+    closeDialog() {
+      this.dialogActive = false
+      this.bookToBeDeleted = null
     },
   },
   mounted() {
