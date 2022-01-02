@@ -3,7 +3,7 @@
     :headers="headers"
     :items="users"
     hide-default-footer
-    class="elevation-1"
+    class="elevation-1 mx-auto"
     :loading="loading"
     @click:row="chooseUser"
   ></v-data-table>
@@ -76,5 +76,9 @@ ul li span::after {
   color: black;
   box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
   cursor: pointer;
+}
+
+.v-data-table {
+  max-width: 600px !important;
 }
 </style>

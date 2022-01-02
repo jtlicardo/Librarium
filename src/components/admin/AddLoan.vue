@@ -37,7 +37,12 @@
       </v-stepper-content>
 
       <v-stepper-content step="3">
-        <v-card class="mb-12" color="grey lighten-1" height="200px"></v-card>
+        <choose-copy
+          :title="book.title"
+          :author="book.author"
+          :logoUrl="book.logoUrl"
+          @copy-chosen="saveCopy"
+        ></choose-copy>
 
         <v-btn color="red white--text" class="mt-10">Cancel</v-btn>
 
@@ -50,11 +55,13 @@
 <script>
 import ChooseUser from "@/components/admin/add-loan/ChooseUser.vue"
 import ChooseBook from "@/components/admin/add-loan/ChooseBook.vue"
+import ChooseCopy from "@/components/admin/add-loan/ChooseCopy.vue"
 
 export default {
   components: {
     ChooseUser,
     ChooseBook,
+    ChooseCopy,
   },
   data() {
     return {
@@ -68,6 +75,10 @@ export default {
         author: "",
         logoUrl: "",
         numOfPages: "",
+      },
+      copy: {
+        inventoryNumber: "",
+        status: "Available",
       },
     }
   },
@@ -83,6 +94,9 @@ export default {
       this.book.logoUrl = payload.logoUrl
       this.book.numOfPages = payload.numOfPages
       this.e1 = 3
+    },
+    saveCopy(payload) {
+      this.copy.inventoryNumber = payload.inventoryNumber
     },
   },
 }

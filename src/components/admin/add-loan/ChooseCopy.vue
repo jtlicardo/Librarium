@@ -1,0 +1,90 @@
+<template>
+  <v-data-table
+    :headers="headers"
+    :items="bookCopies"
+    hide-default-footer
+    class="elevation-1 mx-auto"
+    v-if="!!selectedBook"
+  >
+    <template v-slot:[`item.status`]="{ item }">
+      <book-status :type="item.status" class="mx-auto" />
+    </template>
+    <template v-slot:[`item.loan`]="{ item }">
+      <v-btn
+        color="yellow darken-1"
+        elevation="1"
+        v-if="item.status === 'Available'"
+        @click="chooseCopy(item)"
+      >
+        LOAN
+      </v-btn>
+    </template>
+  </v-data-table>
+</template>
+
+<script>
+import BookStatus from "@/components/book-details/BookStatus.vue"
+import { db, collection, query, where, getDocs } from "@/firebase.js"
+
+export default {
+  props: ["title", "author", "logoUrl"],
+  emits: ["copy-chosen"],
+  components: {
+    BookStatus,
+  },
+  data() {
+    return {
+      selectedBook: null,
+      headers: [
+        {
+          text: "INVENTORY NUMBER",
+          sortable: false,
+          value: "inventoryNumber",
+          align: "center",
+        },
+        { text: "STATUS", value: "status", sortable: false, align: "center" },
+        { text: "", value: "loan", sortable: false, align: "right" },
+      ],
+    }
+  },
+  methods: {
+    async getBookData() {
+      this.selectedBook = null
+      const booksRef = collection(db, "books")
+      const q = query(
+        booksRef,
+        where("title", "==", this.title),
+        where("author", "==", this.author),
+        where("logoUrl", "==", this.logoUrl)
+      )
+      const querySnapshot = await getDocs(q)
+      querySnapshot.forEach((doc) => {
+        this.selectedBook = doc.data()
+      })
+    },
+    chooseCopy(item) {
+      this.$emit("copy-chosen", item)
+    },
+  },
+  computed: {
+    bookCopies() {
+      return this.selectedBook.copies
+    },
+  },
+  watch: {
+    logoUrl() {
+      this.getBookData()
+    },
+  },
+}
+</script>
+
+<style scoped>
+.v-data-table {
+  max-width: 600px !important;
+}
+
+.v-data-table >>> .v-data-table__wrapper > table > tbody > tr > td {
+  font-size: 1rem !important;
+}
+</style>
