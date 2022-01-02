@@ -6,16 +6,14 @@
     class="elevation-1"
     :loading="loading"
   >
-    <template v-slot:[`item.delete`]>
-      <v-btn class="mx-2" color="red darken-1" fab x-small elevation="1">
-        <v-icon color="white">mdi-trash-can-outline</v-icon>
-      </v-btn>
+    <template v-slot:[`item.delete`]="{ item }">
+      <v-icon color="red" @click="deleteRequest(item)">mdi-trash-can-outline</v-icon>
     </template>
   </v-data-table>
 </template>
 
 <script>
-import { db, collection, getDocs } from "@/firebase.js"
+import { db, collection, getDocs, deleteDoc, query, where, doc } from "@/firebase.js"
 
 export default {
   data() {
@@ -34,6 +32,12 @@ export default {
           sortable: false,
           align: "center",
         },
+        {
+          text: "DELETE",
+          value: "delete",
+          sortable: false,
+          align: "center",
+        },
       ],
       requests: [],
     }
@@ -44,6 +48,37 @@ export default {
       querySnapshot.forEach((doc) => {
         this.requests.push(doc.data())
       })
+    },
+    async deleteRequest(item) {
+      try {
+        const bookRequestsRef = collection(db, "bookRequests")
+        const q = query(
+          bookRequestsRef,
+          where("title", "==", item.title),
+          where("author", "==", item.author)
+        )
+        let id = ""
+        const querySnapshot = await getDocs(q)
+        querySnapshot.forEach((doc) => {
+          id = doc.id
+        })
+        await deleteDoc(doc(db, "bookRequests", id))
+        this.$store.dispatch("displaySnackbar", {
+          text: "Request deleted!",
+          isActive: true,
+        })
+        this.requests = []
+        await this.getBookRequests()
+      } catch (e) {
+        console.log("Error: ", e)
+        this.$store.dispatch("displayBaseDialog", {
+          text: e.toString(),
+          title: "Error! Please try again later.",
+          color: "red",
+          loading: false,
+          active: true,
+        })
+      }
     },
   },
   created() {
