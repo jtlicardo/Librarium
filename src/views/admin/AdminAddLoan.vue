@@ -4,6 +4,7 @@
       <v-col cols="12" md="1"></v-col>
       <v-col cols="12" md="10">
         <h1 class="mb-10">Add loan</h1>
+        <add-loan></add-loan>
       </v-col>
       <v-col cols="12" md="1"></v-col>
     </v-row>
@@ -11,7 +12,13 @@
 </template>
 
 <script>
-export default {}
+import AddLoan from "@/components/admin/AddLoan.vue"
+
+export default {
+  components: {
+    AddLoan,
+  },
+}
 </script>
 
 <style scoped>

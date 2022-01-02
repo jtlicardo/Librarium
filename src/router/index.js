@@ -8,7 +8,7 @@ import BookDetails from "@/views/BookDetails.vue"
 import AuthPage from "@/views/AuthPage.vue"
 import AdminBooks from "@/views/admin/AdminBooks.vue"
 import AdminLoans from "@/views/admin/AdminLoans.vue"
-import AddLoan from "@/views/admin/AddLoan.vue"
+import AdminAddLoan from "@/views/admin/AdminAddLoan.vue"
 import AdminReservations from "@/views/admin/AdminReservations.vue"
 import AdminRequests from "@/views/admin/AdminRequests.vue"
 import AdminUsers from "@/views/admin/AdminUsers.vue"
@@ -93,7 +93,7 @@ const routes = [
   {
     name: "Add Loan",
     path: "/addloan",
-    component: AddLoan,
+    component: AdminAddLoan,
     meta: {
       needsAuth: true,
       needsAdmin: true,
