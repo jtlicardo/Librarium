@@ -58,6 +58,7 @@ import ChooseBook from "@/components/admin/add-loan/ChooseBook.vue"
 import ChooseCopy from "@/components/admin/add-loan/ChooseCopy.vue"
 
 export default {
+  emits: ["loan-chosen"],
   components: {
     ChooseUser,
     ChooseBook,
@@ -97,6 +98,7 @@ export default {
     },
     saveCopy(payload) {
       this.copy.inventoryNumber = payload.inventoryNumber
+      this.$emit("loan-chosen", { user: this.user, book: this.book, copy: this.copy })
     },
   },
 }
