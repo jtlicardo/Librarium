@@ -140,6 +140,7 @@ export default {
           return_time: null,
           loan_status: "In progress",
           extensionRequested: false,
+          extensionApproved: false,
         })
         console.log("Document written with ID: ", docRef.id)
         // add loan id to user

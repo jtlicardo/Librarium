@@ -6,8 +6,12 @@
     class="elevation-1"
     :loading="loading"
   >
-    <template v-slot:[`item.request`]>
-      <v-icon color="primary" @click="requestLoanExtension">
+    <template v-slot:[`item.request`]="{ item }">
+      <v-icon
+        v-if="item.firebaseExtensionRequested === false"
+        color="primary"
+        @click="requestLoanExtension(item)"
+      >
         mdi-calendar-clock
       </v-icon>
     </template>
@@ -15,7 +19,7 @@
 </template>
 
 <script>
-import { db, collection, query, where, getDocs } from "@/firebase.js"
+import { db, collection, query, where, getDocs, updateDoc, doc } from "@/firebase.js"
 export default {
   data() {
     return {
@@ -65,6 +69,7 @@ export default {
           firebaseIssueTime: doc.data().issue_time,
           firebaseDueTime: doc.data().due_time,
           firebaseExtensionRequested: doc.data().extensionRequested,
+          firebaseExtensionApproved: doc.data().extensionApproved,
           firebaseLoanStatus: doc.data().loan_status,
           author: doc.data().author,
           inventoryNumber: doc.data().copyInvNumber,
@@ -75,8 +80,29 @@ export default {
       })
       this.loading = false
     },
-    requestLoanExtension() {
-      // ...
+    async requestLoanExtension(item) {
+      const id = item.firebaseLoanId
+      try {
+        const loansRef = doc(db, "loans", id)
+        await updateDoc(loansRef, {
+          extensionRequested: true,
+        })
+        this.$store.dispatch("displaySnackbar", {
+          text: "Request sent!",
+          isActive: true,
+        })
+        this.loans = []
+        await this.getUserLoans()
+      } catch (e) {
+        console.log("Error: ", e)
+        this.$store.dispatch("displayBaseDialog", {
+          text: e.toString(),
+          title: "Error! Please try again later.",
+          color: "red",
+          loading: false,
+          active: true,
+        })
+      }
     },
   },
   async created() {
