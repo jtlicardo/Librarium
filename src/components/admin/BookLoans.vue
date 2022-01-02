@@ -13,6 +13,9 @@
       <br />
       {{ item.copyInvNumber }}
     </template>
+    <template v-slot:[`item.loan_status`]="{ item }">
+      <loan-status :type="item.loan_status"></loan-status>
+    </template>
     <template v-slot:[`item.edit`]="{ item }">
       <v-icon color="primary" @click="editLoan(item)">mdi-circle-edit-outline</v-icon>
     </template>
@@ -21,7 +24,11 @@
 
 <script>
 import { db, collection, getDocs, query, where } from "@/firebase.js"
+import LoanStatus from "@/components/LoanStatus.vue"
 export default {
+  components: {
+    LoanStatus,
+  },
   data() {
     return {
       loading: false,
