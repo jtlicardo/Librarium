@@ -22,6 +22,8 @@ export default {
   methods: {
     addLoan() {
       this.$router.push({ name: "Add Loan" })
+      this.$store.dispatch("showBackButton")
+      this.$store.dispatch("showBackButtonActive")
     },
   },
 }

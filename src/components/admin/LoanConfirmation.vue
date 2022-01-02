@@ -26,13 +26,25 @@
       class="elevation-1 mx-auto"
     ></v-data-table>
     <v-container class="text-center mt-12">
-      <v-btn color="red white--text" class="mx-2">Cancel</v-btn>
-      <v-btn color="yellow darken-1" class="mx-2">Confirm</v-btn>
+      <v-btn color="red white--text" class="mx-2" @click="cancelLoan">Cancel</v-btn>
+      <v-btn color="yellow darken-1" class="mx-2" @click="addLoan">Confirm</v-btn>
     </v-container>
   </div>
 </template>
 
 <script>
+import {
+  db,
+  collection,
+  addDoc,
+  query,
+  where,
+  getDocs,
+  updateDoc,
+  arrayRemove,
+  arrayUnion,
+  doc,
+} from "@/firebase.js"
 export default {
   props: ["user", "book", "copy"],
   data() {
@@ -78,6 +90,98 @@ export default {
           return 100
         default:
           return 125
+      }
+    },
+  },
+  methods: {
+    cancelLoan() {
+      this.$router.replace({ name: "Admin Loans" })
+      this.$store.dispatch("removeBackButton")
+      this.$store.dispatch("removeBackButtonActive")
+    },
+    async getUserId() {
+      const usersRef = collection(db, "users")
+      const q = query(usersRef, where("email", "==", this.user.email))
+      const querySnapshot = await getDocs(q)
+      let uid = ""
+      querySnapshot.forEach((doc) => {
+        uid = doc.data().uid
+      })
+      return uid
+    },
+    async getBookDocumentId() {
+      const booksRef = collection(db, "books")
+      const q = query(
+        booksRef,
+        where("title", "==", this.book.title),
+        where("author", "==", this.book.author),
+        where("logoUrl", "==", this.book.logoUrl)
+      )
+      const querySnapshot = await getDocs(q)
+      let bookDocumentId = ""
+      querySnapshot.forEach((doc) => {
+        bookDocumentId = doc.id
+      })
+      return bookDocumentId
+    },
+    async addLoan() {
+      try {
+        const userId = await this.getUserId()
+        const bookId = await this.getBookDocumentId()
+        // add loan
+        const docRef = await addDoc(collection(db, "loans"), {
+          userId,
+          bookId,
+          title: this.bookTitle,
+          author: this.bookAuthor,
+          copyInvNumber: this.copyInvNumber,
+          issue_time: Date.now(),
+          due_time: Date.now() + 1209600000,
+          return_time: null,
+          loan_status: "In progress",
+          extensionRequested: false,
+        })
+        console.log("Document written with ID: ", docRef.id)
+        // add loan id to user
+        const users = collection(db, "users")
+        const q = query(users, where("uid", "==", userId))
+        const querySnapshot = await getDocs(q)
+        let userDocId = ""
+        querySnapshot.forEach((doc) => {
+          userDocId = doc.id
+        })
+        const usersRef = doc(db, "users", userDocId)
+        await updateDoc(usersRef, {
+          loans: arrayUnion(docRef.id),
+        })
+        // update copy status
+        const booksRef = doc(db, "books", bookId)
+        await updateDoc(booksRef, {
+          copies: arrayRemove({
+            inventoryNumber: this.copy.inventoryNumber,
+            status: "Available",
+          }),
+        })
+        await updateDoc(booksRef, {
+          copies: arrayUnion({
+            inventoryNumber: this.copy.inventoryNumber,
+            status: "Loaned",
+          }),
+        })
+        this.$store.dispatch("displaySnackbar", {
+          text: "Copy loaned!",
+          isActive: true,
+        })
+        this.$router.replace({ name: "Admin Loans" })
+      } catch (e) {
+        console.log(e)
+        this.$store.dispatch("displayBaseDialog", {
+          text: e.toString(),
+          title: "Error! Please try again later.",
+          color: "red",
+          loading: false,
+          active: true,
+        })
       }
     },
   },

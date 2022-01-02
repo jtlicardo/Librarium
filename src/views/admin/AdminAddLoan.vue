@@ -5,7 +5,7 @@
       <v-col cols="12" md="10">
         <h1 class="mb-10">Add loan</h1>
         <transition name="fade" mode="out-in">
-          <add-loan v-if="!loanChosen" @loan-chosen="displayData"></add-loan>
+          <add-loan v-if="!loanChosen" @loan-chosen="saveData"></add-loan>
           <loan-confirmation
             v-else
             :user="user"
@@ -37,7 +37,7 @@ export default {
     }
   },
   methods: {
-    displayData(payload) {
+    saveData(payload) {
       this.user = payload.user
       this.book = payload.book
       this.copy = payload.copy
