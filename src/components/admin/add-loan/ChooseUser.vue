@@ -57,4 +57,24 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+ul li span::after {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1px;
+  border-bottom: 1px solid rgb(0, 0, 0, 0.2);
+  content: "";
+}
+
+.v-data-table >>> .v-data-table__wrapper > table > tbody > tr {
+  transition: all 0.3s ease;
+}
+
+.v-data-table >>> .v-data-table__wrapper > table > tbody > tr:hover {
+  color: black;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+  cursor: pointer;
+}
+</style>

@@ -25,25 +25,23 @@
       <v-stepper-content step="1">
         <choose-user @user-chosen="saveUser"></choose-user>
 
-        <v-btn color="yellow darken-1" @click="e1 = 2">Continue</v-btn>
-
-        <v-btn text>Cancel</v-btn>
+        <v-btn color="red white--text" class="mt-10">Cancel</v-btn>
       </v-stepper-content>
 
       <v-stepper-content step="2">
         <choose-book @book-chosen="saveBook"></choose-book>
 
-        <v-btn color="yellow darken-1" @click="e1 = 3">Continue</v-btn>
+        <v-btn color="red white--text" class="mt-10">Cancel</v-btn>
 
-        <v-btn text>Cancel</v-btn>
+        <v-btn text @click="e1 = 1" class="mt-10 mx-5">Go back</v-btn>
       </v-stepper-content>
 
       <v-stepper-content step="3">
         <v-card class="mb-12" color="grey lighten-1" height="200px"></v-card>
 
-        <v-btn color="yellow darken-1" @click="e1 = 1">Continue</v-btn>
+        <v-btn color="red white--text" class="mt-10">Cancel</v-btn>
 
-        <v-btn text>Cancel</v-btn>
+        <v-btn text @click="e1 = 2" class="mt-10 mx-5">Go back</v-btn>
       </v-stepper-content>
     </v-stepper-items>
   </v-stepper>
