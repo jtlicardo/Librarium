@@ -31,7 +31,7 @@
       </v-stepper-content>
 
       <v-stepper-content step="2">
-        <v-card class="mb-12" color="grey lighten-1" height="200px"></v-card>
+        <choose-book @book-chosen="saveBook"></choose-book>
 
         <v-btn color="yellow darken-1" @click="e1 = 3">Continue</v-btn>
 
@@ -51,26 +51,40 @@
 
 <script>
 import ChooseUser from "@/components/admin/add-loan/ChooseUser.vue"
-import FilteredBooks from "@/components/FilteredBooks.vue"
+import ChooseBook from "@/components/admin/add-loan/ChooseBook.vue"
 
 export default {
   components: {
     ChooseUser,
-    FilteredBooks,
+    ChooseBook,
   },
   data() {
     return {
       e1: 1,
-      userEmail: "",
-      userDisplayName: "",
+      user: {
+        email: "",
+        displayName: "",
+      },
+      book: {
+        title: "",
+        author: "",
+        logoUrl: "",
+        numOfPages: "",
+      },
     }
   },
   methods: {
     saveUser(payload) {
-      this.userEmail = payload.email
-      this.userDisplayName = payload.fullname
-      console.log(this.userEmail, this.userDisplayName)
+      this.user.email = payload.email
+      this.user.displayName = payload.fullname
       this.e1 = 2
+    },
+    saveBook(payload) {
+      this.book.title = payload.title
+      this.book.author = payload.author
+      this.book.logoUrl = payload.logoUrl
+      this.book.numOfPages = payload.numOfPages
+      this.e1 = 3
     },
   },
 }

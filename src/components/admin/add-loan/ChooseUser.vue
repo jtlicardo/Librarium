@@ -5,13 +5,14 @@
     hide-default-footer
     class="elevation-1"
     :loading="loading"
-    @click:row="displayUserDetails"
+    @click:row="chooseUser"
   ></v-data-table>
 </template>
 
 <script>
 import { collection, query, where, db, getDocs } from "@/firebase.js"
 export default {
+  emits: ["user-chosen"],
   data() {
     return {
       loading: false,
@@ -46,8 +47,7 @@ export default {
       })
       this.loading = false
     },
-    displayUserDetails(data) {
-      console.log(data)
+    chooseUser(data) {
       this.$emit("user-chosen", data)
     },
   },

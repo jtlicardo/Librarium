@@ -13,7 +13,23 @@
 </template>
 
 <script>
-export default {}
+export default {
+  data() {
+    return {
+      loading: false,
+      loans: [],
+      headers: [
+        {
+          text: "BOOK TITLE",
+          value: "title",
+          sortable: false,
+          align: "center",
+          filterable: true,
+        },
+      ],
+    }
+  },
+}
 </script>
 
 <style></style>
