@@ -1,54 +1,86 @@
 <template>
   <v-data-table
     :headers="headers"
-    :items="reservations"
+    :items="loans"
     hide-default-footer
-    class="elevation-1 grey lighten-4"
+    class="elevation-1"
+    :loading="loading"
   >
     <template v-slot:[`item.request`]>
-      <v-btn class="mx-2" color="yellow darken-1" fab x-small elevation="1">
-        <v-icon color="black" @click="openDialog">mdi-calendar-clock</v-icon>
-      </v-btn>
+      <v-icon color="primary" @click="requestLoanExtension">
+        mdi-calendar-clock
+      </v-icon>
     </template>
   </v-data-table>
 </template>
 
 <script>
+import { db, collection, query, where, getDocs } from "@/firebase.js"
 export default {
   data() {
     return {
+      loading: false,
       headers: [
         {
           text: "BOOK TITLE",
           sortable: false,
-          value: "bookTitle",
+          value: "title",
+          align: "center",
         },
-        { text: "AUTHOR", value: "author", sortable: false },
-        { text: "INVENTORY NUMBER", value: "inventoryNumber", sortable: false },
-        { text: "ISSUE DATE", value: "issueDate", sortable: false },
-        { text: "DUE DATE", value: "dueDate", sortable: false },
-        { text: "REQUEST", value: "request", sortable: false },
-      ],
-      reservations: [
+        { text: "AUTHOR", value: "author", sortable: false, align: "center" },
         {
-          bookTitle: "Crime and Punishment",
-          author: "Fyodor Dostoevsky",
-          inventoryNumber: "26008",
-          issueDate: "16.11.2021.",
-          dueDate: "19.11.2021.",
+          text: "INVENTORY NUMBER",
+          value: "inventoryNumber",
+          sortable: false,
+          align: "center",
         },
-        {
-          bookTitle: "Sapiens - A Brief History of Humankind",
-          author: "Yuval Noah Harari",
-          inventoryNumber: "57961",
-          issueDate: "15.11.2021.",
-          dueDate: "18.11.2021.",
-        },
+        { text: "ISSUE DATE", value: "issueDate", sortable: false, align: "center" },
+        { text: "DUE DATE", value: "dueDate", sortable: false, align: "center" },
+        { text: "REQUEST", value: "request", sortable: false, align: "center" },
       ],
+      loans: [],
     }
   },
   methods: {
-    openDialog() {},
+    milisecondsToDate(miliseconds) {
+      let date = new Date(miliseconds)
+      const day = date.getDate()
+      const month = date.getMonth() + 1
+      const year = date.getFullYear()
+      const result = day + "." + month + "." + year + "."
+      return result
+    },
+    async getUserLoans() {
+      this.loading = true
+      const userId = localStorage.getItem("userId")
+      const loansRef = collection(db, "loans")
+      const q = query(loansRef, where("userId", "==", userId))
+      const querySnapshot = await getDocs(q)
+      querySnapshot.forEach((doc) => {
+        const issueDate = this.milisecondsToDate(doc.data().issue_time)
+        const dueDate = this.milisecondsToDate(doc.data().due_time)
+        this.loans.push({
+          firebaseLoanId: doc.id,
+          firebaseBookId: doc.data().bookId,
+          firebaseIssueTime: doc.data().issue_time,
+          firebaseDueTime: doc.data().due_time,
+          firebaseExtensionRequested: doc.data().extensionRequested,
+          firebaseLoanStatus: doc.data().loan_status,
+          author: doc.data().author,
+          inventoryNumber: doc.data().copyInvNumber,
+          title: doc.data().title,
+          issueDate,
+          dueDate,
+        })
+      })
+      this.loading = false
+    },
+    requestLoanExtension() {
+      // ...
+    },
+  },
+  async created() {
+    await this.getUserLoans()
   },
 }
 </script>
