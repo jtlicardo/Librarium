@@ -19,6 +19,12 @@
     <template v-slot:[`item.edit`]="{ item }">
       <v-icon color="primary" @click="editLoan(item)">mdi-circle-edit-outline</v-icon>
     </template>
+    <template v-slot:[`item.accept`]="{ item }">
+      <v-icon color="success" @click="acceptRequest(item)">mdi-check-outline</v-icon>
+    </template>
+    <template v-slot:[`item.deny`]="{ item }">
+      <v-icon color="red" @click="denyRequest(item)">mdi-close-outline</v-icon>
+    </template>
   </v-data-table>
 </template>
 
@@ -26,6 +32,13 @@
 import { db, collection, getDocs, query, where } from "@/firebase.js"
 import LoanStatus from "@/components/LoanStatus.vue"
 export default {
+  props: {
+    requests: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+  },
   components: {
     LoanStatus,
   },
@@ -33,7 +46,11 @@ export default {
     return {
       loading: false,
       loans: [],
-      headers: [
+    }
+  },
+  computed: {
+    headers() {
+      let headers = [
         {
           text: "BOOK COPY",
           value: "copy",
@@ -70,14 +87,35 @@ export default {
           sortable: false,
           align: "center",
         },
-        {
+      ]
+      if (!this.requests) {
+        headers.push({
           text: "EDIT",
           value: "edit",
           sortable: false,
           align: "center",
-        },
-      ],
-    }
+        })
+      }
+      if (this.requests) {
+        headers.splice(4, 1)
+        headers.push(
+          {
+            text: "ACCEPT",
+            value: "accept",
+            sortable: false,
+            align: "center",
+          },
+          {
+            text: "DENY",
+            value: "deny",
+            sortable: false,
+            align: "center",
+          }
+        )
+      }
+
+      return headers
+    },
   },
   methods: {
     milisecondsToDate(miliseconds) {
@@ -91,6 +129,38 @@ export default {
     async getAllLoans() {
       this.loading = true
       const querySnapshot = await getDocs(collection(db, "loans"))
+      querySnapshot.forEach((doc) => {
+        const issue_date = this.milisecondsToDate(doc.data().issue_time)
+        const due_date = this.milisecondsToDate(doc.data().due_time)
+        let return_date = ""
+        if (doc.data().return_time !== null) {
+          return_date = this.milisecondsToDate(doc.data().return_time)
+        }
+        this.loans.push({
+          firebaseLoanId: doc.id,
+          firebaseBookId: doc.data().bookId,
+          firebaseIssueTime: doc.data().issue_time,
+          firebaseDueTime: doc.data().due_time,
+          firebaseReturnTime: doc.data().return_time,
+          firebaseExtensionRequested: doc.data().extensionRequested,
+          author: doc.data().author,
+          copyInvNumber: doc.data().copyInvNumber,
+          loan_status: doc.data().loan_status,
+          title: doc.data().title,
+          userId: doc.data().userId,
+          issue_date,
+          due_date,
+          return_date,
+        })
+      })
+      await this.changeAllIdsToEmails(this.loans)
+      this.loading = false
+    },
+    async getRequests() {
+      this.loading = true
+      const loansRef = collection(db, "loans")
+      const q = query(loansRef, where("extensionRequested", "==", true))
+      const querySnapshot = await getDocs(q)
       querySnapshot.forEach((doc) => {
         const issue_date = this.milisecondsToDate(doc.data().issue_time)
         const due_date = this.milisecondsToDate(doc.data().due_time)
@@ -135,9 +205,12 @@ export default {
         loan.user = email
       }
     },
+    acceptRequest(item) {},
+    denyRequest(item) {},
   },
   async created() {
-    await this.getAllLoans()
+    if (!this.requests) await this.getAllLoans()
+    else await this.getRequests()
   },
 }
 </script>

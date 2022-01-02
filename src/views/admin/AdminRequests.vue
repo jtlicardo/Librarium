@@ -12,7 +12,7 @@
       <v-col cols="12" md="1"></v-col>
       <v-col cols="12" md="10">
         <h1 class="my-10">Loan extension requests</h1>
-        <loan-extension-requests></loan-extension-requests>
+        <book-loans requests></book-loans>
       </v-col>
       <v-col cols="12" md="1"></v-col>
     </v-row>
@@ -21,11 +21,12 @@
 
 <script>
 import BookRequests from "@/components/admin/BookRequests.vue"
-import LoanExtensionRequests from "@/components/admin/LoanExtensionRequests.vue"
+import BookLoans from "@/components/admin/BookLoans.vue"
+
 export default {
   components: {
     BookRequests,
-    LoanExtensionRequests,
+    BookLoans,
   },
 }
 </script>
