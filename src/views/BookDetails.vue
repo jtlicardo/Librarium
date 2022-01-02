@@ -1,6 +1,6 @@
 <template>
   <v-container class="mt-md-10">
-    <transition name="fade">
+    <transition name="fade" mode="out-in">
       <book-details-loading v-if="loading"></book-details-loading>
       <div v-else>
         <v-row>

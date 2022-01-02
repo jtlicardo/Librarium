@@ -4,8 +4,15 @@
       <v-col cols="12" md="1"></v-col>
       <v-col cols="12" md="10">
         <h1 class="mb-10">Add loan</h1>
-        <add-loan v-if="!loanChosen" @loan-chosen="displayData"></add-loan>
-        <loan-confirmation></loan-confirmation>
+        <transition name="fade" mode="out-in">
+          <add-loan v-if="!loanChosen" @loan-chosen="displayData"></add-loan>
+          <loan-confirmation
+            v-else
+            :user="user"
+            :book="book"
+            :copy="copy"
+          ></loan-confirmation>
+        </transition>
       </v-col>
       <v-col cols="12" md="1"></v-col>
     </v-row>
