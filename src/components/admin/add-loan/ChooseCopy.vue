@@ -13,7 +13,7 @@
       <v-btn
         color="yellow darken-1"
         elevation="1"
-        v-if="item.status === 'Available'"
+        v-if="item.status === 'Available' || item.inventoryNumber === userReservedCopy"
         @click="chooseCopy(item)"
       >
         LOAN
@@ -24,10 +24,10 @@
 
 <script>
 import BookStatus from "@/components/book-details/BookStatus.vue"
-import { db, collection, query, where, getDocs } from "@/firebase.js"
+import { db, collection, query, where, getDocs, doc, getDoc } from "@/firebase.js"
 
 export default {
-  props: ["title", "author", "logoUrl"],
+  props: ["title", "author", "logoUrl", "userEmail"],
   emits: ["copy-chosen"],
   components: {
     BookStatus,
@@ -35,6 +35,8 @@ export default {
   data() {
     return {
       selectedBook: null,
+      bookDocumentId: "",
+      userReservedCopy: "",
       headers: [
         {
           text: "INVENTORY NUMBER",
@@ -59,8 +61,31 @@ export default {
       )
       const querySnapshot = await getDocs(q)
       querySnapshot.forEach((doc) => {
+        this.bookDocumentId = doc.id
         this.selectedBook = doc.data()
       })
+    },
+    async getUserReservations() {
+      const usersRef = collection(db, "users")
+      const q = query(usersRef, where("email", "==", this.userEmail))
+      const querySnapshot = await getDocs(q)
+      let reservationIds = []
+      querySnapshot.forEach((doc) => {
+        reservationIds = doc.data().reservations
+      })
+      return reservationIds
+    },
+    async getUserReservedCopies() {
+      const reservationIds = await this.getUserReservations()
+      for (let id of reservationIds) {
+        const docRef = doc(db, "reservations", id)
+        const docSnap = await getDoc(docRef)
+        if (docSnap.exists() && docSnap.data().bookId === this.bookDocumentId) {
+          this.userReservedCopy = docSnap.data().copyInvNumber
+        } else {
+          console.log("User has no reservations for selected book")
+        }
+      }
     },
     chooseCopy(item) {
       this.$emit("copy-chosen", item)
@@ -74,6 +99,7 @@ export default {
   watch: {
     logoUrl() {
       this.getBookData()
+      this.getUserReservedCopies()
     },
   },
 }

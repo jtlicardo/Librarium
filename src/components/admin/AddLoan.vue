@@ -41,6 +41,7 @@
           :title="book.title"
           :author="book.author"
           :logoUrl="book.logoUrl"
+          :userEmail="user.email"
           @copy-chosen="saveCopy"
         ></choose-copy>
 
