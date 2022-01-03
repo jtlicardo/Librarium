@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import { db, doc, updateDoc, getDoc } from "@/firebase.js"
+import { db, doc, updateDoc, getDoc, arrayUnion, arrayRemove } from "@/firebase.js"
 
 export default {
   props: ["active", "loan"],
@@ -78,14 +78,31 @@ export default {
       this.$emit("close-dialog")
     },
     async finishLoan() {
+      // update loan status
       const loansRef = doc(db, "loans", this.loan.firebaseLoanId)
       await updateDoc(loansRef, {
         loan_status: "Finished",
+        return_time: Date.now(),
+      })
+      // update copy status
+      const booksRef = doc(db, "books", this.loan.firebaseBookId)
+      await updateDoc(booksRef, {
+        copies: arrayRemove({
+          inventoryNumber: this.loan.copyInvNumber,
+          status: "Loaned",
+        }),
+      })
+      await updateDoc(booksRef, {
+        copies: arrayUnion({
+          inventoryNumber: this.loan.copyInvNumber,
+          status: "Available",
+        }),
       })
       this.$emit("refresh")
       this.closeDialog()
     },
     async revertStatus() {
+      // update loan status
       const docRef = doc(db, "loans", this.loan.firebaseLoanId)
       const docSnap = await getDoc(docRef)
       let due_time = null
@@ -99,12 +116,28 @@ export default {
       if (due_time < currentTime) {
         await updateDoc(loansRef, {
           loan_status: "Overdue",
+          return_time: null,
         })
       } else {
         await updateDoc(loansRef, {
           loan_status: "In progress",
+          return_time: null,
         })
       }
+      // update copy status
+      const booksRef = doc(db, "books", this.loan.firebaseBookId)
+      await updateDoc(booksRef, {
+        copies: arrayRemove({
+          inventoryNumber: this.loan.copyInvNumber,
+          status: "Available",
+        }),
+      })
+      await updateDoc(booksRef, {
+        copies: arrayUnion({
+          inventoryNumber: this.loan.copyInvNumber,
+          status: "Loaned",
+        }),
+      })
       this.$emit("refresh")
       this.closeDialog()
     },
