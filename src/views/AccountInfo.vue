@@ -104,6 +104,7 @@ export default {
       return this.reservations.length
     },
     numOfLoans() {
+      // check if loan_status !== "Finished"
       return this.loans.length
     },
     hasLoansOrReservations() {

@@ -4,12 +4,17 @@
       <v-col cols="12" md="1"></v-col>
       <v-col cols="12" md="10">
         <h1 class="mb-10">All loans</h1>
-        <book-loans @edit-loan="openDialog" />
+        <book-loans @edit-loan="openDialog" ref="loansComponent" />
         <v-btn class="my-14" color="yellow darken-1" @click="addLoan">Add loan</v-btn>
       </v-col>
       <v-col cols="12" md="1"></v-col>
     </v-row>
-    <edit-loan :active="active" :loan="loan" @close-dialog="closeDialog"></edit-loan>
+    <edit-loan
+      :active="active"
+      :loan="loan"
+      @close-dialog="closeDialog"
+      @finished="getLoans"
+    ></edit-loan>
   </v-container>
 </template>
 
@@ -40,6 +45,9 @@ export default {
     },
     closeDialog() {
       this.active = false
+    },
+    getLoans() {
+      this.$refs.loansComponent.getAllLoans()
     },
   },
 }

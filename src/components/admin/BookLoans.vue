@@ -128,6 +128,7 @@ export default {
     },
     async getAllLoans() {
       this.loading = true
+      this.loans = []
       const querySnapshot = await getDocs(collection(db, "loans"))
       querySnapshot.forEach((doc) => {
         const issue_date = this.milisecondsToDate(doc.data().issue_time)

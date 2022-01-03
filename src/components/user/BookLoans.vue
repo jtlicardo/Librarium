@@ -58,7 +58,11 @@ export default {
       this.loading = true
       const userId = localStorage.getItem("userId")
       const loansRef = collection(db, "loans")
-      const q = query(loansRef, where("userId", "==", userId))
+      const q = query(
+        loansRef,
+        where("userId", "==", userId),
+        where("loan_status", "!=", "Finished")
+      )
       const querySnapshot = await getDocs(q)
       querySnapshot.forEach((doc) => {
         const issueDate = this.milisecondsToDate(doc.data().issue_time)
