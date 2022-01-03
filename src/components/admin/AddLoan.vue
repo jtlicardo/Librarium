@@ -80,7 +80,8 @@ export default {
       },
       copy: {
         inventoryNumber: "",
-        status: "Available",
+        status: "",
+        userReservedCopy: false,
       },
     }
   },
@@ -99,6 +100,10 @@ export default {
     },
     saveCopy(payload) {
       this.copy.inventoryNumber = payload.inventoryNumber
+      this.copy.status = payload.status
+      if (payload.userReservedCopy) {
+        this.copy.userReservedCopy = payload.userReservedCopy
+      }
       this.$emit("loan-chosen", { user: this.user, book: this.book, copy: this.copy })
     },
     cancelLoan() {

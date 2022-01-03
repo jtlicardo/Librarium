@@ -44,6 +44,7 @@ import {
   arrayRemove,
   arrayUnion,
   doc,
+  deleteDoc,
 } from "@/firebase.js"
 export default {
   props: ["user", "book", "copy"],
@@ -82,6 +83,12 @@ export default {
     },
     copyInvNumber() {
       return this.copy.inventoryNumber
+    },
+    copyStatus() {
+      return this.copy.status
+    },
+    userReservedTheCopy() {
+      return this.copy.userReservedCopy
     },
     cardSize() {
       switch (this.$vuetify.breakpoint.name) {
@@ -155,12 +162,31 @@ export default {
         await updateDoc(usersRef, {
           loans: arrayUnion(docRef.id),
         })
+        // if user reserved the copy: remove reservation id from user; delete the reservation
+        if (this.userReservedTheCopy) {
+          const reservations = collection(db, "reservations")
+          const q = query(
+            reservations,
+            where("userId", "==", userId),
+            where("bookId", "==", bookId),
+            where("copyInvNumber", "==", this.copyInvNumber)
+          )
+          const querySnapshot = await getDocs(q)
+          let reservationId = ""
+          querySnapshot.forEach((doc) => {
+            reservationId = doc.id
+          })
+          await updateDoc(usersRef, {
+            reservations: arrayRemove(reservationId),
+          })
+          await deleteDoc(doc(db, "reservations", reservationId))
+        }
         // update copy status
         const booksRef = doc(db, "books", bookId)
         await updateDoc(booksRef, {
           copies: arrayRemove({
             inventoryNumber: this.copy.inventoryNumber,
-            status: "Available",
+            status: this.copyStatus,
           }),
         })
         await updateDoc(booksRef, {

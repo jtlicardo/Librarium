@@ -76,6 +76,7 @@ export default {
       return reservationIds
     },
     async getUserReservedCopies() {
+      this.userReservedCopy = ""
       const reservationIds = await this.getUserReservations()
       for (let id of reservationIds) {
         const docRef = doc(db, "reservations", id)
@@ -88,6 +89,9 @@ export default {
       }
     },
     chooseCopy(item) {
+      if (item.inventoryNumber === this.userReservedCopy) {
+        item.userReservedCopy = true
+      }
       this.$emit("copy-chosen", item)
     },
   },
