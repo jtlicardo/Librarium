@@ -143,6 +143,7 @@ export default {
           firebaseDueTime: doc.data().due_time,
           firebaseReturnTime: doc.data().return_time,
           firebaseExtensionRequested: doc.data().extensionRequested,
+          firebaseExtensionApproved: doc.data().extensionApproved,
           author: doc.data().author,
           copyInvNumber: doc.data().copyInvNumber,
           loan_status: doc.data().loan_status,
@@ -175,6 +176,7 @@ export default {
           firebaseDueTime: doc.data().due_time,
           firebaseReturnTime: doc.data().return_time,
           firebaseExtensionRequested: doc.data().extensionRequested,
+          firebaseExtensionApproved: doc.data().extensionApproved,
           author: doc.data().author,
           copyInvNumber: doc.data().copyInvNumber,
           loan_status: doc.data().loan_status,
@@ -204,6 +206,9 @@ export default {
         const email = await this.userIdToEmail(userId)
         loan.user = email
       }
+    },
+    editLoan(item) {
+      this.$emit("edit-loan", item)
     },
     acceptRequest(item) {},
     denyRequest(item) {},
