@@ -68,7 +68,19 @@
 </template>
 
 <script>
-import { db, doc, updateDoc, getDoc, arrayUnion, arrayRemove } from "@/firebase.js"
+import {
+  db,
+  doc,
+  updateDoc,
+  getDoc,
+  arrayUnion,
+  arrayRemove,
+  deleteDoc,
+  getDocs,
+  query,
+  where,
+  collection,
+} from "@/firebase.js"
 
 export default {
   props: ["active", "loan"],
@@ -141,7 +153,53 @@ export default {
       this.$emit("refresh")
       this.closeDialog()
     },
-    deleteLoan() {},
+    async deleteLoan() {
+      try {
+        // remove loan id from users collection
+        let userDocumentId = ""
+        const users = collection(db, "users")
+        const q = query(users, where("uid", "==", this.loan.userId))
+        const querySnapshot = await getDocs(q)
+        querySnapshot.forEach((doc) => {
+          userDocumentId = doc.id
+        })
+        const usersRef = doc(db, "users", userDocumentId)
+        await updateDoc(usersRef, {
+          loans: arrayRemove(this.loan.firebaseLoanId),
+        })
+        // update copy status
+        const booksRef = doc(db, "books", this.loan.firebaseBookId)
+        await updateDoc(booksRef, {
+          copies: arrayRemove({
+            inventoryNumber: this.loan.copyInvNumber,
+            status: "Loaned",
+          }),
+        })
+        await updateDoc(booksRef, {
+          copies: arrayUnion({
+            inventoryNumber: this.loan.copyInvNumber,
+            status: "Available",
+          }),
+        })
+        // delete loan
+        await deleteDoc(doc(db, "loans", this.loan.firebaseLoanId))
+        this.$store.dispatch("displaySnackbar", {
+          text: "Loan deleted!",
+          isActive: true,
+        })
+        this.$emit("refresh")
+        this.closeDialog()
+      } catch (e) {
+        console.log(e)
+        this.$store.dispatch("displayBaseDialog", {
+          text: e.toString(),
+          title: "Error! Please try again later.",
+          color: "red",
+          loading: false,
+          active: true,
+        })
+      }
+    },
   },
   computed: {
     loanIsFinished() {

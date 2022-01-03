@@ -21,7 +21,7 @@
       <div class="info-label">NUMBER OF LOANS</div>
       {{ numOfLoans }}
     </h2>
-    <h2 class="mb-5">
+    <h2 class="mb-5" v-if="user">
       <div class="info-label">AUTHENTICATION METHOD</div>
       <v-img
         v-if="authMethod === 'google'"
@@ -38,7 +38,7 @@
     <v-btn
       class="mt-14 mb-10"
       color="red white--text"
-      v-if="userStatus === 'user' && !hasLoansOrReservations"
+      v-if="user && userStatus === 'user' && !hasLoansOrReservations"
       @click="openDialog"
     >
       Delete account
@@ -112,7 +112,8 @@ export default {
       else return false
     },
     authMethod() {
-      if (this.user.providerData[0].providerId === "google.com") return "google"
+      if (this.user && this.user.providerData[0].providerId === "google.com")
+        return "google"
       else return "email"
     },
   },

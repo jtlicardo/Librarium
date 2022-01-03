@@ -87,7 +87,7 @@ export default {
   },
   computed: {
     googleAuth() {
-      if (this.user.providerData[0].providerId === "google.com") return true
+      if (this.user && this.user.providerData[0].providerId === "google.com") return true
       else return false
     },
   },
