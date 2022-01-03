@@ -13,7 +13,7 @@
       :active="active"
       :loan="loan"
       @close-dialog="closeDialog"
-      @finished="getLoans"
+      @refresh="getLoans"
     ></edit-loan>
   </v-container>
 </template>

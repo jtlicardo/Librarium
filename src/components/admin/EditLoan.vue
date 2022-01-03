@@ -42,7 +42,7 @@
               <v-btn
                 color="brown white--text"
                 class="mx-auto"
-                @click="activateLoan"
+                @click="revertStatus"
                 width="150px"
                 v-else
               >
@@ -68,11 +68,11 @@
 </template>
 
 <script>
-import { db, doc, updateDoc } from "@/firebase.js"
+import { db, doc, updateDoc, getDoc } from "@/firebase.js"
 
 export default {
   props: ["active", "loan"],
-  emits: ["close-dialog", "finished", "deleted"],
+  emits: ["close-dialog", "refresh"],
   methods: {
     closeDialog() {
       this.$emit("close-dialog")
@@ -82,14 +82,37 @@ export default {
       await updateDoc(loansRef, {
         loan_status: "Finished",
       })
-      this.$emit("finished")
+      this.$emit("refresh")
+      this.closeDialog()
     },
-    activateLoan() {},
+    async revertStatus() {
+      const docRef = doc(db, "loans", this.loan.firebaseLoanId)
+      const docSnap = await getDoc(docRef)
+      let due_time = null
+      const currentTime = Date.now()
+      if (docSnap.exists()) {
+        due_time = docSnap.data().due_time
+      } else {
+        console.log("No such document!")
+      }
+      const loansRef = doc(db, "loans", this.loan.firebaseLoanId)
+      if (due_time < currentTime) {
+        await updateDoc(loansRef, {
+          loan_status: "Overdue",
+        })
+      } else {
+        await updateDoc(loansRef, {
+          loan_status: "In progress",
+        })
+      }
+      this.$emit("refresh")
+      this.closeDialog()
+    },
     deleteLoan() {},
   },
   computed: {
     loanIsFinished() {
-      if (this.loan.loan_status === "Finished") return true
+      if (this.loan && this.loan.loan_status === "Finished") return true
       else return false
     },
   },
