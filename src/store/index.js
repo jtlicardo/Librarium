@@ -18,7 +18,6 @@ export default new Vuex.Store({
       snackbarActive: false,
       snackbarText: "",
       header: {
-        hamburgerVisible: true,
         backButton: false,
         backButtonActive: false,
       },

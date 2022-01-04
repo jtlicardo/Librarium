@@ -181,6 +181,8 @@ export default {
       this.books = filteredBooks
     },
     async displayBookDetails(data) {
+      this.$store.dispatch("showBackButton")
+      this.$store.dispatch("showBackButtonActive")
       let bookId = ""
       const booksRef = collection(db, "books")
       const q = query(booksRef, where("title", "==", data.title))

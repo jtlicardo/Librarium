@@ -36,7 +36,6 @@ export default {
   methods: {
     addLoan() {
       this.$router.push({ name: "Add Loan" })
-      this.$store.dispatch("toggleHamburger")
     },
     openDialog(loan) {
       this.loan = loan

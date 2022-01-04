@@ -33,9 +33,6 @@ export default {
   removeBackButtonActive(context) {
     context.commit("removeBackButtonActive")
   },
-  toggleHamburger(context) {
-    context.commit("toggleHamburger")
-  },
   updateFilters(context, payload) {
     context.commit("updateFilters", payload)
   },

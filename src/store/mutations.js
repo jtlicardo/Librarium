@@ -25,19 +25,16 @@ export default {
     state.sidebarOpen = payload
   },
   showBackButton(state) {
-    state.backButton = true
+    state.header.backButton = true
   },
   showBackButtonActive(state) {
     state.header.backButtonActive = true
   },
   removeBackButton(state) {
-    state.backButton = false
+    state.header.backButton = false
   },
   removeBackButtonActive(state) {
     state.header.backButtonActive = false
-  },
-  toggleHamburger(state) {
-    state.header.hamburgerVisible = !state.header.hamburgerVisible
   },
   updateFilters(state, payload) {
     state.searchInput = payload

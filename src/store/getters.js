@@ -23,9 +23,6 @@ export default {
   backButtonActive(state) {
     return state.header.backButtonActive
   },
-  hamburgerVisible(state) {
-    return state.header.hamburgerVisible
-  },
   searchInput(state) {
     return state.searchInput
   },

@@ -8,14 +8,21 @@
   >
     <hamburger-icon
       @click.native="toggleSidebar"
-      v-if="!backButton && hamburgerVisible"
+      v-if="!backButtonActive && !backButton && hamburgerVisible"
     ></hamburger-icon>
-    <div class="hamburger-replacement" v-else-if="!hamburgerVisible"></div>
+    <div
+      class="hamburger-replacement"
+      v-if="!backButtonActive && !backButton && !hamburgerVisible"
+    ></div>
     <back-button
-      v-else
+      v-if="!backButtonActive && backButton"
       @click.native="removeBackButton"
       @clicked-back="clickedBack"
     ></back-button>
+    <back-button-active
+      v-if="backButtonActive && !backButton"
+      @clicked-back="clickedBackFromActive"
+    ></back-button-active>
 
     <v-img
       src="../../assets/logo.png"
@@ -46,16 +53,20 @@
 <script>
 import HamburgerIcon from "./HamburgerIcon.vue"
 import BackButton from "@/components/header/BackButton.vue"
+import BackButtonActive from "@/components/header/BackButtonActive.vue"
 import { getAuth, signOut } from "firebase/auth"
 
 export default {
   components: {
     HamburgerIcon,
     BackButton,
+    BackButtonActive,
   },
   data() {
     return {
+      hamburgerVisible: true,
       menuVisible: true,
+      backButtonActive: null,
     }
   },
   computed: {
@@ -73,13 +84,12 @@ export default {
     currentRoute() {
       return this.$router.currentRoute.path
     },
-    hamburgerVisible() {
-      return this.$store.getters.hamburgerVisible
-    },
   },
   watch: {
     $route(to, from) {
       if (to.path === "/auth") this.headerAnimation("hide")
+      if (from.name === "Add Loan") this.hamburgerVisible = true
+      if (to.name === "Add Loan") this.hamburgerVisible = false
     },
   },
   methods: {
@@ -139,6 +149,14 @@ export default {
     },
     clickedBack() {
       this.menuVisible = true
+      this.$store.dispatch("removeBackButton")
+      this.$store.dispatch("removeBackButtonActive")
+    },
+    clickedBackFromActive() {
+      setTimeout(() => {
+        this.backButtonActive = false
+      }, 500)
+      this.menuVisible = true
     },
     checkIfUserIsLoggedIn() {
       let userLoggedIn = this.$store.getters.currentUser
@@ -151,10 +169,14 @@ export default {
       }
     },
     checkCurrentRoute() {
-      if (this.$route.name === "Account Info") {
+      if (this.$route.meta.backButton) {
+        this.backButtonActive = true
+      }
+      if (this.$route.meta.hamburgerVisible === false) {
+        this.hamburgerVisible = false
+      }
+      if (this.$route.meta.menuVisible === false) {
         this.menuVisible = false
-        this.$store.dispatch("showBackButton")
-        this.$store.dispatch("showBackButtonActive")
       }
     },
   },
@@ -163,9 +185,16 @@ export default {
     this.checkCurrentRoute()
     // if back button is pressed (in browser)
     window.onpopstate = (event) => {
+      // if (this.backButtonActive === null) {
       this.$store.dispatch("removeBackButton")
       this.$store.dispatch("removeBackButtonActive")
       this.menuVisible = true
+      //  }
+      // else {
+      //   setTimeout(() => {
+      //     this.backButtonActive = false
+      //   }, 500)
+      // }
     }
   },
 }

@@ -68,6 +68,7 @@ const routes = [
       needsAuth: true,
       needsUser: true,
       title: "Search",
+      backButton: true,
     },
   },
   {
@@ -98,6 +99,7 @@ const routes = [
       needsAuth: true,
       needsAdmin: true,
       title: "Add Loan",
+      hamburgerVisible: false,
     },
   },
   {
@@ -138,6 +140,7 @@ const routes = [
     meta: {
       needsAuth: true,
       title: "Book Details",
+      backButton: true,
     },
   },
   {
@@ -148,6 +151,8 @@ const routes = [
     meta: {
       needsAuth: true,
       title: "Account Info",
+      backButton: true,
+      menuVisible: false,
     },
   },
 ]
