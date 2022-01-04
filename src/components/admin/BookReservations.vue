@@ -53,17 +53,6 @@ export default {
       const result = day + "." + month + "." + year + "."
       return result
     },
-    async autoDeleteReservations() {
-      const querySnapshot = await getDocs(collection(db, "reservations"))
-      let reservationIds = []
-      querySnapshot.forEach((doc) => {
-        if (doc.data().end_time < Date.now()) reservationIds.push(doc.id)
-      })
-      for (let id of reservationIds) {
-        await deleteDoc(doc(db, "reservations", id))
-        console.log("Autodeleted reservation: ", id)
-      }
-    },
     async getAllReservations() {
       const querySnapshot = await getDocs(collection(db, "reservations"))
       querySnapshot.forEach((doc) => {
@@ -156,7 +145,6 @@ export default {
   },
   async created() {
     this.loading = true
-    await this.autoDeleteReservations()
     await this.getAllReservations()
     this.loading = false
   },
