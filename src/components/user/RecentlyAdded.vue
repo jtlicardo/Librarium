@@ -41,7 +41,7 @@ export default {
         console.log("Book id: ", doc.id)
         bookId = doc.id
       })
-      this.$router.push("/" + bookId)
+      this.$router.push({ name: "Book Details", params: { id: bookId } })
     },
   },
   async created() {

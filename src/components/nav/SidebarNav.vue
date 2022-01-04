@@ -38,9 +38,9 @@ export default {
   data() {
     return {
       userListItems: [
-        { text: "BOOKS", to: "/ubooks" },
-        { text: "RESERVATIONS", to: "/ureservations" },
-        { text: "LOANS", to: "/uloans" },
+        { text: "BOOKS", to: "/books" },
+        { text: "RESERVATIONS", to: "/reservations" },
+        { text: "LOANS", to: "/loans" },
       ],
       adminListItems: [
         { text: "BOOKS", to: "/adminbooks" },

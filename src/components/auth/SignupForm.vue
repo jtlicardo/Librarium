@@ -170,7 +170,7 @@ export default {
         console.log("Signed up with display name: ", auth.currentUser.displayName)
         this.addUserToCollection(user.uid)
         await this.animation()
-        this.$router.replace("/ubooks")
+        this.$router.replace({name: "User Books"})
         this.$store.dispatch("displaySnackbar", {
           text: "Signup successful!",
           isActive: true,

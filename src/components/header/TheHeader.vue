@@ -87,7 +87,10 @@ export default {
       if (from.name === "Add Loan") this.hamburgerVisible = true
       if (to.name === "Add Loan") this.hamburgerVisible = false
       if (to.meta.backButton || to.meta.hideMenu) this.menuVisible = false
-      else this.menuVisible = true
+      else {
+        this.menuVisible = true
+        this.hamburgerVisible = true
+      }
     },
   },
   methods: {

@@ -13,6 +13,7 @@ import AdminReservations from "@/views/admin/AdminReservations.vue"
 import AdminRequests from "@/views/admin/AdminRequests.vue"
 import AdminUsers from "@/views/admin/AdminUsers.vue"
 import AccountInfo from "@/views/AccountInfo.vue"
+import NotFound from "@/views/NotFound.vue"
 
 Vue.use(VueRouter)
 
@@ -28,11 +29,11 @@ const routes = [
   },
   {
     path: "/",
-    redirect: "/ubooks",
+    redirect: "/books",
   },
   {
     name: "User Books",
-    path: "/ubooks",
+    path: "/books",
     component: UserBooks,
     meta: {
       needsAuth: true,
@@ -42,7 +43,7 @@ const routes = [
   },
   {
     name: "User Reservations",
-    path: "/ureservations",
+    path: "/reservations",
     component: UserReservations,
     meta: {
       needsAuth: true,
@@ -52,7 +53,7 @@ const routes = [
   },
   {
     name: "User Loans",
-    path: "/uloans",
+    path: "/loans",
     component: UserLoans,
     meta: {
       needsAuth: true,
@@ -135,7 +136,7 @@ const routes = [
   },
   {
     name: "Book Details",
-    path: "/:id",
+    path: "/book/:id",
     component: BookDetails,
     props: true,
     meta: {
@@ -155,6 +156,17 @@ const routes = [
       backButton: true,
     },
   },
+  {
+    name: "Not Found",
+    path: "/:notFound(.*)",
+    component: NotFound,
+    meta: {
+      needsAuth: true,
+      title: "Not Found",
+      hamburgerVisible: false,
+      hideMenu: true,
+    },
+  },
 ]
 
 const router = new VueRouter({
@@ -170,9 +182,9 @@ router.beforeEach((to, from, next) => {
   const isAdmin = userIsAdmin === "true"
   const isAuthenticated = !!currentUserEmail
   if (to.meta.needsAuth && !isAuthenticated) next("/auth")
-  else if (to.meta.needsUnauth && !isAdmin && isAuthenticated) next("/ubooks")
+  else if (to.meta.needsUnauth && !isAdmin && isAuthenticated) next("/books")
   else if (to.meta.needsUnauth && isAdmin && isAuthenticated) next("/adminbooks")
-  else if (to.meta.needsAdmin && !isAdmin && isAuthenticated) next("/ubooks")
+  else if (to.meta.needsAdmin && !isAdmin && isAuthenticated) next("/books")
   else if (to.meta.needsUser && isAdmin && isAuthenticated) next("/adminbooks")
   else next()
   console.log(

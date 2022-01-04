@@ -195,7 +195,7 @@ export default {
       querySnapshot.forEach((doc) => {
         bookId = doc.id
       })
-      this.$router.push("/" + bookId)
+      this.$router.push({ name: "Book Details", params: { id: bookId } })
     },
     openDialog(data) {
       this.bookToBeDeleted = data
