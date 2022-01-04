@@ -20,6 +20,7 @@ export default new Vuex.Store({
       header: {
         backButton: false,
         backButtonActive: false,
+        backButtonActiveOnRefresh: false,
       },
       baseDialog: {
         title: "",

@@ -103,7 +103,6 @@ export default {
   methods: {
     cancelLoan() {
       this.$router.replace({ name: "Admin Loans" })
-      this.$store.dispatch("toggleHamburger")
     },
     async getUserId() {
       const usersRef = collection(db, "users")

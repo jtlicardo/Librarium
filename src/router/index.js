@@ -99,6 +99,7 @@ const routes = [
       needsAuth: true,
       needsAdmin: true,
       title: "Add Loan",
+      hideMenu: true,
       hamburgerVisible: false,
     },
   },

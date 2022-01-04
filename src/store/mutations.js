@@ -36,6 +36,9 @@ export default {
   removeBackButtonActive(state) {
     state.header.backButtonActive = false
   },
+  backButtonActiveOnRefresh(state) {
+    state.header.backButtonActiveOnRefresh = true
+  },
   updateFilters(state, payload) {
     state.searchInput = payload
   },

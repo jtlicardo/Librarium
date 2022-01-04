@@ -86,7 +86,8 @@ export default {
       if (to.name === "Authentication") this.headerAnimation("hide")
       if (from.name === "Add Loan") this.hamburgerVisible = true
       if (to.name === "Add Loan") this.hamburgerVisible = false
-      if (to.meta.backButton) this.menuVisible = false
+      if (to.meta.backButton || to.meta.hideMenu) this.menuVisible = false
+      else this.menuVisible = true
     },
   },
   methods: {
@@ -134,10 +135,8 @@ export default {
     accountInfo() {
       const userId = localStorage.getItem("userId")
       this.$router.push({ name: "Account Info", params: { id: userId } })
-      if (this.backButtonActive === null) {
-        this.$store.dispatch("showBackButton")
-        this.$store.dispatch("showBackButtonActive")
-      }
+      this.$store.dispatch("showBackButton")
+      this.$store.dispatch("showBackButtonActive")
       this.menuVisible = false
     },
     clickedBackFromActive() {
@@ -159,10 +158,14 @@ export default {
     checkCurrentRoute() {
       if (this.$route.meta.backButton) {
         this.backButtonActive = true
+        this.$store.dispatch("backButtonActiveOnRefresh")
         this.menuVisible = false
       }
       if (this.$route.meta.hamburgerVisible === false) {
         this.hamburgerVisible = false
+      }
+      if (this.$route.meta.hideMenu === true) {
+        this.menuVisible = false
       }
     },
   },

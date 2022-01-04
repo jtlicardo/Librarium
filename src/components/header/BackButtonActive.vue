@@ -28,7 +28,9 @@ export default {
   },
   methods: {
     goBack() {
-      this.$router.go(-1)
+      const userIsAdmin = localStorage.getItem("userIsAdmin")
+      if (userIsAdmin) this.$router.push({ name: "Admin Books" })
+      else this.$router.push({ name: "User Books" })
       this.backButtonActive = false
       this.$emit("clicked-back")
     },

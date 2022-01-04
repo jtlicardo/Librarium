@@ -23,6 +23,9 @@ export default {
   backButtonActive(state) {
     return state.header.backButtonActive
   },
+  backButtonActiveOnRefresh(state) {
+    return state.header.backButtonActiveOnRefresh
+  },
   searchInput(state) {
     return state.searchInput
   },

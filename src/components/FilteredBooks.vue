@@ -147,6 +147,9 @@ export default {
         })
       return headers
     },
+    backButtonActiveOnRefresh() {
+      return this.$store.getters.backButtonActiveOnRefresh
+    },
   },
   methods: {
     async getAllBooks() {
@@ -181,8 +184,10 @@ export default {
       this.books = filteredBooks
     },
     async displayBookDetails(data) {
-      this.$store.dispatch("showBackButton")
-      this.$store.dispatch("showBackButtonActive")
+      if (!this.backButtonActiveOnRefresh) {
+        this.$store.dispatch("showBackButton")
+        this.$store.dispatch("showBackButtonActive")
+      }
       let bookId = ""
       const booksRef = collection(db, "books")
       const q = query(booksRef, where("title", "==", data.title))
