@@ -14,6 +14,30 @@
       >
         mdi-calendar-clock
       </v-icon>
+      <div
+        v-if="
+          item.firebaseExtensionRequested === true &&
+          item.firebaseExtensionApproved === null
+        "
+      >
+        Sent
+      </div>
+      <div
+        v-if="
+          item.firebaseExtensionRequested === true &&
+          item.firebaseExtensionApproved === false
+        "
+      >
+        Denied
+      </div>
+      <div
+        v-if="
+          item.firebaseExtensionRequested === true &&
+          item.firebaseExtensionApproved === true
+        "
+      >
+        Accepted
+      </div>
     </template>
   </v-data-table>
 </template>

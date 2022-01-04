@@ -12,7 +12,7 @@ import {
   sendPasswordResetEmail,
   deleteUser,
   reauthenticateWithCredential,
-  EmailAuthProvider
+  EmailAuthProvider,
 } from "firebase/auth"
 import {
   getFirestore,
@@ -29,6 +29,7 @@ import {
   deleteDoc,
   orderBy,
   limit,
+  increment,
 } from "firebase/firestore"
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage"
 
@@ -76,5 +77,6 @@ export {
   limit,
   deleteUser,
   reauthenticateWithCredential,
-  EmailAuthProvider
+  EmailAuthProvider,
+  increment,
 }

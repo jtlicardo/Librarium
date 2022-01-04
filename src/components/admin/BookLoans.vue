@@ -29,7 +29,16 @@
 </template>
 
 <script>
-import { db, collection, getDocs, query, where } from "@/firebase.js"
+import {
+  db,
+  collection,
+  getDocs,
+  query,
+  where,
+  updateDoc,
+  doc,
+  increment,
+} from "@/firebase.js"
 import LoanStatus from "@/components/LoanStatus.vue"
 export default {
   props: {
@@ -161,7 +170,11 @@ export default {
     async getRequests() {
       this.loading = true
       const loansRef = collection(db, "loans")
-      const q = query(loansRef, where("extensionRequested", "==", true))
+      const q = query(
+        loansRef,
+        where("extensionRequested", "==", true),
+        where("extensionApproved", "==", null)
+      )
       const querySnapshot = await getDocs(q)
       querySnapshot.forEach((doc) => {
         const issue_date = this.milisecondsToDate(doc.data().issue_time)
@@ -211,8 +224,49 @@ export default {
     editLoan(item) {
       this.$emit("edit-loan", item)
     },
-    acceptRequest(item) {},
-    denyRequest(item) {},
+    async acceptRequest(item) {
+      try {
+        const loansRef = doc(db, "loans", item.firebaseLoanId)
+        await updateDoc(loansRef, {
+          extensionApproved: true,
+          due_time: increment(604800000),
+        })
+        this.$store.dispatch("displaySnackbar", {
+          text: "Request accepted!",
+          isActive: true,
+        })
+      } catch (e) {
+        console.log("Error: ", e)
+        this.$store.dispatch("displayBaseDialog", {
+          text: e.toString(),
+          title: "Error! Please try again later.",
+          color: "red",
+          loading: false,
+          active: true,
+        })
+      }
+    },
+    async denyRequest(item) {
+      try {
+        const loansRef = doc(db, "loans", item.firebaseLoanId)
+        await updateDoc(loansRef, {
+          extensionApproved: false,
+        })
+        this.$store.dispatch("displaySnackbar", {
+          text: "Request denied!",
+          isActive: true,
+        })
+      } catch (e) {
+        console.log("Error: ", e)
+        this.$store.dispatch("displayBaseDialog", {
+          text: e.toString(),
+          title: "Error! Please try again later.",
+          color: "red",
+          loading: false,
+          active: true,
+        })
+      }
+    },
   },
   async created() {
     if (!this.requests) await this.getAllLoans()
