@@ -108,8 +108,7 @@ export default {
     },
     cancelLoan() {
       this.$router.replace({ name: "Admin Loans" })
-      this.$store.dispatch("removeBackButton")
-      this.$store.dispatch("removeBackButtonActive")
+      this.$store.dispatch("toggleHamburger")
     },
   },
 }

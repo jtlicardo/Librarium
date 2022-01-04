@@ -18,10 +18,13 @@ export default {
     return state.sidebarOpen
   },
   backButton(state) {
-    return state.backButton
+    return state.header.backButton
   },
   backButtonActive(state) {
-    return state.backButtonActive
+    return state.header.backButtonActive
+  },
+  hamburgerVisible(state) {
+    return state.header.hamburgerVisible
   },
   searchInput(state) {
     return state.searchInput

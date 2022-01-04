@@ -6,7 +6,11 @@
     app
     class="d-flex justify-space-between header"
   >
-    <hamburger-icon @click.native="toggleSidebar" v-if="!backButton"></hamburger-icon>
+    <hamburger-icon
+      @click.native="toggleSidebar"
+      v-if="!backButton && hamburgerVisible"
+    ></hamburger-icon>
+    <div class="hamburger-replacement" v-else-if="!hamburgerVisible"></div>
     <back-button
       v-else
       @click.native="removeBackButton"
@@ -68,6 +72,9 @@ export default {
     },
     currentRoute() {
       return this.$router.currentRoute.path
+    },
+    hamburgerVisible() {
+      return this.$store.getters.hamburgerVisible
     },
   },
   watch: {
@@ -191,5 +198,10 @@ export default {
 .menu-replacement {
   width: 56px;
   height: 36px;
+}
+
+.hamburger-replacement {
+  width: 50px;
+  height: 50px;
 }
 </style>

@@ -28,13 +28,16 @@ export default {
     state.backButton = true
   },
   showBackButtonActive(state) {
-    state.backButtonActive = true
+    state.header.backButtonActive = true
   },
   removeBackButton(state) {
     state.backButton = false
   },
   removeBackButtonActive(state) {
-    state.backButtonActive = false
+    state.header.backButtonActive = false
+  },
+  toggleHamburger(state) {
+    state.header.hamburgerVisible = !state.header.hamburgerVisible
   },
   updateFilters(state, payload) {
     state.searchInput = payload

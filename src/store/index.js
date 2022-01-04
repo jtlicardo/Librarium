@@ -17,8 +17,11 @@ export default new Vuex.Store({
       sidebarOpen: false,
       snackbarActive: false,
       snackbarText: "",
-      backButton: false,
-      backButtonActive: false,
+      header: {
+        hamburgerVisible: true,
+        backButton: false,
+        backButtonActive: false,
+      },
       baseDialog: {
         title: "",
         text: "",
