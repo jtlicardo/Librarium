@@ -4,7 +4,7 @@
     viewBox="0 0 100 100"
     width="50"
     @click="goBack"
-    :class="{ active: backButtonActive }"
+    :class="{ active: active }"
   >
     <path
       class="line top"
@@ -20,19 +20,17 @@
 
 <script>
 export default {
-  emits: ["clicked-back"],
   computed: {
-    backButton() {
-      return this.$store.getters.backButton
-    },
-    backButtonActive() {
+    active() {
       return this.$store.getters.backButtonActive
     },
   },
   methods: {
     goBack() {
-      this.$router.go(-1)
-      this.$emit("clicked-back")
+      this.$router.push({ name: "User Books" })
+      this.menuVisible = true
+      this.$store.dispatch("removeBackButton")
+      this.$store.dispatch("removeBackButtonActive")
     },
   },
 }

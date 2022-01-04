@@ -14,11 +14,7 @@
       class="hamburger-replacement"
       v-if="!backButtonActive && !backButton && !hamburgerVisible"
     ></div>
-    <back-button
-      v-if="!backButtonActive && backButton"
-      @click.native="removeBackButton"
-      @clicked-back="clickedBack"
-    ></back-button>
+    <back-button v-if="!backButtonActive && backButton"></back-button>
     <back-button-active
       v-if="backButtonActive && !backButton"
       @clicked-back="clickedBackFromActive"
@@ -87,18 +83,15 @@ export default {
   },
   watch: {
     $route(to, from) {
-      if (to.path === "/auth") this.headerAnimation("hide")
+      if (to.name === "Authentication") this.headerAnimation("hide")
       if (from.name === "Add Loan") this.hamburgerVisible = true
       if (to.name === "Add Loan") this.hamburgerVisible = false
+      if (to.meta.backButton) this.menuVisible = false
     },
   },
   methods: {
     toggleSidebar() {
       this.$store.dispatch("toggleSidebar")
-    },
-    removeBackButton() {
-      this.$store.dispatch("removeBackButton")
-      this.$store.dispatch("removeBackButtonActive")
     },
     headerAnimation(payload) {
       if (payload === "show")
@@ -122,7 +115,6 @@ export default {
           email: null,
           fullname: null,
           isAdmin: null,
-          backButtonActive: null,
         })
         document.querySelector(".header").classList.add("hideheader")
         this.$router.replace("/auth")
@@ -142,15 +134,11 @@ export default {
     accountInfo() {
       const userId = localStorage.getItem("userId")
       this.$router.push({ name: "Account Info", params: { id: userId } })
-      this.$store.dispatch("showBackButton")
-      this.$store.dispatch("showBackButtonActive")
-      localStorage.setItem("backButtonActive", true)
+      if (this.backButtonActive === null) {
+        this.$store.dispatch("showBackButton")
+        this.$store.dispatch("showBackButtonActive")
+      }
       this.menuVisible = false
-    },
-    clickedBack() {
-      this.menuVisible = true
-      this.$store.dispatch("removeBackButton")
-      this.$store.dispatch("removeBackButtonActive")
     },
     clickedBackFromActive() {
       setTimeout(() => {
@@ -171,12 +159,10 @@ export default {
     checkCurrentRoute() {
       if (this.$route.meta.backButton) {
         this.backButtonActive = true
+        this.menuVisible = false
       }
       if (this.$route.meta.hamburgerVisible === false) {
         this.hamburgerVisible = false
-      }
-      if (this.$route.meta.menuVisible === false) {
-        this.menuVisible = false
       }
     },
   },
@@ -185,16 +171,9 @@ export default {
     this.checkCurrentRoute()
     // if back button is pressed (in browser)
     window.onpopstate = (event) => {
-      // if (this.backButtonActive === null) {
       this.$store.dispatch("removeBackButton")
       this.$store.dispatch("removeBackButtonActive")
       this.menuVisible = true
-      //  }
-      // else {
-      //   setTimeout(() => {
-      //     this.backButtonActive = false
-      //   }, 500)
-      // }
     }
   },
 }

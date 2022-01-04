@@ -152,7 +152,6 @@ const routes = [
       needsAuth: true,
       title: "Account Info",
       backButton: true,
-      menuVisible: false,
     },
   },
 ]

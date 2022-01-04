@@ -6,13 +6,11 @@ export default {
       localStorage.removeItem("userFullname")
       localStorage.removeItem("userEmail")
       localStorage.removeItem("userIsAdmin")
-      localStorage.removeItem("backButtonActive")
     } else {
       localStorage.setItem("userId", payload.uid)
       localStorage.setItem("userFullname", payload.fullname)
       localStorage.setItem("userEmail", payload.email)
       localStorage.setItem("userIsAdmin", payload.isAdmin)
-      localStorage.setItem("backButtonActive", payload.backButtonActive)
     }
   },
 }
