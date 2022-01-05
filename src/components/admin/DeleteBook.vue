@@ -35,6 +35,9 @@ import {
   doc,
   updateDoc,
   arrayRemove,
+  deleteObject,
+  storage,
+  ref,
 } from "@/firebase.js"
 export default {
   props: ["active", "book"],
@@ -110,6 +113,11 @@ export default {
           }
         }
         await deleteDoc(doc(db, "books", bookDocumentId))
+        const storageRef = ref(
+          storage,
+          `gs://librarium-11060.appspot.com/${bookDocumentId}`
+        )
+        await deleteObject(storageRef)
         this.$store.dispatch("displaySnackbar", {
           text: "Book deleted!",
           isActive: true,

@@ -31,7 +31,13 @@ import {
   limit,
   increment,
 } from "firebase/firestore"
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage"
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  deleteObject,
+} from "firebase/storage"
 
 const firebaseConfig = {
   apiKey: "AIzaSyDmpWucdj9MuwM5mvjA5_TKMCFlsUXUGpg",
@@ -79,4 +85,5 @@ export {
   reauthenticateWithCredential,
   EmailAuthProvider,
   increment,
+  deleteObject,
 }

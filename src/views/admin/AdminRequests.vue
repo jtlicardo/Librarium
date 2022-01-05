@@ -11,7 +11,8 @@
     <v-row>
       <v-col cols="12" md="1"></v-col>
       <v-col cols="12" md="10">
-        <h1 class="my-10">Loan extension requests</h1>
+        <h1 class="mt-10 mb-5">Loan extension requests</h1>
+        <p class="mb-10">Extend the due date by 7 days</p>
         <book-loans requests></book-loans>
       </v-col>
       <v-col cols="12" md="1"></v-col>
