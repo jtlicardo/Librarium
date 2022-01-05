@@ -88,7 +88,13 @@ export default {
           text: "Login successful!",
           isActive: true,
         })
-        this.$router.replace({name: "User Books"})
+        const userIsAdmin = localStorage.getItem("userIsAdmin")
+        console.log("Login - user is admin?", userIsAdmin)
+        if (userIsAdmin === "true") {
+          this.$router.replace({ name: "Admin Books" })
+        } else if (userIsAdmin === "false") {
+          this.$router.replace({ name: "User Books" })
+        }
       } catch (e) {
         console.log("Login error!", e)
         this.$store.dispatch("displayBaseDialog", {
@@ -128,7 +134,7 @@ export default {
           if (userIsAdmin === "true") {
             this.$router.replace("/adminbooks")
           } else if (userIsAdmin === "false") {
-            this.$router.replace({name: "User Books"})
+            this.$router.replace({ name: "User Books" })
           }
           this.$store.dispatch("displaySnackbar", {
             text: `Logged in as ${user.email}`,
@@ -190,7 +196,7 @@ export default {
           if (userIsAdmin === "true") {
             this.$router.replace("/adminbooks")
           } else if (userIsAdmin === "false") {
-            this.$router.replace({name: "User Books"})
+            this.$router.replace({ name: "User Books" })
           }
           this.$store.dispatch("displaySnackbar", {
             text: `Logged in as ${user.email}`,
