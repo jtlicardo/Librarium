@@ -201,6 +201,26 @@ export default {
         console.log("Autodeleted reservation: ", reservation.id)
       }
     },
+    async checkLoanStatus() {
+      const querySnapshot = await getDocs(collection(db, "loans"))
+      let loans = []
+      querySnapshot.forEach((doc) => {
+        if (
+          doc.data().due_time < Date.now() &&
+          doc.data().loan_status === "In progress"
+        ) {
+          loans.push({
+            id: doc.id,
+          })
+        }
+      })
+      for (let loan of loans) {
+        const loansRef = doc(db, "loans", loan.id)
+        await updateDoc(loansRef, {
+          loan_status: "Overdue",
+        })
+      }
+    },
   },
   watch: {
     $route(to, from) {
@@ -223,6 +243,7 @@ export default {
       this.showHeader = true
     }
     await this.autoDeleteReservations()
+    await this.checkLoanStatus()
   },
 }
 </script>
