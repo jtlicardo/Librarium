@@ -219,7 +219,7 @@ export default {
       } else {
         console.log("No such document!")
       }
-      await this.timeout(1000)
+      await this.timeout(500)
       this.loading = false
     },
     removeReview(userId) {

@@ -13,7 +13,7 @@
       <v-btn
         color="yellow darken-1"
         elevation="1"
-        v-if="item.status === 'Available'"
+        v-if="item.status === 'Available' && !userAlreadyReservedCopy"
         @click="reserveCopy(item)"
       >
         RESERVE
@@ -57,6 +57,7 @@ export default {
   data() {
     return {
       selectedBook: null,
+      userAlreadyReservedCopy: null,
       headers: [
         {
           text: "INVENTORY NUMBER",
@@ -79,6 +80,18 @@ export default {
       } else {
         console.log("No such document!")
       }
+    },
+    async checkIfUserReservedCopy() {
+      const userId = localStorage.getItem("userId")
+      const reservationsRef = collection(db, "reservations")
+      const q = query(
+        reservationsRef,
+        where("bookId", "==", this.id),
+        where("userId", "==", userId)
+      )
+      const querySnapshot = await getDocs(q)
+      if (querySnapshot.empty === true) this.userAlreadyReservedCopy = false
+      else this.userAlreadyReservedCopy = true
     },
     async deleteCopy(item) {
       const inventoryNumber = item.inventoryNumber
@@ -170,8 +183,9 @@ export default {
       }
     },
   },
-  beforeMount() {
-    this.getBookData()
+  async created() {
+    await this.checkIfUserReservedCopy()
+    await this.getBookData()
   },
   computed: {
     bookCopies() {
