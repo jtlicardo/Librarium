@@ -5,6 +5,7 @@
     hide-default-footer
     class="elevation-1 grey lighten-5"
     v-if="selectedBook"
+    :loading="loading"
   >
     <template v-slot:[`item.status`]="{ item }">
       <book-status :type="item.status" class="mx-auto" />
@@ -13,7 +14,7 @@
       <v-btn
         color="yellow darken-1"
         elevation="1"
-        v-if="item.status === 'Available' && !userAlreadyReservedCopy"
+        v-if="item.status === 'Available' && userCanReserve"
         @click="reserveCopy(item)"
       >
         RESERVE
@@ -58,6 +59,8 @@ export default {
     return {
       selectedBook: null,
       userAlreadyReservedCopy: null,
+      userNumOfReservations: 0,
+      loading: false,
       headers: [
         {
           text: "INVENTORY NUMBER",
@@ -93,6 +96,15 @@ export default {
       if (querySnapshot.empty === true) this.userAlreadyReservedCopy = false
       else this.userAlreadyReservedCopy = true
     },
+    async checkNumOfReservationsForUser() {
+      const userId = localStorage.getItem("userId")
+      const usersRef = collection(db, "users")
+      const q = query(usersRef, where("uid", "==", userId))
+      const querySnapshot = await getDocs(q)
+      querySnapshot.forEach((doc) => {
+        this.userNumOfReservations = doc.data().reservations.length
+      })
+    },
     async deleteCopy(item) {
       const inventoryNumber = item.inventoryNumber
       const status = item.status
@@ -111,7 +123,9 @@ export default {
           text: "Copy successfully deleted!",
           isActive: true,
         })
-        this.$emit("copy-deleted")
+        this.loading = true
+        await this.getBookData()
+        this.loading = false
       } catch (e) {
         console.log(e)
         this.$store.dispatch("displayBaseDialog", {
@@ -170,7 +184,11 @@ export default {
           text: "Copy reserved!",
           isActive: true,
         })
-        this.$emit("copy-reserved")
+        this.loading = true
+        await this.checkIfUserReservedCopy()
+        await this.checkNumOfReservationsForUser()
+        await this.getBookData()
+        this.loading = false
       } catch (e) {
         console.log(e)
         this.$store.dispatch("displayBaseDialog", {
@@ -183,9 +201,12 @@ export default {
       }
     },
   },
-  async created() {
+  async mounted() {
+    this.loading = true
     await this.checkIfUserReservedCopy()
+    await this.checkNumOfReservationsForUser()
     await this.getBookData()
+    this.loading = false
   },
   computed: {
     bookCopies() {
@@ -195,6 +216,11 @@ export default {
       const userIsAdmin = localStorage.getItem("userIsAdmin")
       const isAdmin = userIsAdmin === "true"
       if (isAdmin) return true
+      else return false
+    },
+    userCanReserve() {
+      if (this.userNumOfReservations < 3 && this.userAlreadyReservedCopy === false)
+        return true
       else return false
     },
   },

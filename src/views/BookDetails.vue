@@ -21,8 +21,6 @@
           :id="id"
           :title="bookTitle"
           :author="bookAuthor"
-          @copy-deleted="getBookData"
-          @copy-reserved="getBookData"
         />
         <v-row class="mt-5" v-if="userIsAdmin">
           <v-btn class="mx-auto" color="yellow darken-1" @click="openDialog">

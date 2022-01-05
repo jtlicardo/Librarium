@@ -4,7 +4,10 @@
       <v-col cols="12" md="2"></v-col>
       <v-col cols="12" md="10">
         <h1 class="mb-5">My reservations</h1>
-        <p class="mb-10">A list of all your active reservations.</p>
+        <p class="mb-0">A list of all your active reservations.</p>
+        <p class="mb-10">
+          Each user is allowed to have 3 reservations; 1 reservation per book.
+        </p>
         <book-reservations-mobile v-if="isMobile" />
         <book-reservations v-else />
       </v-col>
