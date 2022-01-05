@@ -59,6 +59,7 @@ export default {
     return {
       selectedBook: null,
       userAlreadyReservedCopy: null,
+      userHasLoan: null,
       userNumOfReservations: 0,
       loading: false,
       headers: [
@@ -95,6 +96,18 @@ export default {
       const querySnapshot = await getDocs(q)
       if (querySnapshot.empty === true) this.userAlreadyReservedCopy = false
       else this.userAlreadyReservedCopy = true
+    },
+    async checkIfUserHasLoan() {
+      const userId = localStorage.getItem("userId")
+      const loansRef = collection(db, "loans")
+      const q = query(
+        loansRef,
+        where("bookId", "==", this.id),
+        where("userId", "==", userId)
+      )
+      const querySnapshot = await getDocs(q)
+      if (querySnapshot.empty === true) this.userHasLoan = false
+      else this.userHasLoan = true
     },
     async checkNumOfReservationsForUser() {
       const userId = localStorage.getItem("userId")
@@ -186,6 +199,7 @@ export default {
         })
         this.loading = true
         await this.checkIfUserReservedCopy()
+        await this.checkIfUserHasLoan()
         await this.checkNumOfReservationsForUser()
         await this.getBookData()
         this.loading = false
@@ -204,6 +218,7 @@ export default {
   async mounted() {
     this.loading = true
     await this.checkIfUserReservedCopy()
+    await this.checkIfUserHasLoan()
     await this.checkNumOfReservationsForUser()
     await this.getBookData()
     this.loading = false
@@ -219,7 +234,11 @@ export default {
       else return false
     },
     userCanReserve() {
-      if (this.userNumOfReservations < 3 && this.userAlreadyReservedCopy === false)
+      if (
+        this.userNumOfReservations < 3 &&
+        this.userAlreadyReservedCopy === false &&
+        this.userHasLoan === false
+      )
         return true
       else return false
     },
