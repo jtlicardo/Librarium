@@ -112,6 +112,9 @@ import {
   updateDoc,
   doc,
   arrayUnion,
+  query,
+  where,
+  getDocs,
 } from "@/firebase.js"
 export default {
   props: ["active"],
@@ -189,8 +192,25 @@ export default {
         return false
       } else return true
     },
+    async checkIfBookExists() {
+      const booksRef = collection(db, "books")
+      const q = query(
+        booksRef,
+        where("title", "==", this.book.title),
+        where("author", "==", this.book.author)
+      )
+      const querySnapshot = await getDocs(q)
+      if (querySnapshot.empty === true) return false
+      else {
+        this.validationError = true
+        this.errorMsg = "Book already exists!"
+        return true
+      }
+    },
     async addBook() {
       if (!this.validate()) return
+      const exists = await this.checkIfBookExists()
+      if (exists) return
       this.$store.dispatch("displayLoadingDialog", {
         active: true,
         title: "Adding book...",
