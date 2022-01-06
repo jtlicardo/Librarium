@@ -1,5 +1,5 @@
 <template>
-  <v-container class="login mx-auto d-flex flex-column justify-center">
+  <v-container class="signup mx-auto d-flex flex-column justify-center">
     <h1 class="text-center">SIGNUP</h1>
     <v-form ref="form">
       <div class="inputs">
@@ -45,17 +45,18 @@
     />
     <v-btn
       color="yellow darken-1"
-      class="mx-auto signupbutton"
+      class="mx-auto"
       @click="signup"
       :disabled="isLoading"
       :loading="isLoading"
     >
       SIGN UP
     </v-btn>
-    <p class="text-center mt-10 paragraph">
+    <p class="text-center mt-10">
       Existing user?
       <a @click="changeCmp('login')">Log in here.</a>
     </p>
+    <div id="overlay"></div>
   </v-container>
 </template>
 
@@ -135,13 +136,9 @@ export default {
     },
     animation() {
       return new Promise(async (resolve) => {
-        document.querySelector("h1").classList.toggle("fadeout")
-        document.querySelector(".inputs").classList.toggle("fadeout")
-        document.querySelector(".signupbutton").classList.toggle("fadeout")
-        document.querySelector(".paragraph").classList.toggle("fadeout")
+        document.querySelector("#overlay").classList.toggle("overlay")
+        document.querySelector("#overlay").classList.toggle("fadeout")
         await this.timeout(1500)
-        document.querySelector(".login").classList.toggle("scale")
-        await this.timeout(2000)
         resolve()
       })
     },
@@ -170,7 +167,7 @@ export default {
         console.log("Signed up with display name: ", auth.currentUser.displayName)
         this.addUserToCollection(user.uid)
         await this.animation()
-        this.$router.replace({name: "User Books"})
+        this.$router.replace({ name: "User Books" })
         this.$store.dispatch("displaySnackbar", {
           text: "Signup successful!",
           isActive: true,
@@ -206,7 +203,7 @@ export default {
 </script>
 
 <style scoped>
-.login {
+.signup {
   background-color: white;
   max-width: 570px;
   margin-top: 60px;
@@ -218,16 +215,6 @@ export default {
   padding: 5% 5%;
 }
 
-.fadeout {
-  opacity: 0;
-  transition: all 1.5s;
-}
-
-.scale {
-  transform: scale(4);
-  transition: all 2s ease-out;
-}
-
 p,
 p a {
   color: gray;
@@ -236,5 +223,18 @@ p a {
 p a {
   text-decoration: underline;
   font-weight: 500;
+}
+
+.overlay {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+}
+
+.fadeout {
+  background-color: white;
+  transition: all 1.5s;
 }
 </style>

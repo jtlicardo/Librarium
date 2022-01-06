@@ -11,18 +11,17 @@
       ></v-text-field>
       <p class="text-center"><a @click="changeCmp('forgot')">Forgot password?</a></p>
     </div>
-    <v-btn color="yellow darken-1 loginbutton" class="mx-auto" @click="login">
-      LOG IN
-    </v-btn>
-    <p class="text-center mt-10 paragraph">
+    <v-btn color="yellow darken-1" class="mx-auto" @click="login">LOG IN</v-btn>
+    <p class="text-center mt-10">
       New user?
       <a @click="changeCmp('signup')">Sign up here</a>
       or:
     </p>
-    <v-btn @click="googleAuth" class="mx-auto mt-5 py-5 googlebutton" color="white">
+    <v-btn @click="googleAuth" class="mx-auto mt-5 py-5" color="white">
       <v-img src="@/assets/google.png" max-width="20px"></v-img>
       <span class="googlelogin">Log in with Google</span>
     </v-btn>
+    <div id="overlay"></div>
   </v-container>
 </template>
 
@@ -58,14 +57,9 @@ export default {
     },
     animation() {
       return new Promise(async (resolve) => {
-        document.querySelector("h1").classList.toggle("fadeout")
-        document.querySelector(".inputs").classList.toggle("fadeout")
-        document.querySelector(".loginbutton").classList.toggle("fadeout")
-        document.querySelector(".paragraph").classList.toggle("fadeout")
-        document.querySelector(".googlebutton").classList.toggle("fadeout")
+        document.querySelector("#overlay").classList.toggle("overlay")
+        document.querySelector("#overlay").classList.toggle("fadeout")
         await this.timeout(1500)
-        document.querySelector(".login").classList.toggle("scale")
-        await this.timeout(2000)
         resolve()
       })
     },
@@ -241,16 +235,6 @@ export default {
   padding: 20px 50px 30px;
 }
 
-.fadeout {
-  opacity: 0;
-  transition: all 1.5s;
-}
-
-.scale {
-  transform: scale(4);
-  transition: all 2s ease-out;
-}
-
 .inputs {
   padding: 5% 5%;
 }
@@ -271,5 +255,18 @@ p a {
   color: grey;
   text-transform: none;
   font-family: "Roboto", sans-serif;
+}
+
+.overlay {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+}
+
+.fadeout {
+  background-color: white;
+  transition: all 1.5s;
 }
 </style>

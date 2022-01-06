@@ -128,6 +128,10 @@ export default {
       const user = auth.currentUser
       if (this.googleAuth) {
         try {
+          this.$store.dispatch("displayLoadingDialog", {
+            active: true,
+            title: "Deleting account...",
+          })
           const provider = new GoogleAuthProvider()
           const result = await signInWithPopup(auth, provider)
           const authCredential = GoogleAuthProvider.credentialFromResult(result)
@@ -158,9 +162,17 @@ export default {
             active: true,
           })
         }
+        this.$store.dispatch("displayLoadingDialog", {
+          active: false,
+          title: "",
+        })
       } else {
         try {
           if (!this.validate()) return
+          this.$store.dispatch("displayLoadingDialog", {
+            active: true,
+            title: "Deleting account...",
+          })
           const authCredential = EmailAuthProvider.credential(this.email, this.password)
           await reauthenticateWithCredential(user, authCredential)
           await deleteDoc(doc(db, "users", this.docId))
@@ -189,6 +201,10 @@ export default {
             active: true,
           })
         }
+        this.$store.dispatch("displayLoadingDialog", {
+          active: false,
+          title: "",
+        })
       }
     },
   },
