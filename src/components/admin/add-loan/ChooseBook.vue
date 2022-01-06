@@ -40,12 +40,14 @@
 </template>
 
 <script>
-import { collection, getDocs, db, query, where } from "@/firebase.js"
+import { collection, getDocs, db, query, where, getDoc, doc } from "@/firebase.js"
 
 export default {
   emits: ["book-chosen"],
+  props: ["userEmail"],
   data() {
     return {
+      userLoanBookIds: [],
       books: [],
       loading: false,
       search: "",
@@ -102,21 +104,43 @@ export default {
     },
   },
   methods: {
-    async getAllBooks() {
+    async getBooks() {
+      await this.getUserLoans()
       this.loading = true
       this.books = []
       const querySnapshot = await getDocs(collection(db, "books"))
       querySnapshot.forEach((doc) => {
-        this.books.push(doc.data())
+        if (!this.userLoanBookIds.includes(doc.id)) this.books.push(doc.data())
       })
       this.loading = false
+    },
+    async getUserLoans() {
+      const usersRef = collection(db, "users")
+      const q = query(usersRef, where("email", "==", this.userEmail))
+      this.userLoanBookIds = []
+      const querySnapshot = await getDocs(q)
+      let loans = []
+      querySnapshot.forEach((doc) => {
+        loans = doc.data().loans
+      })
+      for (let loan of loans) {
+        const docRef = doc(db, "loans", loan)
+        const docSnap = await getDoc(docRef)
+        if (docSnap.exists()) {
+          this.userLoanBookIds.push(docSnap.data().bookId)
+        } else {
+          console.log("No such document!")
+        }
+      }
     },
     chooseBook(data) {
       this.$emit("book-chosen", data)
     },
   },
-  async created() {
-    await this.getAllBooks()
+  watch: {
+    userEmail() {
+      this.getBooks()
+    },
   },
 }
 </script>

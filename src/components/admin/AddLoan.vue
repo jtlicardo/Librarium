@@ -29,11 +29,11 @@
       </v-stepper-content>
 
       <v-stepper-content step="2">
-        <choose-book @book-chosen="saveBook"></choose-book>
+        <choose-book :userEmail="user.email" @book-chosen="saveBook"></choose-book>
 
         <v-btn color="red white--text" class="mt-10" @click="cancelLoan">Cancel</v-btn>
 
-        <v-btn text @click="e1 = 1" class="mt-10 mx-5">Go back</v-btn>
+        <v-btn text @click="goBackToUser" class="mt-10 mx-5">Go back</v-btn>
       </v-stepper-content>
 
       <v-stepper-content step="3">
@@ -108,6 +108,11 @@ export default {
     },
     cancelLoan() {
       this.$router.replace({ name: "Admin Loans" })
+    },
+    goBackToUser() {
+      this.user.email = ""
+      this.user.displayName = ""
+      this.e1 = 1
     },
   },
 }
