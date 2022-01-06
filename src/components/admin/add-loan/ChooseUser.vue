@@ -34,16 +34,18 @@ export default {
     }
   },
   methods: {
-    async getAllUsers() {
+    async getUsers() {
       this.loading = true
       const usersRef = collection(db, "users")
       const q = query(usersRef, where("isAdmin", "==", false))
       const querySnapshot = await getDocs(q)
       querySnapshot.forEach((doc) => {
-        this.users.push({
-          fullname: doc.data().fullname,
-          email: doc.data().email,
-        })
+        if (doc.data().loans.length < 3) {
+          this.users.push({
+            fullname: doc.data().fullname,
+            email: doc.data().email,
+          })
+        }
       })
       this.loading = false
     },
@@ -52,7 +54,7 @@ export default {
     },
   },
   async created() {
-    await this.getAllUsers()
+    await this.getUsers()
   },
 }
 </script>
