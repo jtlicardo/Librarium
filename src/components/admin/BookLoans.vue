@@ -169,6 +169,7 @@ export default {
     },
     async getRequests() {
       this.loading = true
+      this.loans = []
       const loansRef = collection(db, "loans")
       const q = query(
         loansRef,
@@ -235,6 +236,7 @@ export default {
           text: "Request accepted!",
           isActive: true,
         })
+        await this.getRequests()
       } catch (e) {
         console.log("Error: ", e)
         this.$store.dispatch("displayBaseDialog", {
@@ -256,6 +258,7 @@ export default {
           text: "Request denied!",
           isActive: true,
         })
+        await this.getRequests()
       } catch (e) {
         console.log("Error: ", e)
         this.$store.dispatch("displayBaseDialog", {

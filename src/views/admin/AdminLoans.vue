@@ -21,6 +21,7 @@
 <script>
 import BookLoans from "@/components/admin/BookLoans.vue"
 import EditLoan from "@/components/admin/EditLoan.vue"
+import { collection, db, getDocs, updateDoc, doc } from "@/firebase.js"
 
 export default {
   components: {
@@ -47,6 +48,43 @@ export default {
     getLoans() {
       this.$refs.loansComponent.getAllLoans()
     },
+    async checkLoanStatus() {
+      const querySnapshot = await getDocs(collection(db, "loans"))
+      let loans = []
+      querySnapshot.forEach((doc) => {
+        if (
+          doc.data().due_time < Date.now() &&
+          doc.data().loan_status === "In progress"
+        ) {
+          loans.push({
+            id: doc.id,
+          })
+        }
+      })
+      for (let loan of loans) {
+        const loansRef = doc(db, "loans", loan.id)
+        await updateDoc(loansRef, {
+          loan_status: "Overdue",
+        })
+      }
+      loans = []
+      querySnapshot.forEach((doc) => {
+        if (doc.data().due_time > Date.now() && doc.data().loan_status === "Overdue") {
+          loans.push({
+            id: doc.id,
+          })
+        }
+      })
+      for (let loan of loans) {
+        const loansRef = doc(db, "loans", loan.id)
+        await updateDoc(loansRef, {
+          loan_status: "In progress",
+        })
+      }
+    },
+  },
+  async mounted() {
+    await this.checkLoanStatus()
   },
 }
 </script>
