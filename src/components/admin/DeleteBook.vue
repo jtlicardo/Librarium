@@ -7,6 +7,9 @@
         </v-card-title>
         <v-card-subtitle>
           <h3 class="text-center mt-10">Are you sure you want to delete this book?</h3>
+          <h3 class="text-center mt-2">
+            This will delete all the loans and reservations associated with this book.
+          </h3>
           <p class="text-center mt-5 mb-0">{{ bookTitle }}</p>
           <p class="text-center mb-0">{{ bookAuthor }}</p>
         </v-card-subtitle>
@@ -83,21 +86,71 @@ export default {
       })
       return reservationIds
     },
-    async deleteReservation(reservationId) {
-      const usersRef = collection(db, "users")
-      const q = query(usersRef, where("reservations", "array-contains", reservationId))
+    async checkForLoans(bookDocumentId) {
+      const loansRef = collection(db, "loans")
+      const q = query(loansRef, where("bookId", "==", bookDocumentId))
       const querySnapshot = await getDocs(q)
-      let userDocumentId = ""
+      let loanIds = []
       querySnapshot.forEach((doc) => {
-        userDocumentId = doc.id
+        loanIds.push(doc.id)
       })
-      if (userDocumentId !== "") {
-        const user = doc(db, "users", userDocumentId)
-        await updateDoc(user, {
-          reservations: arrayRemove(reservationId),
+      return loanIds
+    },
+    async deleteReservation(reservationId) {
+      try {
+        // remove reservation id from users collection
+        const usersRef = collection(db, "users")
+        const q = query(usersRef, where("reservations", "array-contains", reservationId))
+        const querySnapshot = await getDocs(q)
+        let userDocumentId = ""
+        querySnapshot.forEach((doc) => {
+          userDocumentId = doc.id
+        })
+        if (userDocumentId !== "") {
+          const user = doc(db, "users", userDocumentId)
+          await updateDoc(user, {
+            reservations: arrayRemove(reservationId),
+          })
+        }
+        // delete reservation
+        await deleteDoc(doc(db, "reservations", reservationId))
+      } catch (e) {
+        console.log(e)
+        this.$store.dispatch("displayBaseDialog", {
+          text: e.toString(),
+          title: "Error! Please try again later.",
+          color: "red",
+          loading: false,
+          active: true,
         })
       }
-      await deleteDoc(doc(db, "reservations", reservationId))
+    },
+    async deleteLoan(loanId) {
+      try {
+        // remove loan id from users collection
+        let userDocumentId = ""
+        const users = collection(db, "users")
+        const q = query(users, where("loans", "array-contains", loanId))
+        const querySnapshot = await getDocs(q)
+        querySnapshot.forEach((doc) => {
+          userDocumentId = doc.id
+        })
+        const usersRef = doc(db, "users", userDocumentId)
+        await updateDoc(usersRef, {
+          loans: arrayRemove(loanId),
+        })
+        // delete loan
+        await deleteDoc(doc(db, "loans", loanId))
+      } catch (e) {
+        console.log(e)
+        this.$store.dispatch("displayBaseDialog", {
+          text: e.toString(),
+          title: "Error! Please try again later.",
+          color: "red",
+          loading: false,
+          active: true,
+        })
+      }
     },
     async deleteBook() {
       this.$store.dispatch("displayLoadingDialog", {
@@ -110,6 +163,12 @@ export default {
         if (reservationIds.length > 0) {
           for (let id of reservationIds) {
             await this.deleteReservation(id)
+          }
+        }
+        const loanIds = await this.checkForLoans(bookDocumentId)
+        if (loanIds.length > 0) {
+          for (let id of loanIds) {
+            await this.deleteLoan(id)
           }
         }
         await deleteDoc(doc(db, "books", bookDocumentId))
