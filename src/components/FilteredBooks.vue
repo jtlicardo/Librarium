@@ -127,23 +127,34 @@ export default {
           sortable: false,
           align: "center",
           filterable: false,
-          sortable: true,
-        },
-        {
-          text: "# OF COPIES",
-          value: "copies",
-          sortable: false,
-          align: "center",
-          filterable: false,
         },
       ]
       if (this.userIsAdmin)
+        headers.push(
+          {
+            text: "# OF COPIES",
+            value: "copies",
+            sortable: false,
+            align: "center",
+            width: "200px",
+            filterable: false,
+          },
+          {
+            text: "DELETE",
+            value: "delete",
+            sortable: false,
+            width: "100px",
+            align: "center",
+          }
+        )
+      else
         headers.push({
-          text: "DELETE",
-          value: "delete",
+          text: "AVG RATING",
+          value: "averageRating",
+          width: "200px",
           sortable: false,
-          width: "100px",
           align: "center",
+          filterable: false,
         })
       return headers
     },
@@ -152,12 +163,30 @@ export default {
     },
   },
   methods: {
+    calculateAvgRating(reviews) {
+      if (reviews.length === 0) return "N/A"
+      let total = 0
+      for (let review of reviews) {
+        total += review.rating
+      }
+      return (total / reviews.length).toFixed(1)
+    },
     async getAllBooks() {
       this.loading = true
       this.books = []
       const querySnapshot = await getDocs(collection(db, "books"))
       querySnapshot.forEach((doc) => {
-        this.books.push(doc.data())
+        this.books.push({
+          added_at: doc.data().added_at,
+          author: doc.data().author,
+          copies: doc.data().copies,
+          genres: doc.data().genres,
+          logoUrl: doc.data().logoUrl,
+          numOfPages: doc.data().numOfPages,
+          reviews: doc.data().reviews,
+          title: doc.data().title,
+          averageRating: this.calculateAvgRating(doc.data().reviews),
+        })
       })
       this.loading = false
     },
