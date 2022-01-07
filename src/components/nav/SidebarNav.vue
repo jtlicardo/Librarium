@@ -38,16 +38,18 @@ export default {
   data() {
     return {
       userListItems: [
-        { text: "BOOKS", to: "/books" },
-        { text: "RESERVATIONS", to: "/reservations" },
-        { text: "LOANS", to: "/loans" },
+        { text: "BOOKS", to: { name: "User Books" } },
+        { text: "RESERVATIONS", to: { name: "User Reservations" } },
+        { text: "LOANS", to: { name: "User Loans" } },
+        { text: "ACCOUNT", to: `/account/${localStorage.getItem("userId")}` },
       ],
       adminListItems: [
-        { text: "BOOKS", to: "/adminbooks" },
-        { text: "LOANS", to: "/adminloans" },
-        { text: "RESERVATIONS", to: "/adminreservations" },
-        { text: "REQUESTS", to: "/adminrequests" },
-        { text: "USERS", to: "/adminusers" },
+        { text: "BOOKS", to: { name: "Admin Books" } },
+        { text: "LOANS", to: { name: "Admin Loans" } },
+        { text: "RESERVATIONS", to: { name: "Admin Reservations" } },
+        { text: "REQUESTS", to: { name: "Admin Requests" } },
+        { text: "USERS", to: { name: "Admin Users" } },
+        { text: "ACCOUNT", to: `/account/${localStorage.getItem("userId")}` },
       ],
     }
   },
