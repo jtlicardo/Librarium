@@ -11,6 +11,9 @@ export default {
   displayLoadingDialog(context, payload) {
     context.commit("displayLoadingDialog", payload)
   },
+  toggleLogoutDialog(context) {
+    context.commit("toggleLogoutDialog")
+  },
   toggleSidebar(context) {
     context.commit("toggleSidebar")
   },
@@ -33,7 +36,7 @@ export default {
   removeBackButtonActive(context) {
     context.commit("removeBackButtonActive")
   },
-  backButtonActiveOnRefresh(context){
+  backButtonActiveOnRefresh(context) {
     context.commit("backButtonActiveOnRefresh")
   },
   updateFilters(context, payload) {

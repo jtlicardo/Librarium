@@ -12,8 +12,8 @@
       <v-list-item-group v-if="sidebarLinks === 'user'" active-class="link-active">
         <v-list-item
           class="justify-center my-2"
-          v-for="item in userListItems"
-          :key="item.to"
+          v-for="(item, index) in userListItems"
+          :key="index"
           :to="item.to"
         >
           {{ item.text }}
@@ -22,8 +22,8 @@
       <v-list-item-group v-if="sidebarLinks === 'admin'" active-class="link-active">
         <v-list-item
           class="justify-center my-2"
-          v-for="item in adminListItems"
-          :key="item.to"
+          v-for="(item, index) in adminListItems"
+          :key="index"
           :to="item.to"
         >
           {{ item.text }}

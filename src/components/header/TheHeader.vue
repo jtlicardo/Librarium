@@ -29,18 +29,17 @@
 
     <v-menu offset-y v-if="menuVisible">
       <template v-slot:activator="{ on, attrs }">
-        <v-icon color="white" large class="ml-3 mr-2" v-bind="attrs" v-on="on">
-          mdi-account-circle
+        <v-icon
+          color="white"
+          large
+          class="ml-3 mr-2"
+          v-bind="attrs"
+          v-on="on"
+          @click="openLogoutDialog"
+        >
+          mdi-logout-variant
         </v-icon>
       </template>
-      <v-list>
-        <v-list-item @click="accountInfo" link>
-          <v-list-item-title class="text-center py-2">Account info</v-list-item-title>
-        </v-list-item>
-        <v-list-item @click="logout" link>
-          <v-list-item-title class="text-center py-2">Log out</v-list-item-title>
-        </v-list-item>
-      </v-list>
     </v-menu>
     <div class="menu-replacement" v-else></div>
   </v-app-bar>
@@ -50,7 +49,6 @@
 import HamburgerIcon from "./HamburgerIcon.vue"
 import BackButton from "@/components/header/BackButton.vue"
 import BackButtonActive from "@/components/header/BackButtonActive.vue"
-import { getAuth, signOut } from "firebase/auth"
 
 export default {
   components: {
@@ -77,9 +75,6 @@ export default {
     backButton() {
       return this.$store.getters.backButton
     },
-    currentRoute() {
-      return this.$router.currentRoute.path
-    },
   },
   watch: {
     $route(to, from) {
@@ -97,50 +92,13 @@ export default {
     toggleSidebar() {
       this.$store.dispatch("toggleSidebar")
     },
+    openLogoutDialog() {
+      this.$store.dispatch("toggleLogoutDialog")
+    },
     headerAnimation(payload) {
       if (payload === "show")
         document.querySelector(".header").classList.remove("hideheader")
       else document.querySelector(".header").classList.add("hideheader")
-    },
-    timeout(miliseconds) {
-      return new Promise((resolve) => setTimeout(resolve, miliseconds))
-    },
-    async logout() {
-      const auth = getAuth()
-      this.$store.dispatch("displayLoadingDialog", {
-        active: true,
-        title: "Logging you out...",
-      })
-      try {
-        await signOut(auth)
-        console.log("Logout successful!")
-        this.$store.dispatch("setUser", {
-          uid: null,
-          email: null,
-          fullname: null,
-          isAdmin: null,
-        })
-        document.querySelector(".header").classList.add("hideheader")
-        this.$router.replace("/auth")
-        await this.timeout(2000)
-        this.$store.dispatch("displaySnackbar", {
-          text: "Logout successful!",
-          isActive: true,
-        })
-      } catch (e) {
-        console.log("Logout error", e)
-      }
-      this.$store.dispatch("displayLoadingDialog", {
-        active: false,
-        title: "",
-      })
-    },
-    accountInfo() {
-      const userId = localStorage.getItem("userId")
-      this.$router.push({ name: "Account Info", params: { id: userId } })
-      this.$store.dispatch("showBackButton")
-      this.$store.dispatch("showBackButtonActive")
-      this.menuVisible = false
     },
     clickedBackFromActive() {
       setTimeout(() => {

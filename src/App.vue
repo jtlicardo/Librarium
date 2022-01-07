@@ -26,6 +26,7 @@
       :active="loadingDialog.active"
       :title="loadingDialog.title"
     ></loading-dialog>
+    <logout-dialog :active="logoutDialogActive"></logout-dialog>
     <v-snackbar content-class="text-center" v-model="snackbarActive" timeout="2000">
       {{ snackbarText }}
     </v-snackbar>
@@ -38,6 +39,7 @@ import TheHeader from "@/components/header/TheHeader.vue"
 import BaseDialog from "@/components/ui/BaseDialog.vue"
 import ErrorPopup from "@/components/ui/ErrorPopup.vue"
 import LoadingDialog from "@/components/ui/LoadingDialog.vue"
+import LogoutDialog from "@/components/LogoutDialog.vue"
 import {
   getAuth,
   onAuthStateChanged,
@@ -93,6 +95,7 @@ export default {
     BaseDialog,
     ErrorPopup,
     LoadingDialog,
+    LogoutDialog,
   },
   data() {
     return {
@@ -133,6 +136,9 @@ export default {
     },
     loadingDialog() {
       return this.$store.getters.loadingDialog
+    },
+    logoutDialogActive() {
+      return this.$store.getters.logoutDialogActive
     },
   },
   methods: {

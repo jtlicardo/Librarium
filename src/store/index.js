@@ -37,6 +37,7 @@ export default new Vuex.Store({
         active: false,
         title: "",
       },
+      logoutDialogActive: false,
       searchInput: {
         title: "",
         author: "",

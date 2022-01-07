@@ -153,7 +153,6 @@ const routes = [
     meta: {
       needsAuth: true,
       title: "Account Info",
-      backButton: true,
     },
   },
   {

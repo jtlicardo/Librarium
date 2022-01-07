@@ -14,6 +14,9 @@ export default {
   loadingDialog(state) {
     return state.loadingDialog
   },
+  logoutDialogActive(state) {
+    return state.logoutDialogActive
+  },
   sidebarOpen(state) {
     return state.sidebarOpen
   },
