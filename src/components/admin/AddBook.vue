@@ -85,11 +85,12 @@
           </v-container>
         </v-card-text>
         <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="gray darken-1" class="px-4" text @click="closeDialog">
+          <v-btn color="gray darken-1" class="px-4 mx-auto" text @click="closeDialog">
             Cancel
           </v-btn>
-          <v-btn color="yellow darken-1" class="px-4" @click="addBook">Add book</v-btn>
+          <v-btn color="yellow darken-1" class="px-4 mx-auto" @click="addBook">
+            Add book
+          </v-btn>
         </v-card-actions>
         <error-popup
           :active="validationError"

@@ -17,7 +17,12 @@
       <loan-status :type="item.loan_status"></loan-status>
     </template>
     <template v-slot:[`item.edit`]="{ item }">
-      <v-icon color="primary" @click="editLoan(item)">mdi-circle-edit-outline</v-icon>
+      <v-icon color="primary" @click="editLoan(item)" v-if="!isMobile">
+        mdi-circle-edit-outline
+      </v-icon>
+      <v-btn color="primary" @click="editLoan(item)" v-else class="edit-button">
+        Edit
+      </v-btn>
     </template>
     <template v-slot:[`item.accept`]="{ item }">
       <v-icon color="success" @click="acceptRequest(item)">mdi-check-outline</v-icon>
@@ -58,6 +63,15 @@ export default {
     }
   },
   computed: {
+    isMobile() {
+      switch (this.$vuetify.breakpoint.name) {
+        case "xs":
+        case "sm":
+          return true
+        default:
+          return false
+      }
+    },
     headers() {
       let headers = [
         {
@@ -97,9 +111,17 @@ export default {
           align: "center",
         },
       ]
-      if (!this.requests) {
+      if (!this.requests && !this.isMobile) {
         headers.push({
           text: "EDIT",
+          value: "edit",
+          sortable: false,
+          align: "center",
+        })
+      }
+      if (!this.requests && this.isMobile) {
+        headers.push({
+          text: "",
           value: "edit",
           sortable: false,
           align: "center",
@@ -278,4 +300,19 @@ export default {
 }
 </script>
 
-<style></style>
+<style scoped>
+.v-data-table__mobile-row__cell > button.edit-button {
+  margin-top: 30px;
+  margin-bottom: 40px;
+}
+
+.v-data-table
+  >>> .v-data-table__wrapper
+  > table
+  > tbody
+  > .v-data-table__mobile-table-row
+  > .v-data-table__mobile-row:last-child
+  > .v-data-table__mobile-row__cell {
+  margin: 0 auto;
+}
+</style>

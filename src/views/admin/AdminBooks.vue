@@ -36,7 +36,9 @@
           ></filtered-books-mobile>
         </div>
         <filtered-books v-else></filtered-books>
-        <v-btn class="my-14" color="yellow darken-1" @click="addBook">Add book</v-btn>
+        <div :class="{ 'text-center': isMobile }">
+          <v-btn class="my-14" color="yellow darken-1" @click="addBook">Add book</v-btn>
+        </div>
         <add-book :active="addBookDialogActive" @close-dialog="closeDialog"></add-book>
       </v-col>
       <v-col cols="12" lg="1"></v-col>
