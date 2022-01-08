@@ -17,8 +17,21 @@
         <v-divider></v-divider>
         <v-card-subtitle class="pb-0"><b>Genres</b></v-card-subtitle>
         <v-card-subtitle class="pt-0">{{ allGenres }}</v-card-subtitle>
-        <v-card-subtitle class="pb-0"><b>Average rating</b></v-card-subtitle>
-        <v-card-subtitle class="pt-0">{{ avgRating }}</v-card-subtitle>
+        <v-card-subtitle class="pb-0" v-if="!userIsAdmin">
+          <b>Average rating</b>
+        </v-card-subtitle>
+        <v-card-subtitle class="pt-0" v-if="!userIsAdmin">
+          {{ avgRating }}
+        </v-card-subtitle>
+        <v-card-subtitle class="pb-0" v-if="userIsAdmin">
+          <b>Number of copies</b>
+        </v-card-subtitle>
+        <v-card-subtitle class="pt-0" v-if="userIsAdmin">
+          {{ copies.length }}
+        </v-card-subtitle>
+        <v-btn color="red white--text my-3" v-if="userIsAdmin" @click.stop="deleteBook">
+          Delete
+        </v-btn>
       </div>
 
       <v-img
@@ -34,7 +47,7 @@
 
 <script>
 export default {
-  props: ["title", "author", "imagesource", "genres", "reviews"],
+  props: ["title", "author", "imagesource", "genres", "reviews", "copies", "added"],
   methods: {
     emitBookTitle() {
       this.$emit("book-title", this.title)
@@ -42,6 +55,14 @@ export default {
     toggleBackButton() {
       this.$store.dispatch("showBackButton")
       this.$store.dispatch("showBackButtonActive")
+    },
+    deleteBook() {
+      this.$emit("delete", {
+        title: this.title,
+        author: this.author,
+        logoUrl: this.imagesource,
+        added_at: this.added,
+      })
     },
   },
   computed: {
@@ -66,6 +87,12 @@ export default {
         total += review.rating
       }
       return (total / this.reviews.length).toFixed(1)
+    },
+    userIsAdmin() {
+      const userIsAdmin = localStorage.getItem("userIsAdmin")
+      const isAdmin = userIsAdmin === "true"
+      if (isAdmin) return true
+      else return false
     },
   },
 }

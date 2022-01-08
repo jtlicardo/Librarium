@@ -182,6 +182,10 @@ export default {
         this.validationError = true
         this.errorMsg = "Please fill in all the required fields!"
         return false
+      } else if (this.book.numOfPages <= 0) {
+        this.validationError = true
+        this.errorMsg = "Number of pages needs to be a positive number!"
+        return false
       } else if (
         this.book.genres.mainGenre.length >= 25 ||
         this.book.genres.secondaryGenre.length >= 25 ||

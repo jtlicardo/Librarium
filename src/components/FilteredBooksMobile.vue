@@ -8,15 +8,25 @@
       :imagesource="book.logoUrl"
       :genres="book.genres"
       :reviews="book.reviews"
+      :copies="book.copies"
+      :added="book.added_at"
       @book-title="displayBookDetails"
+      @delete="openDialog"
       class="mx-auto"
     ></mobile-search-card>
     <p v-if="books.length === 0 && !loading">No books found</p>
+    <delete-book
+      :active="dialogActive"
+      :book="bookToBeDeleted"
+      @close-dialog="closeDialog"
+      @deleted="getAllBooks"
+    ></delete-book>
   </div>
 </template>
 
 <script>
 import MobileSearchCard from "@/components/MobileSearchCard.vue"
+import DeleteBook from "@/components/admin/DeleteBook.vue"
 
 import { collection, getDocs, db, query, where } from "@/firebase.js"
 
@@ -37,12 +47,15 @@ export default {
   },
   components: {
     MobileSearchCard,
+    DeleteBook,
   },
   data() {
     return {
       books: [],
       search: "",
       loading: false,
+      bookToBeDeleted: null,
+      dialogActive: false,
     }
   },
   computed: {
