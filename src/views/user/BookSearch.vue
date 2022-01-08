@@ -4,7 +4,13 @@
       <v-col cols="12" md="1"></v-col>
       <v-col cols="12" md="10">
         <h1 class="mb-5">Search results</h1>
-        <filtered-books :title="title" :author="author" :genre="genre" />
+        <filtered-books v-if="!isMobile" :title="title" :author="author" :genre="genre" />
+        <filtered-books-mobile
+          v-else
+          :searchtitle="title"
+          :searchauthor="author"
+          :searchgenre="genre"
+        ></filtered-books-mobile>
         <p class="mt-15">Can't find the book you're looking for?</p>
         <p>
           <a @click="openDialog">Send a request</a>
@@ -22,11 +28,13 @@
 
 <script>
 import FilteredBooks from "@/components/FilteredBooks.vue"
+import FilteredBooksMobile from "@/components/FilteredBooksMobile.vue"
 import SendRequest from "@/components/user/SendRequest.vue"
 
 export default {
   components: {
     FilteredBooks,
+    FilteredBooksMobile,
     SendRequest,
   },
   data() {
@@ -36,6 +44,17 @@ export default {
       genre: "",
       sendRequestDialogActive: false,
     }
+  },
+  computed: {
+    isMobile() {
+      switch (this.$vuetify.breakpoint.name) {
+        case "xs":
+        case "sm":
+          return true
+        default:
+          return false
+      }
+    },
   },
   methods: {
     setFilters() {

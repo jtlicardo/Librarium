@@ -92,7 +92,7 @@ export default {
       else return false
     },
     headers() {
-      const headers = [
+      let headers = [
         {
           text: "LOGO",
           sortable: false,
