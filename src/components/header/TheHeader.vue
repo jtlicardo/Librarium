@@ -32,8 +32,6 @@
       color="white"
       large
       class="ml-3 mr-2 logout"
-      v-bind="attrs"
-      v-on="on"
       @click="openLogoutDialog"
       v-if="menuVisible"
     >

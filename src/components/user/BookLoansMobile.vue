@@ -1,13 +1,14 @@
 <template>
   <v-data-table
     :headers="headerTitles"
-    :items="reservations"
+    :items="loans"
     :single-expand="singleExpand"
-    item-key="name"
+    item-key="title"
     show-expand
     hide-default-header
     hide-default-footer
-    class="elevation-1 grey lighten-4"
+    class="elevation-1"
+    :loading="loading"
     @click:row="(item, slot) => slot.expand(!slot.isExpanded)"
   >
     <template v-slot:expanded-item="{ headers, item }">
@@ -15,7 +16,7 @@
         <b class="text-h6">LOAN DETAILS</b>
         <p class="my-0">
           <b>Book title:</b>
-          {{ item.name }}
+          {{ item.title }}
         </p>
         <p class="my-0">
           <b>Author:</b>
@@ -33,46 +34,98 @@
           <b>Due date:</b>
           {{ item.dueDate }}
         </p>
-        <v-btn class="mt-3 black--text" color="yellow darken-1">SEND REQUEST</v-btn>
+        <p
+          class="my-0"
+          v-if="item.extensionRequested === true && item.extensionApproved === null"
+        >
+          <b>Request status:</b>
+          Sent
+        </p>
+        <p
+          class="my-0"
+          v-if="item.extensionRequested === true && item.extensionApproved === false"
+        >
+          <b>Request status:</b>
+          Denied
+        </p>
+        <p
+          class="my-0"
+          v-if="item.extensionRequested === true && item.extensionApproved === true"
+        >
+          <b>Request status:</b>
+          Approved
+        </p>
+        <v-btn
+          v-if="item.extensionRequested === false"
+          class="mt-3 black--text"
+          color="yellow darken-1"
+        >
+          SEND REQUEST
+        </v-btn>
       </td>
     </template>
   </v-data-table>
 </template>
 
 <script>
+import { db, collection, query, where, getDocs } from "@/firebase.js"
+
 export default {
   data() {
     return {
       singleExpand: true,
+      loading: false,
       headerTitles: [
         {
           text: "",
           align: "start",
           sortable: false,
-          value: "name",
+          value: "title",
         },
         {
           text: "",
           value: "data-table-expand",
         },
       ],
-      reservations: [
-        {
-          name: "Crime and Punishment",
-          author: "Fyodor Dostoevsky",
-          inventoryNumber: "26008",
-          issueDate: "16.11.2021.",
-          dueDate: "19.11.2021.",
-        },
-        {
-          name: "Sapiens - A Brief History of Humankind",
-          author: "Yuval Noah Harari",
-          inventoryNumber: "57961",
-          issueDate: "15.11.2021.",
-          dueDate: "18.11.2021.",
-        },
-      ],
+      loans: [],
     }
+  },
+  methods: {
+    milisecondsToDate(miliseconds) {
+      let date = new Date(miliseconds)
+      const day = date.getDate()
+      const month = date.getMonth() + 1
+      const year = date.getFullYear()
+      const result = day + "." + month + "." + year + "."
+      return result
+    },
+    async getUserLoans() {
+      this.loading = true
+      const userId = localStorage.getItem("userId")
+      const loansRef = collection(db, "loans")
+      const q = query(loansRef, where("userId", "==", userId))
+      const querySnapshot = await getDocs(q)
+      querySnapshot.forEach((doc) => {
+        this.loans.push({
+          firebaseLoanId: doc.id,
+          author: doc.data().author,
+          title: doc.data().title,
+          firebaseBookId: doc.data().bookId,
+          inventoryNumber: doc.data().copyInvNumber,
+          firebaseDueTime: doc.data().due_time,
+          dueDate: this.milisecondsToDate(doc.data().due_time),
+          firebaseIssueTime: doc.data().issue_time,
+          issueDate: this.milisecondsToDate(doc.data().issue_time),
+          extensionApproved: doc.data().extensionApproved,
+          extensionRequested: doc.data().extensionRequested,
+          loanStatus: doc.data().loan_status,
+        })
+      })
+      this.loading = false
+    },
+  },
+  async created() {
+    await this.getUserLoans()
   },
 }
 </script>

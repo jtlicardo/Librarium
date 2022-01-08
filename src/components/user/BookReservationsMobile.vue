@@ -8,6 +8,7 @@
     hide-default-header
     hide-default-footer
     class="elevation-1"
+    :loading="loading"
     @click:row="(item, slot) => slot.expand(!slot.isExpanded)"
   >
     <template v-slot:expanded-item="{ headers, item }">
@@ -63,6 +64,7 @@ export default {
   data() {
     return {
       singleExpand: true,
+      loading: false,
       headerTitles: [
         {
           text: "",
