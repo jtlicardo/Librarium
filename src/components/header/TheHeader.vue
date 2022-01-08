@@ -2,9 +2,10 @@
   <v-app-bar
     color="#02afff"
     height="80px"
+    :width="appBarWidth"
     clipped-left
     app
-    class="d-flex justify-space-between header"
+    class="header"
   >
     <hamburger-icon
       @click.native="toggleSidebar"
@@ -19,28 +20,25 @@
       v-if="backButtonActive && !backButton"
       @clicked-back="clickedBackFromActive"
     ></back-button-active>
-
+    <v-spacer></v-spacer>
     <v-img
       src="../../assets/logo.png"
       contain
       max-height="40px"
       :max-width="imageWidth"
     ></v-img>
-
-    <v-menu offset-y v-if="menuVisible">
-      <template v-slot:activator="{ on, attrs }">
-        <v-icon
-          color="white"
-          large
-          class="ml-3 mr-2"
-          v-bind="attrs"
-          v-on="on"
-          @click="openLogoutDialog"
-        >
-          mdi-logout-variant
-        </v-icon>
-      </template>
-    </v-menu>
+    <v-spacer></v-spacer>
+    <v-icon
+      color="white"
+      large
+      class="ml-3 mr-2 logout"
+      v-bind="attrs"
+      v-on="on"
+      @click="openLogoutDialog"
+      v-if="menuVisible"
+    >
+      mdi-logout-variant
+    </v-icon>
     <div class="menu-replacement" v-else></div>
   </v-app-bar>
 </template>
@@ -74,6 +72,14 @@ export default {
     },
     backButton() {
       return this.$store.getters.backButton
+    },
+    appBarWidth() {
+      switch (this.$vuetify.breakpoint.name) {
+        case "xs":
+          return "100vw"
+        default:
+          return "100%"
+      }
     },
   },
   watch: {
@@ -144,11 +150,6 @@ export default {
 </script>
 
 <style>
-.v-toolbar__content {
-  width: 100%;
-  justify-content: space-between;
-}
-
 .hidden {
   transform: translateY(-100px) !important;
 }
@@ -168,12 +169,16 @@ export default {
 }
 
 .menu-replacement {
-  width: 56px;
+  width: 50px;
   height: 36px;
 }
 
 .hamburger-replacement {
   width: 50px;
   height: 50px;
+}
+
+button.logout {
+  font-size: 30px !important;
 }
 </style>
