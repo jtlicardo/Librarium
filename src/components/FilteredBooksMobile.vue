@@ -11,6 +11,7 @@
       @book-title="displayBookDetails"
       class="mx-auto"
     ></mobile-search-card>
+    <p v-if="books.length === 0 && !loading">No books found</p>
   </div>
 </template>
 
@@ -41,6 +42,7 @@ export default {
     return {
       books: [],
       search: "",
+      loading: false,
     }
   },
   computed: {

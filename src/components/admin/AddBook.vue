@@ -32,16 +32,18 @@
                 <v-col cols="12" md="6" id="genres">
                   <v-text-field
                     label="Main genre"
-                    :rules="[rules.required]"
+                    :rules="[rules.required, rules.genreMax]"
                     required
                     v-model.trim="book.genres.mainGenre"
                   ></v-text-field>
                   <v-text-field
                     label="Additional genre (optional)"
+                    :rules="[rules.genreMax]"
                     v-model.trim="book.genres.secondaryGenre"
                   ></v-text-field>
                   <v-text-field
                     label="Additional genre (optional)"
+                    :rules="[rules.genreMax]"
                     v-model.trim="book.genres.tertiaryGenre"
                   ></v-text-field>
                 </v-col>
@@ -150,6 +152,8 @@ export default {
         required: (value) => !!value || "Required",
         positive: (value) => (value && value > 0) || "Must be a positive number",
         max: (value) => (value && value.length < 8) || "Inventory number is too long!",
+        genreMax: (value) =>
+          (value && value.length < 25) || value === "" || "Genre name is too long!",
       },
       validationError: false,
       errorMsg: "",
@@ -178,9 +182,13 @@ export default {
         this.validationError = true
         this.errorMsg = "Please fill in all the required fields!"
         return false
-      } else if (this.book.numOfPages <= 0) {
+      } else if (
+        this.book.genres.mainGenre.length >= 25 ||
+        this.book.genres.secondaryGenre.length >= 25 ||
+        this.book.genres.tertiaryGenre.length >= 25
+      ) {
         this.validationError = true
-        this.errorMsg = "Number of pages needs to be a positive number!"
+        this.errorMsg = "Genre name is too long!"
         return false
       } else if (this.book.copies[0].inventoryNumber <= 0) {
         this.validationError = true
