@@ -1,9 +1,10 @@
 <template>
   <v-container class="mt-md-10">
     <v-row>
-      <v-col cols="12" md="1"></v-col>
-      <v-col cols="12" md="10">
-        <h1 class="mb-5">Search results</h1>
+      <v-col cols="12" lg="1"></v-col>
+      <v-col cols="12" lg="10">
+        <h1>Search results</h1>
+        <p class="mb-5">Click on a book to see more details</p>
         <filtered-books v-if="!isMobile" :title="title" :author="author" :genre="genre" />
         <filtered-books-mobile
           v-else
@@ -17,7 +18,7 @@
           to add a book to the library's collection.
         </p>
       </v-col>
-      <v-col cols="12" md="1"></v-col>
+      <v-col cols="12" lg="1"></v-col>
     </v-row>
     <send-request
       :active="sendRequestDialogActive"

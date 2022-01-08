@@ -31,7 +31,7 @@
       ></v-img>
       <v-icon v-else large class="mx-auto mt-3">mdi-email</v-icon>
     </h2>
-    <p v-if="hasLoansOrReservations">
+    <p v-if="hasLoansOrReservations" class="mt-10">
       You currently cannot delete your account because you have at least one active loan
       or reservation.
     </p>

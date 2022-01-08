@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="text-center">
     <mobile-search-card
       v-for="(book, index) in books"
       :key="index"
@@ -9,6 +9,7 @@
       :genres="book.genres"
       :reviews="book.reviews"
       @book-title="displayBookDetails"
+      class="mx-auto"
     ></mobile-search-card>
   </div>
 </template>

@@ -2,11 +2,9 @@
   <v-row justify="center">
     <v-dialog v-model="active" persistent width="400px">
       <v-card>
-        <v-card-title>
-          <h2 class="mx-auto">Logout</h2>
-        </v-card-title>
+        <v-card-title></v-card-title>
         <v-card-subtitle>
-          <h3 class="text-center mt-10">Are you sure you want to log out?</h3>
+          <h3 class="text-center mt-5">Are you sure you want to log out?</h3>
         </v-card-subtitle>
         <v-card-text></v-card-text>
         <v-card-actions>

@@ -7,11 +7,11 @@
     "
   >
     <div class="d-flex flex-no-wrap justify-space-between mt-3">
-      <div>
+      <div class="card-content">
         <v-card-title
           class="text-subtitle-1 text-sm-h5 text-md-subtitle-1 text-lg-h6 word-break"
         >
-          <b>{{ title }}</b>
+          <b class="mx-auto">{{ title }}</b>
         </v-card-title>
         <v-card-subtitle>by {{ author }}</v-card-subtitle>
         <v-divider></v-divider>
@@ -20,9 +20,14 @@
         <v-card-subtitle class="pb-0"><b>Average rating</b></v-card-subtitle>
         <v-card-subtitle class="pt-0">{{ avgRating }}</v-card-subtitle>
       </div>
-      <v-avatar class="ma-3 my-auto" size="110" tile>
-        <v-img :src="imagesource" contain></v-img>
-      </v-avatar>
+
+      <v-img
+        :src="imagesource"
+        contain
+        max-height="100px"
+        max-width="100px"
+        class="my-auto card-picture"
+      ></v-img>
     </div>
   </v-card>
 </template>
@@ -69,5 +74,15 @@ export default {
 <style scoped>
 .word-break {
   word-break: keep-all;
+}
+
+.card-content {
+  width: 70%;
+}
+
+.card-picture {
+  width: 30%;
+  padding: 0;
+  margin: 2%;
 }
 </style>
