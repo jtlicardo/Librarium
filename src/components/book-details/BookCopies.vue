@@ -14,6 +14,7 @@
       <v-btn
         color="yellow darken-1"
         elevation="1"
+        class="reserve-button"
         v-if="item.status === 'Available' && userCanReserve"
         @click="reserveCopy(item)"
       >
@@ -24,6 +25,7 @@
       <v-btn
         color="red white--text"
         elevation="1"
+        class="delete-button"
         @click="deleteCopy(item)"
         v-if="item.status === 'Available'"
       >
@@ -62,17 +64,6 @@ export default {
       userHasLoan: null,
       userNumOfReservations: 0,
       loading: false,
-      headers: [
-        {
-          text: "INVENTORY NUMBER",
-          sortable: false,
-          value: "inventoryNumber",
-          align: "center",
-        },
-        { text: "STATUS", value: "status", sortable: false, align: "center" },
-        { text: "", value: "reserve", sortable: false, align: "right" },
-        { text: "", value: "delete", sortable: false, align: "right" },
-      ],
     }
   },
   methods: {
@@ -224,6 +215,21 @@ export default {
     this.loading = false
   },
   computed: {
+    headers() {
+      let headers = [
+        {
+          text: "INVENTORY NUMBER",
+          sortable: false,
+          value: "inventoryNumber",
+          align: "center",
+        },
+        { text: "STATUS", value: "status", sortable: false, align: "center" },
+      ]
+      if (this.userIsAdmin)
+        headers.push({ text: "", value: "delete", sortable: false, align: "right" })
+      else headers.push({ text: "", value: "reserve", sortable: false, align: "right" })
+      return headers
+    },
     bookCopies() {
       return this.selectedBook.copies
     },
@@ -253,5 +259,21 @@ export default {
 
 .v-data-table >>> .v-data-table__wrapper > table > tbody > tr > td {
   font-size: 1rem !important;
+}
+
+.v-data-table__mobile-row__cell > button.reserve-button,
+.v-data-table__mobile-row__cell > button.delete-button {
+  margin-top: 30px;
+  margin-bottom: 40px;
+}
+
+.v-data-table
+  >>> .v-data-table__wrapper
+  > table
+  > tbody
+  > .v-data-table__mobile-table-row
+  > .v-data-table__mobile-row:last-child
+  > .v-data-table__mobile-row__cell {
+  margin: 0 auto;
 }
 </style>
