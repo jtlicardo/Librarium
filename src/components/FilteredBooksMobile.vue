@@ -137,5 +137,11 @@ export default {
     await this.getAllBooks()
     if (this.searchtitle || this.searchauthor || this.searchgenre) this.filterBooks()
   },
+  mounted() {
+    this.$root.$on("getAllBooksMobile", () => {
+      this.books = []
+      this.getAllBooks()
+    })
+  },
 }
 </script>

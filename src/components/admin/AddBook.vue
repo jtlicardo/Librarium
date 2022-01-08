@@ -162,6 +162,17 @@ export default {
       addingBookErrorMsg: "",
     }
   },
+  computed: {
+    isMobile() {
+      switch (this.$vuetify.breakpoint.name) {
+        case "xs":
+        case "sm":
+          return true
+        default:
+          return false
+      }
+    },
+  },
   methods: {
     openFileDialog() {
       document.querySelector("#fileinput").click()
@@ -245,7 +256,8 @@ export default {
           text: "Book successfully added!",
           isActive: true,
         })
-        this.$root.$emit("getAllBooks")
+        if (!this.isMobile) this.$root.$emit("getAllBooks")
+        else this.$root.$emit("getAllBooksMobile")
       } catch (e) {
         console.log("Error while adding book: ", e)
         this.$store.dispatch("displayBaseDialog", {
