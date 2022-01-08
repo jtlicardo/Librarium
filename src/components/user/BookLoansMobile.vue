@@ -59,6 +59,7 @@
           v-if="item.extensionRequested === false"
           class="mt-3 black--text"
           color="yellow darken-1"
+          @click="requestLoanExtension(item)"
         >
           SEND REQUEST
         </v-btn>
@@ -68,7 +69,7 @@
 </template>
 
 <script>
-import { db, collection, query, where, getDocs } from "@/firebase.js"
+import { db, collection, query, where, getDocs, updateDoc, doc } from "@/firebase.js"
 
 export default {
   data() {
@@ -122,6 +123,30 @@ export default {
         })
       })
       this.loading = false
+    },
+    async requestLoanExtension(item) {
+      const id = item.firebaseLoanId
+      try {
+        const loansRef = doc(db, "loans", id)
+        await updateDoc(loansRef, {
+          extensionRequested: true,
+        })
+        this.$store.dispatch("displaySnackbar", {
+          text: "Request sent!",
+          isActive: true,
+        })
+        this.loans = []
+        await this.getUserLoans()
+      } catch (e) {
+        console.log("Error: ", e)
+        this.$store.dispatch("displayBaseDialog", {
+          text: e.toString(),
+          title: "Error! Please try again later.",
+          color: "red",
+          loading: false,
+          active: true,
+        })
+      }
     },
   },
   async created() {
