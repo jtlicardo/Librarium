@@ -1,32 +1,45 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="reservations"
-    hide-default-footer
-    class="elevation-1"
-    :loading="loading"
-  >
-    <template v-slot:[`item.copy`]="{ item }">
-      {{ item.title }}
-      <br />
-      {{ item.author }}
-      <br />
-      {{ item.copyInvNumber }}
-    </template>
-    <template v-slot:[`item.delete`]="{ item }">
-      <v-icon color="red" @click="deleteReservation(item)" v-if="!isMobile">
-        mdi-trash-can-outline
-      </v-icon>
-      <v-btn
-        color="red white--text"
-        class="delete-button"
-        @click="deleteReservation(item)"
-        v-else
-      >
-        Delete
-      </v-btn>
-    </template>
-  </v-data-table>
+  <v-card>
+    <v-card-title>
+      <v-text-field
+        v-model="search"
+        append-icon="mdi-magnify"
+        label="Filter (by book copy or user)"
+        single-line
+        hide-details
+      ></v-text-field>
+    </v-card-title>
+
+    <v-data-table
+      :headers="headers"
+      :items="reservations"
+      hide-default-footer
+      class="elevation-1"
+      :loading="loading"
+      :search="search"
+    >
+      <template v-slot:[`item.copy`]="{ item }">
+        {{ item.title }}
+        <br />
+        {{ item.author }}
+        <br />
+        {{ item.copyInvNumber }}
+      </template>
+      <template v-slot:[`item.delete`]="{ item }">
+        <v-icon color="red" @click="deleteReservation(item)" v-if="!isMobile">
+          mdi-trash-can-outline
+        </v-icon>
+        <v-btn
+          color="red white--text"
+          class="delete-button"
+          @click="deleteReservation(item)"
+          v-else
+        >
+          Delete
+        </v-btn>
+      </template>
+    </v-data-table>
+  </v-card>
 </template>
 
 <script>
@@ -46,6 +59,7 @@ export default {
   data() {
     return {
       loading: false,
+      search: "",
       reservations: [],
     }
   },
@@ -57,15 +71,67 @@ export default {
           sortable: false,
           value: "copy",
           align: "center",
+          filterable: false,
         },
-        { text: "USER", value: "user", sortable: false, align: "center" },
-        { text: "START DATE", value: "startDate", sortable: false, align: "center" },
-        { text: "END DATE", value: "endDate", sortable: false, align: "center" },
-        { text: "DELETE", value: "delete", sortable: false, align: "center" },
+        {
+          text: "TITLE",
+          value: "title",
+          sortable: false,
+          align: " d-none",
+          filterable: true,
+        },
+        {
+          text: "AUTHOR",
+          value: "author",
+          sortable: false,
+          align: " d-none",
+          filterable: true,
+        },
+        {
+          text: "INVNUM",
+          value: "copyInvNumber",
+          sortable: false,
+          align: " d-none",
+          filterable: true,
+        },
+        {
+          text: "USER",
+          value: "user",
+          sortable: false,
+          align: "center",
+          filterable: true,
+        },
+        {
+          text: "START DATE",
+          value: "startDate",
+          sortable: false,
+          align: "center",
+          filterable: false,
+        },
+        {
+          text: "END DATE",
+          value: "endDate",
+          sortable: false,
+          align: "center",
+          filterable: false,
+        },
+        {
+          text: "DELETE",
+          value: "delete",
+          sortable: false,
+          align: "center",
+          filterable: false,
+        },
       ]
       if (this.isMobile) {
-        headers.splice(4, 1)
-        headers.push({ text: "", value: "delete", sortable: false, align: "center" })
+        headers.splice(7, 1)
+        headers.push({
+          text: "",
+          value: "delete",
+          sortable: false,
+          align: "center",
+          filterable: "false",
+        })
       }
       return headers
     },
@@ -207,5 +273,26 @@ export default {
   > .v-data-table__mobile-row:first-child
   > .v-data-table__mobile-row__cell {
   padding-top: 10px;
+}
+
+.v-data-table
+  >>> .v-data-table__wrapper
+  > table
+  > tbody
+  > .v-data-table__mobile-table-row
+  > .v-data-table__mobile-row:nth-of-type(2),
+.v-data-table
+  >>> .v-data-table__wrapper
+  > table
+  > tbody
+  > .v-data-table__mobile-table-row
+  > .v-data-table__mobile-row:nth-of-type(3),
+.v-data-table
+  >>> .v-data-table__wrapper
+  > table
+  > tbody
+  > .v-data-table__mobile-table-row
+  > .v-data-table__mobile-row:nth-of-type(4) {
+  display: none;
 }
 </style>

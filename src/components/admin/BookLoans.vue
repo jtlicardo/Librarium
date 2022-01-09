@@ -189,7 +189,7 @@ export default {
         })
       }
       if (this.requests && !this.isMobile) {
-        headers.splice(4, 1)
+        headers.splice(7, 1)
         headers.push(
           {
             text: "ACCEPT",
@@ -206,7 +206,7 @@ export default {
         )
       }
       if (this.requests && this.isMobile) {
-        headers.splice(4, 1)
+        headers.splice(7, 1)
         headers.push({
           text: "",
           value: "accept",

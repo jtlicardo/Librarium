@@ -1,11 +1,24 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="users"
-    hide-default-footer
-    class="elevation-1"
-    :loading="loading"
-  ></v-data-table>
+  <v-card>
+    <v-card-title>
+      <v-text-field
+        v-model="search"
+        append-icon="mdi-magnify"
+        label="Filter"
+        single-line
+        hide-details
+      ></v-text-field>
+    </v-card-title>
+
+    <v-data-table
+      :headers="headers"
+      :items="users"
+      hide-default-footer
+      class="elevation-1"
+      :loading="loading"
+      :search="search"
+    ></v-data-table>
+  </v-card>
 </template>
 
 <script>
@@ -14,18 +27,21 @@ export default {
   data() {
     return {
       loading: false,
+      search: "",
       headers: [
         {
           text: "FULL NAME",
           sortable: false,
           value: "fullname",
           align: "center",
+          filterable: true,
         },
         {
           text: "EMAIL",
           value: "email",
           sortable: false,
           align: "center",
+          filterable: true,
         },
       ],
       users: [],
