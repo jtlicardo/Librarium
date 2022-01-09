@@ -7,7 +7,17 @@
     :loading="loading"
   >
     <template v-slot:[`item.delete`]="{ item }">
-      <v-icon color="red" @click="deleteRequest(item)">mdi-trash-can-outline</v-icon>
+      <v-icon color="red" @click="deleteRequest(item)" v-if="!isMobile">
+        mdi-trash-can-outline
+      </v-icon>
+      <v-btn
+        color="red white--text"
+        class="delete-button"
+        @click="deleteRequest(item)"
+        v-else
+      >
+        Delete
+      </v-btn>
     </template>
   </v-data-table>
 </template>
@@ -19,7 +29,20 @@ export default {
   data() {
     return {
       loading: false,
-      headers: [
+      requests: [],
+    }
+  },
+  computed: {
+    isMobile() {
+      switch (this.$vuetify.breakpoint.name) {
+        case "xs":
+          return true
+        default:
+          return false
+      }
+    },
+    headers() {
+      let headers = [
         {
           text: "TITLE",
           sortable: false,
@@ -32,15 +55,23 @@ export default {
           sortable: false,
           align: "center",
         },
-        {
+      ]
+      if (this.isMobile)
+        headers.push({
+          text: "",
+          value: "delete",
+          sortable: false,
+          align: "center",
+        })
+      else
+        headers.push({
           text: "DELETE",
           value: "delete",
           sortable: false,
           align: "center",
-        },
-      ],
-      requests: [],
-    }
+        })
+      return headers
+    },
   },
   methods: {
     async getBookRequests() {
@@ -87,4 +118,19 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.v-data-table__mobile-row__cell > button.delete-button {
+  margin-top: 30px;
+  margin-bottom: 40px;
+}
+
+.v-data-table
+  >>> .v-data-table__wrapper
+  > table
+  > tbody
+  > .v-data-table__mobile-table-row
+  > .v-data-table__mobile-row:last-child
+  > .v-data-table__mobile-row__cell {
+  margin: 0 auto;
+}
+</style>

@@ -25,10 +25,32 @@
       </v-btn>
     </template>
     <template v-slot:[`item.accept`]="{ item }">
-      <v-icon color="success" @click="acceptRequest(item)">mdi-check-outline</v-icon>
+      <v-icon color="success" @click="acceptRequest(item)" v-if="!isMobile">
+        mdi-check-outline
+      </v-icon>
+      <div class="text-center" v-else>
+        <v-btn
+          color="green white--text"
+          class="mx-3 my-5"
+          width="90px"
+          @click="acceptRequest(item)"
+        >
+          Accept
+        </v-btn>
+        <v-btn
+          color="red white--text"
+          class="mx-3 my-5"
+          width="90px"
+          @click="denyRequest(item)"
+        >
+          Deny
+        </v-btn>
+      </div>
     </template>
     <template v-slot:[`item.deny`]="{ item }">
-      <v-icon color="red" @click="denyRequest(item)">mdi-close-outline</v-icon>
+      <v-icon color="red" @click="denyRequest(item)" v-if="!isMobile">
+        mdi-close-outline
+      </v-icon>
     </template>
   </v-data-table>
 </template>
@@ -66,7 +88,6 @@ export default {
     isMobile() {
       switch (this.$vuetify.breakpoint.name) {
         case "xs":
-        case "sm":
           return true
         default:
           return false
@@ -127,7 +148,7 @@ export default {
           align: "center",
         })
       }
-      if (this.requests) {
+      if (this.requests && !this.isMobile) {
         headers.splice(4, 1)
         headers.push(
           {
@@ -143,6 +164,15 @@ export default {
             align: "center",
           }
         )
+      }
+      if (this.requests && this.isMobile) {
+        headers.splice(4, 1)
+        headers.push({
+          text: "",
+          value: "accept",
+          sortable: false,
+          align: "center",
+        })
       }
 
       return headers
@@ -323,6 +353,6 @@ export default {
   > .v-data-table__mobile-table-row
   > .v-data-table__mobile-row:first-child
   > .v-data-table__mobile-row__cell {
-    padding-top: 10px;
+  padding-top: 10px;
 }
 </style>
