@@ -27,7 +27,11 @@
           @book-chosen="saveBook"
           v-if="!isMobile"
         ></choose-book>
-        <choose-book-mobile @book-chosen="saveBook" v-else></choose-book-mobile>
+        <choose-book-mobile
+          :userEmail="user.email"
+          @book-chosen="saveBook"
+          v-else
+        ></choose-book-mobile>
         <v-btn text @click="goBackToUser" class="mt-16 mx-5">Go back</v-btn>
         <v-btn color="red white--text" class="mt-16" @click="cancelLoan">Cancel</v-btn>
       </v-stepper-content>

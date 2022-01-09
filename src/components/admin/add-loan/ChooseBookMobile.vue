@@ -39,14 +39,16 @@
 <script>
 import MobileSearchCard from "@/components/MobileSearchCard.vue"
 
-import { collection, getDocs, db, query, where } from "@/firebase.js"
+import { collection, getDocs, db, query, where, getDoc, doc } from "@/firebase.js"
 
 export default {
+  props: ["userEmail"],
   components: {
     MobileSearchCard,
   },
   data() {
     return {
+      userLoanBookIds: [],
       books: [],
       search: "",
       loading: false,
@@ -67,23 +69,44 @@ export default {
     },
   },
   methods: {
-    async getAllBooks() {
+    async getBooks() {
       this.loading = true
+      await this.getUserLoans()
       this.books = []
       const querySnapshot = await getDocs(collection(db, "books"))
       querySnapshot.forEach((doc) => {
-        this.books.push({
-          added_at: doc.data().added_at,
-          author: doc.data().author,
-          copies: doc.data().copies,
-          genres: doc.data().genres,
-          logoUrl: doc.data().logoUrl,
-          numOfPages: doc.data().numOfPages,
-          reviews: doc.data().reviews,
-          title: doc.data().title,
-        })
+        if (!this.userLoanBookIds.includes(doc.id))
+          this.books.push({
+            added_at: doc.data().added_at,
+            author: doc.data().author,
+            copies: doc.data().copies,
+            genres: doc.data().genres,
+            logoUrl: doc.data().logoUrl,
+            numOfPages: doc.data().numOfPages,
+            reviews: doc.data().reviews,
+            title: doc.data().title,
+          })
       })
       this.loading = false
+    },
+    async getUserLoans() {
+      const usersRef = collection(db, "users")
+      const q = query(usersRef, where("email", "==", this.userEmail))
+      this.userLoanBookIds = []
+      const querySnapshot = await getDocs(q)
+      let loans = []
+      querySnapshot.forEach((doc) => {
+        loans = doc.data().loans
+      })
+      for (let loan of loans) {
+        const docRef = doc(db, "loans", loan)
+        const docSnap = await getDoc(docRef)
+        if (docSnap.exists()) {
+          this.userLoanBookIds.push(docSnap.data().bookId)
+        } else {
+          console.log("No such document!")
+        }
+      }
     },
     applyFilter() {
       this.filterApplied = true
@@ -97,7 +120,7 @@ export default {
       this.filter.author = ""
       this.currentFilter.title = ""
       this.currentFilter.author = ""
-      this.getAllBooks()
+      this.getBooks()
     },
     filterBooks() {
       let filteredBooks = []
@@ -118,8 +141,10 @@ export default {
       this.$emit("book-chosen", payload)
     },
   },
-  async created() {
-    await this.getAllBooks()
+  watch: {
+    userEmail() {
+      this.getBooks()
+    },
   },
 }
 </script>
