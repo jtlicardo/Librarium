@@ -13,6 +13,7 @@
       <v-btn
         color="yellow darken-1"
         elevation="1"
+        class="loan-button"
         v-if="item.status === 'Available' || item.inventoryNumber === userReservedCopy"
         @click="chooseCopy(item)"
       >
@@ -116,5 +117,20 @@ export default {
 
 .v-data-table >>> .v-data-table__wrapper > table > tbody > tr > td {
   font-size: 1rem !important;
+}
+
+.v-data-table__mobile-row__cell > button.loan-button {
+  margin-top: 30px;
+  margin-bottom: 40px;
+}
+
+.v-data-table
+  >>> .v-data-table__wrapper
+  > table
+  > tbody
+  > .v-data-table__mobile-table-row
+  > .v-data-table__mobile-row:last-child
+  > .v-data-table__mobile-row__cell {
+  margin: 0 auto;
 }
 </style>

@@ -1,42 +1,39 @@
 <template>
   <v-stepper v-model="e1">
     <v-stepper-header>
-      <v-stepper-step :complete="e1 > 1" step="1">
-        Loanee
-        <small>Select which user is receiving the loan</small>
-      </v-stepper-step>
+      <v-stepper-step :complete="e1 > 1" step="1">Loanee</v-stepper-step>
 
       <v-divider></v-divider>
 
-      <v-stepper-step :complete="e1 > 2" step="2">
-        Book
-        <small>Select which book you are lending</small>
-      </v-stepper-step>
+      <v-stepper-step :complete="e1 > 2" step="2">Book</v-stepper-step>
 
       <v-divider></v-divider>
 
-      <v-stepper-step step="3">
-        Copy
-        <small>Select which copy you are lending</small>
-      </v-stepper-step>
+      <v-stepper-step step="3">Copy</v-stepper-step>
     </v-stepper-header>
 
     <v-stepper-items>
-      <v-stepper-content step="1">
+      <v-stepper-content step="1" class="text-center">
+        <h4 class="text-center mb-10">Select which user is receiving the loan</h4>
         <choose-user @user-chosen="saveUser"></choose-user>
 
         <v-btn color="red white--text" class="mt-10" @click="cancelLoan">Cancel</v-btn>
       </v-stepper-content>
 
-      <v-stepper-content step="2">
-        <choose-book :userEmail="user.email" @book-chosen="saveBook"></choose-book>
-
-        <v-btn color="red white--text" class="mt-10" @click="cancelLoan">Cancel</v-btn>
-
-        <v-btn text @click="goBackToUser" class="mt-10 mx-5">Go back</v-btn>
+      <v-stepper-content step="2" class="text-center">
+        <h4 class="text-center mb-10">Select which book you are lending</h4>
+        <choose-book
+          :userEmail="user.email"
+          @book-chosen="saveBook"
+          v-if="!isMobile"
+        ></choose-book>
+        <choose-book-mobile @book-chosen="saveBook" v-else></choose-book-mobile>
+        <v-btn text @click="goBackToUser" class="mt-16 mx-5">Go back</v-btn>
+        <v-btn color="red white--text" class="mt-16" @click="cancelLoan">Cancel</v-btn>
       </v-stepper-content>
 
-      <v-stepper-content step="3">
+      <v-stepper-content step="3" class="text-center">
+        <h4 class="text-center mb-10">Select which copy you are lending</h4>
         <choose-copy
           :title="book.title"
           :author="book.author"
@@ -44,10 +41,8 @@
           :userEmail="user.email"
           @copy-chosen="saveCopy"
         ></choose-copy>
-
-        <v-btn color="red white--text" class="mt-10" @click="cancelLoan">Cancel</v-btn>
-
-        <v-btn text @click="e1 = 2" class="mt-10 mx-5">Go back</v-btn>
+        <v-btn text @click="e1 = 2" class="mt-16 mx-5">Go back</v-btn>
+        <v-btn color="red white--text" class="mt-16" @click="cancelLoan">Cancel</v-btn>
       </v-stepper-content>
     </v-stepper-items>
   </v-stepper>
@@ -56,6 +51,7 @@
 <script>
 import ChooseUser from "@/components/admin/add-loan/ChooseUser.vue"
 import ChooseBook from "@/components/admin/add-loan/ChooseBook.vue"
+import ChooseBookMobile from "@/components/admin/add-loan/ChooseBookMobile.vue"
 import ChooseCopy from "@/components/admin/add-loan/ChooseCopy.vue"
 
 export default {
@@ -63,6 +59,7 @@ export default {
   components: {
     ChooseUser,
     ChooseBook,
+    ChooseBookMobile,
     ChooseCopy,
   },
   data() {
@@ -76,7 +73,6 @@ export default {
         title: "",
         author: "",
         logoUrl: "",
-        numOfPages: "",
       },
       copy: {
         inventoryNumber: "",
@@ -84,6 +80,17 @@ export default {
         userReservedCopy: false,
       },
     }
+  },
+  computed: {
+    isMobile() {
+      switch (this.$vuetify.breakpoint.name) {
+        case "xs":
+        case "sm":
+          return true
+        default:
+          return false
+      }
+    },
   },
   methods: {
     saveUser(payload) {
@@ -95,7 +102,6 @@ export default {
       this.book.title = payload.title
       this.book.author = payload.author
       this.book.logoUrl = payload.logoUrl
-      this.book.numOfPages = payload.numOfPages
       this.e1 = 3
     },
     saveCopy(payload) {
@@ -118,4 +124,8 @@ export default {
 }
 </script>
 
-<style></style>
+<style scoped>
+h4 {
+  font-weight: 900;
+}
+</style>

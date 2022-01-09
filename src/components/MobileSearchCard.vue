@@ -1,11 +1,5 @@
 <template>
-  <v-card
-    max-width="500px"
-    @click="
-      emitBookTitle()
-      toggleBackButton()
-    "
-  >
+  <v-card max-width="500px" @click="selectBook()">
     <div class="d-flex flex-no-wrap justify-space-between mt-3">
       <div class="card-content">
         <v-card-title
@@ -29,7 +23,11 @@
         <v-card-subtitle class="pt-0" v-if="userIsAdmin">
           {{ copies.length }}
         </v-card-subtitle>
-        <v-btn color="red white--text my-3" v-if="userIsAdmin" @click.stop="deleteBook">
+        <v-btn
+          color="red white--text my-3"
+          v-if="userIsAdmin && choosebook !== 'true'"
+          @click.stop="deleteBook"
+        >
           Delete
         </v-btn>
       </div>
@@ -47,14 +45,30 @@
 
 <script>
 export default {
-  props: ["title", "author", "imagesource", "genres", "reviews", "copies", "added"],
+  props: [
+    "title",
+    "author",
+    "imagesource",
+    "genres",
+    "reviews",
+    "copies",
+    "added",
+    "choosebook",
+  ],
   methods: {
-    emitBookTitle() {
-      this.$emit("book-title", this.title)
-    },
-    toggleBackButton() {
-      this.$store.dispatch("showBackButton")
-      this.$store.dispatch("showBackButtonActive")
+    selectBook() {
+      if (this.choosebook === "true") {
+        this.$emit("book-chosen", {
+          title: this.title,
+          author: this.author,
+          logoUrl: this.imagesource,
+        })
+        console.log(this.title, this.author, this.logoUrl)
+      } else {
+        this.$emit("book-title", this.title)
+        this.$store.dispatch("showBackButton")
+        this.$store.dispatch("showBackButtonActive")
+      }
     },
     deleteBook() {
       this.$emit("delete", {
