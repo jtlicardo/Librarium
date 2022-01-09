@@ -154,6 +154,10 @@ export default {
       this.closeDialog()
     },
     async deleteLoan() {
+      this.$store.dispatch("displayLoadingDialog", {
+        active: true,
+        title: "Deleting loan...",
+      })
       try {
         // remove loan id from users collection
         let userDocumentId = ""
@@ -183,6 +187,10 @@ export default {
         })
         // delete loan
         await deleteDoc(doc(db, "loans", this.loan.firebaseLoanId))
+        this.$store.dispatch("displayLoadingDialog", {
+          active: false,
+          title: "",
+        })
         this.$store.dispatch("displaySnackbar", {
           text: "Loan deleted!",
           isActive: true,
@@ -191,6 +199,10 @@ export default {
         this.closeDialog()
       } catch (e) {
         console.log(e)
+        this.$store.dispatch("displayLoadingDialog", {
+          active: false,
+          title: "",
+        })
         this.$store.dispatch("displayBaseDialog", {
           text: e.toString(),
           title: "Error! Please try again later.",

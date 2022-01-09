@@ -6,8 +6,25 @@
     class="elevation-1"
     :loading="loading"
   >
+    <template v-slot:[`item.copy`]="{ item }">
+      {{ item.title }}
+      <br />
+      {{ item.author }}
+      <br />
+      {{ item.copyInvNumber }}
+    </template>
     <template v-slot:[`item.delete`]="{ item }">
-      <v-icon color="red" @click="deleteReservation(item)">mdi-trash-can-outline</v-icon>
+      <v-icon color="red" @click="deleteReservation(item)" v-if="!isMobile">
+        mdi-trash-can-outline
+      </v-icon>
+      <v-btn
+        color="red white--text"
+        class="delete-button"
+        @click="deleteReservation(item)"
+        v-else
+      >
+        Delete
+      </v-btn>
     </template>
   </v-data-table>
 </template>
@@ -29,7 +46,12 @@ export default {
   data() {
     return {
       loading: false,
-      headers: [
+      reservations: [],
+    }
+  },
+  computed: {
+    headers() {
+      let headers = [
         {
           text: "BOOK COPY",
           sortable: false,
@@ -40,9 +62,22 @@ export default {
         { text: "START DATE", value: "startDate", sortable: false, align: "center" },
         { text: "END DATE", value: "endDate", sortable: false, align: "center" },
         { text: "DELETE", value: "delete", sortable: false, align: "center" },
-      ],
-      reservations: [],
-    }
+      ]
+      if (this.isMobile) {
+        headers.splice(4, 1)
+        headers.push({ text: "", value: "delete", sortable: false, align: "center" })
+      }
+      return headers
+    },
+    isMobile() {
+      switch (this.$vuetify.breakpoint.name) {
+        case "xs":
+        case "sm":
+          return true
+        default:
+          return false
+      }
+    },
   },
   methods: {
     milisecondsToDate(miliseconds) {
@@ -56,21 +91,18 @@ export default {
     async getAllReservations() {
       const querySnapshot = await getDocs(collection(db, "reservations"))
       querySnapshot.forEach((doc) => {
-        const copy =
-          doc.data().title + ", " + doc.data().author + ", " + doc.data().copyInvNumber
         const userId = doc.data().userId
         const startDate = this.milisecondsToDate(doc.data().start_time)
         const endDate = this.milisecondsToDate(doc.data().end_time)
         this.reservations.push({
           firebaseReservationId: doc.id,
-          firebaseTitle: doc.data().title,
-          firebaseAuthor: doc.data().author,
-          firebaseCopyInvNumber: doc.data().copyInvNumber,
+          title: doc.data().title,
+          author: doc.data().author,
+          copyInvNumber: doc.data().copyInvNumber,
           firebaseUserId: userId,
           firebaseBookId: doc.data().bookId,
           firebaseStartTime: doc.data().start_time,
           firebaseEndTime: doc.data().end_time,
-          copy,
           user: userId,
           startDate,
           endDate,
@@ -101,13 +133,13 @@ export default {
         const booksRef = doc(db, "books", item.firebaseBookId)
         await updateDoc(booksRef, {
           copies: arrayRemove({
-            inventoryNumber: item.firebaseCopyInvNumber,
+            inventoryNumber: item.copyInvNumber,
             status: "Reserved",
           }),
         })
         await updateDoc(booksRef, {
           copies: arrayUnion({
-            inventoryNumber: item.firebaseCopyInvNumber,
+            inventoryNumber: item.copyInvNumber,
             status: "Available",
           }),
         })
@@ -151,4 +183,29 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.v-data-table__mobile-row__cell > button.delete-button {
+  margin-top: 30px;
+  margin-bottom: 40px;
+}
+
+.v-data-table
+  >>> .v-data-table__wrapper
+  > table
+  > tbody
+  > .v-data-table__mobile-table-row
+  > .v-data-table__mobile-row:last-child
+  > .v-data-table__mobile-row__cell {
+  margin: 0 auto;
+}
+
+.v-data-table
+  >>> .v-data-table__wrapper
+  > table
+  > tbody
+  > .v-data-table__mobile-table-row
+  > .v-data-table__mobile-row:first-child
+  > .v-data-table__mobile-row__cell {
+  padding-top: 10px;
+}
+</style>

@@ -315,4 +315,14 @@ export default {
   > .v-data-table__mobile-row__cell {
   margin: 0 auto;
 }
+
+.v-data-table
+  >>> .v-data-table__wrapper
+  > table
+  > tbody
+  > .v-data-table__mobile-table-row
+  > .v-data-table__mobile-row:first-child
+  > .v-data-table__mobile-row__cell {
+    padding-top: 10px;
+}
 </style>
