@@ -52,7 +52,16 @@
 </template>
 
 <script>
-import { db, collection, query, where, getDocs, getAuth } from "@/firebase.js"
+import {
+  db,
+  collection,
+  query,
+  where,
+  getDocs,
+  getAuth,
+  doc,
+  getDoc,
+} from "@/firebase.js"
 import DeleteAccount from "@/components/user/DeleteAccount.vue"
 
 export default {
@@ -69,6 +78,7 @@ export default {
       displayName: "",
       isAdmin: null,
       loans: [],
+      activeLoans: [],
       reservations: [],
     }
   },
@@ -88,6 +98,17 @@ export default {
       const auth = getAuth()
       this.user = auth.currentUser
     },
+    async checkUserLoans(loanIds) {
+      for (let id of loanIds) {
+        const docRef = doc(db, "loans", id)
+        const docSnap = await getDoc(docRef)
+        if (docSnap.exists()) {
+          if (docSnap.data().loan_status !== "Finished") this.activeLoans.push(id)
+        } else {
+          console.log("No such document!")
+        }
+      }
+    },
     openDialog() {
       this.dialogActive = true
     },
@@ -104,8 +125,7 @@ export default {
       return this.reservations.length
     },
     numOfLoans() {
-      // check if loan_status !== "Finished"
-      return this.loans.length
+      return this.activeLoans.length
     },
     hasLoansOrReservations() {
       if (this.numOfReservations > 0 || this.numOfLoans > 0) return true
@@ -117,8 +137,9 @@ export default {
       else return "email"
     },
   },
-  created() {
-    this.getUserInfo()
+  async created() {
+    await this.getUserInfo()
+    await this.checkUserLoans(this.loans)
   },
 }
 </script>
