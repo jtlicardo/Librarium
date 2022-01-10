@@ -1,12 +1,25 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="users"
-    hide-default-footer
-    class="elevation-1 mx-auto"
-    :loading="loading"
-    @click:row="chooseUser"
-  ></v-data-table>
+  <v-card width="600px" class="mx-auto">
+    <v-card-title>
+      <v-text-field
+        v-model="search"
+        append-icon="mdi-magnify"
+        label="Filter"
+        single-line
+        hide-details
+      ></v-text-field>
+    </v-card-title>
+
+    <v-data-table
+      :headers="headers"
+      :items="users"
+      hide-default-footer
+      class="elevation-1 mx-auto"
+      :loading="loading"
+      @click:row="chooseUser"
+      :search="search"
+    ></v-data-table>
+  </v-card>
 </template>
 
 <script>
@@ -16,6 +29,7 @@ export default {
   data() {
     return {
       loading: false,
+      search: "",
       headers: [
         {
           text: "FULL NAME",
@@ -60,16 +74,6 @@ export default {
 </script>
 
 <style scoped>
-ul li span::after {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 1px;
-  border-bottom: 1px solid rgb(0, 0, 0, 0.2);
-  content: "";
-}
-
 .v-data-table >>> .v-data-table__wrapper > table > tbody > tr {
   transition: all 0.3s ease;
 }
@@ -78,9 +82,5 @@ ul li span::after {
   color: black;
   box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
   cursor: pointer;
-}
-
-.v-data-table {
-  max-width: 600px !important;
 }
 </style>
