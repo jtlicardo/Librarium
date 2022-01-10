@@ -1,8 +1,8 @@
 <template>
   <v-container class="mt-md-10">
     <v-row>
-      <v-col cols="12" md="2"></v-col>
-      <v-col cols="12" md="3">
+      <v-col cols="12" lg="1" xl="2"></v-col>
+      <v-col cols="12" lg="4" xl="3">
         <h1 class="mb-5">Search for a book...</h1>
         <v-form>
           <v-text-field label="Title" v-model.trim="searchFilter.title"></v-text-field>

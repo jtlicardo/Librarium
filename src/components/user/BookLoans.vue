@@ -8,47 +8,51 @@
   >
     <template v-slot:[`item.request`]="{ item }">
       <v-icon
-        v-if="item.firebaseExtensionRequested === false"
+        v-if="item.firebaseExtensionRequested === false && !isMobile"
         color="primary"
         @click="requestLoanExtension(item)"
       >
         mdi-calendar-clock
       </v-icon>
-      <div
-        v-if="
-          item.firebaseExtensionRequested === true &&
-          item.firebaseExtensionApproved === null
-        "
+      <v-btn
+        color="primary"
+        class="request"
+        @click="requestLoanExtension(item)"
+        v-if="item.firebaseExtensionRequested === false && isMobile"
       >
-        Sent
-      </div>
-      <div
-        v-if="
-          item.firebaseExtensionRequested === true &&
-          item.firebaseExtensionApproved === false
-        "
-      >
-        Denied
-      </div>
-      <div
-        v-if="
-          item.firebaseExtensionRequested === true &&
-          item.firebaseExtensionApproved === true
-        "
-      >
-        Accepted
-      </div>
+        Send request
+      </v-btn>
+      <request-status
+        v-if="item.firebaseExtensionRequested === true"
+        :type="item.firebaseExtensionApproved"
+        class="request status"
+      ></request-status>
     </template>
   </v-data-table>
 </template>
 
 <script>
 import { db, collection, query, where, getDocs, updateDoc, doc } from "@/firebase.js"
+import RequestStatus from "@/components/user/RequestStatus.vue"
 export default {
+  components: { RequestStatus },
   data() {
     return {
       loading: false,
-      headers: [
+      loans: [],
+    }
+  },
+  computed: {
+    isMobile() {
+      switch (this.$vuetify.breakpoint.name) {
+        case "xs":
+          return true
+        default:
+          return false
+      }
+    },
+    headers() {
+      let headers = [
         {
           text: "BOOK TITLE",
           sortable: false,
@@ -65,9 +69,15 @@ export default {
         { text: "ISSUE DATE", value: "issueDate", sortable: false, align: "center" },
         { text: "DUE DATE", value: "dueDate", sortable: false, align: "center" },
         { text: "REQUEST", value: "request", sortable: false, align: "center" },
-      ],
-      loans: [],
-    }
+      ]
+
+      if (this.isMobile) {
+        headers.splice(5, 1)
+        headers.push({ text: "", value: "request", sortable: false, align: "center" })
+      }
+
+      return headers
+    },
   },
   methods: {
     milisecondsToDate(miliseconds) {
@@ -140,10 +150,6 @@ export default {
 </script>
 
 <style scoped>
-.v-data-table {
-  max-width: 80% !important;
-}
-
 @media only screen and (max-width: 1264px) {
   .v-data-table {
     max-width: 100% !important;
@@ -152,5 +158,20 @@ export default {
 
 .v-data-table >>> .v-data-table__wrapper > table > tbody > tr > td {
   font-size: 1rem !important;
+}
+
+.v-data-table__mobile-row__cell > .request {
+  margin-top: 30px;
+  margin-bottom: 40px;
+}
+
+.v-data-table
+  >>> .v-data-table__wrapper
+  > table
+  > tbody
+  > .v-data-table__mobile-table-row
+  > .v-data-table__mobile-row:last-child
+  > .v-data-table__mobile-row__cell {
+  margin: 0 auto;
 }
 </style>
