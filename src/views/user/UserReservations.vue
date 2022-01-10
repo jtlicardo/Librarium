@@ -1,22 +1,21 @@
 <template>
   <v-container class="mt-md-10">
     <v-row>
-      <v-col cols="12" md="2"></v-col>
-      <v-col cols="12" md="10">
+      <v-col cols="12" md="1" xl="2"></v-col>
+      <v-col cols="12" md="10" xl="8">
         <h1 class="mb-5">My reservations</h1>
         <p class="mb-0">A list of all your active reservations.</p>
         <p class="mb-10">
           Each user is allowed to have 3 reservations; 1 reservation per book.
         </p>
-        <book-reservations-mobile v-if="isMobile" />
-        <book-reservations v-else />
+        <book-reservations />
       </v-col>
+      <v-col cols="12" md="1" xl="2"></v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
-import BookReservationsMobile from "@/components/user/BookReservationsMobile.vue"
 import BookReservations from "@/components/user/BookReservations.vue"
 import {
   collection,
@@ -34,18 +33,6 @@ import {
 export default {
   components: {
     BookReservations,
-    BookReservationsMobile,
-  },
-  computed: {
-    isMobile() {
-      switch (this.$vuetify.breakpoint.name) {
-        case "xs":
-        case "sm":
-          return true
-        default:
-          return false
-      }
-    },
   },
   methods: {
     async autoDeleteUserReservations() {

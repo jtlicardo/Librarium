@@ -22,17 +22,6 @@ export default {
   components: {
     BookLoans,
   },
-  computed: {
-    isMobile() {
-      switch (this.$vuetify.breakpoint.name) {
-        case "xs":
-        case "sm":
-          return true
-        default:
-          return false
-      }
-    },
-  },
 }
 </script>
 

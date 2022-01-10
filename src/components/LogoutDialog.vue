@@ -8,10 +8,15 @@
         </v-card-subtitle>
         <v-card-text></v-card-text>
         <v-card-actions>
-          <v-btn color="gray darken-1" class="px-4 mx-auto" text @click="closeDialog">
+          <v-btn
+            color="gray darken-1"
+            class="px-4 mx-auto mb-6"
+            text
+            @click="closeDialog"
+          >
             Cancel
           </v-btn>
-          <v-btn color="red white--text" class="px-4 mx-auto" @click="logout">
+          <v-btn color="red white--text" class="px-4 mx-auto mb-6" @click="logout">
             Log out
           </v-btn>
         </v-card-actions>

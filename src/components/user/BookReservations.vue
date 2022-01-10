@@ -7,7 +7,17 @@
     :loading="loading"
   >
     <template v-slot:[`item.cancel`]="{ item }">
-      <v-icon color="red" @click="cancelReservation(item)">mdi-trash-can-outline</v-icon>
+      <v-icon color="red" @click="cancelReservation(item)" v-if="!isMobile">
+        mdi-trash-can-outline
+      </v-icon>
+      <v-btn
+        color="red white--text"
+        class="cancel"
+        @click="cancelReservation(item)"
+        v-else
+      >
+        Cancel reservation
+      </v-btn>
     </template>
   </v-data-table>
 </template>
@@ -28,7 +38,14 @@ import {
 export default {
   data() {
     return {
-      headers: [
+      firebaseReservations: [],
+      reservations: [],
+      loading: false,
+    }
+  },
+  computed: {
+    headers() {
+      let headers = [
         {
           text: "BOOK TITLE",
           sortable: false,
@@ -45,11 +62,21 @@ export default {
         { text: "START DATE", value: "startDate", sortable: false, align: "center" },
         { text: "END DATE", value: "endDate", sortable: false, align: "center" },
         { text: "CANCEL", value: "cancel", sortable: false, align: "center" },
-      ],
-      firebaseReservations: [],
-      reservations: [],
-      loading: false,
-    }
+      ]
+      if (this.isMobile) {
+        headers.splice(5, 1)
+        headers.push({ text: "", value: "cancel", sortable: false, align: "center" })
+      }
+      return headers
+    },
+    isMobile() {
+      switch (this.$vuetify.breakpoint.name) {
+        case "xs":
+          return true
+        default:
+          return false
+      }
+    },
   },
   methods: {
     milisecondsToDate(miliseconds) {
@@ -148,10 +175,6 @@ export default {
 </script>
 
 <style scoped>
-.v-data-table {
-  max-width: 80% !important;
-}
-
 @media only screen and (max-width: 1264px) {
   .v-data-table {
     max-width: 100% !important;
@@ -160,5 +183,20 @@ export default {
 
 .v-data-table >>> .v-data-table__wrapper > table > tbody > tr > td {
   font-size: 1rem !important;
+}
+
+.v-data-table__mobile-row__cell > .cancel {
+  margin-top: 30px;
+  margin-bottom: 40px;
+}
+
+.v-data-table
+  >>> .v-data-table__wrapper
+  > table
+  > tbody
+  > .v-data-table__mobile-table-row
+  > .v-data-table__mobile-row:last-child
+  > .v-data-table__mobile-row__cell {
+  margin: 0 auto;
 }
 </style>
