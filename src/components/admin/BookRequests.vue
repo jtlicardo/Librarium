@@ -7,7 +7,7 @@
     :loading="loading"
   >
     <template v-slot:[`item.delete`]="{ item }">
-      <v-icon color="red" @click="deleteRequest(item)" v-if="!isMobile">
+      <v-icon class="delete" @click="deleteRequest(item)" v-if="!isMobile">
         mdi-trash-can-outline
       </v-icon>
       <v-btn
@@ -132,5 +132,14 @@ export default {
   > .v-data-table__mobile-row:last-child
   > .v-data-table__mobile-row__cell {
   margin: 0 auto;
+}
+
+.delete {
+  color: #f44336;
+}
+
+.delete:hover {
+  color: red;
+  transform: scale(1.2);
 }
 </style>

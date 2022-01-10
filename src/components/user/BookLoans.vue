@@ -9,14 +9,14 @@
     <template v-slot:[`item.request`]="{ item }">
       <v-icon
         v-if="item.firebaseExtensionRequested === false && !isMobile"
-        color="primary"
+        class="request"
         @click="requestLoanExtension(item)"
       >
         mdi-calendar-clock
       </v-icon>
       <v-btn
         color="primary"
-        class="request"
+        class="request-button"
         @click="requestLoanExtension(item)"
         v-if="item.firebaseExtensionRequested === false && isMobile"
       >
@@ -160,7 +160,7 @@ export default {
   font-size: 1rem !important;
 }
 
-.v-data-table__mobile-row__cell > .request {
+.v-data-table__mobile-row__cell > .request-button {
   margin-top: 30px;
   margin-bottom: 40px;
 }
@@ -173,5 +173,14 @@ export default {
   > .v-data-table__mobile-row:last-child
   > .v-data-table__mobile-row__cell {
   margin: 0 auto;
+}
+
+.v-icon.request {
+  color: #1976d2;
+}
+
+.v-icon.request:hover {
+  color: #0e78e2;
+  transform: scale(1.2);
 }
 </style>

@@ -102,7 +102,8 @@ export default {
         const docRef = doc(db, "loans", loan)
         const docSnap = await getDoc(docRef)
         if (docSnap.exists()) {
-          this.userLoanBookIds.push(docSnap.data().bookId)
+          if (docSnap.data().loan_status !== "Finished")
+            this.userLoanBookIds.push(docSnap.data().bookId)
         } else {
           console.log("No such document!")
         }

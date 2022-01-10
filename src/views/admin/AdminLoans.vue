@@ -1,13 +1,13 @@
 <template>
   <v-container class="mt-md-10">
     <v-row>
-      <v-col cols="12" md="1"></v-col>
-      <v-col cols="12" md="10">
+      <v-col cols="0" xl="2"></v-col>
+      <v-col cols="12" xl="8">
         <h1 class="mb-10">All loans</h1>
         <book-loans @edit-loan="openDialog" ref="loansComponent" />
         <v-btn class="my-14" color="yellow darken-1" @click="addLoan">Add loan</v-btn>
       </v-col>
-      <v-col cols="12" md="1"></v-col>
+      <v-col cols="0" xl="2"></v-col>
     </v-row>
     <edit-loan
       :active="active"

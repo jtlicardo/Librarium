@@ -7,12 +7,12 @@
     :loading="loading"
   >
     <template v-slot:[`item.cancel`]="{ item }">
-      <v-icon color="red" @click="cancelReservation(item)" v-if="!isMobile">
+      <v-icon class="cancel" @click="cancelReservation(item)" v-if="!isMobile">
         mdi-trash-can-outline
       </v-icon>
       <v-btn
         color="red white--text"
-        class="cancel"
+        class="cancel-button"
         @click="cancelReservation(item)"
         v-else
       >
@@ -185,7 +185,7 @@ export default {
   font-size: 1rem !important;
 }
 
-.v-data-table__mobile-row__cell > .cancel {
+.v-data-table__mobile-row__cell > .cancel-button {
   margin-top: 30px;
   margin-bottom: 40px;
 }
@@ -198,5 +198,14 @@ export default {
   > .v-data-table__mobile-row:last-child
   > .v-data-table__mobile-row__cell {
   margin: 0 auto;
+}
+
+.cancel {
+  color: #f44336;
+}
+
+.cancel:hover {
+  color: red;
+  transform: scale(1.2);
 }
 </style>

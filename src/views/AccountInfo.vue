@@ -1,54 +1,59 @@
 <template>
-  <div class="text-center mt-14">
-    <h1 class="mb-10">Account info</h1>
-    <h2 class="mb-5">
-      <div class="info-label">DISPLAY NAME</div>
-      {{ displayName }}
-    </h2>
-    <h2 class="mb-5">
-      <div class="info-label">EMAIL</div>
-      {{ email }}
-    </h2>
-    <h2 class="mb-5">
-      <div class="info-label">STATUS</div>
-      {{ userStatus }}
-    </h2>
-    <h2 class="mb-5">
-      <div class="info-label">NUMBER OF RESERVATIONS</div>
-      {{ numOfReservations }}
-    </h2>
-    <h2 class="mb-5">
-      <div class="info-label">NUMBER OF LOANS</div>
-      {{ numOfLoans }}
-    </h2>
-    <h2 class="mb-5" v-if="user">
-      <div class="info-label">AUTHENTICATION METHOD</div>
-      <v-img
-        v-if="authMethod === 'google'"
-        src="@/assets/google.png"
-        max-width="40px"
-        class="mx-auto mt-4"
-      ></v-img>
-      <v-icon v-else large class="mx-auto mt-3">mdi-email</v-icon>
-    </h2>
-    <p v-if="hasLoansOrReservations" class="mt-10">
-      You currently cannot delete your account because you have at least one active loan
-      or reservation.
-    </p>
-    <v-btn
-      class="mt-14 mb-10"
-      color="red white--text"
-      v-if="user && userStatus === 'user' && !hasLoansOrReservations"
-      @click="openDialog"
-    >
-      Delete account
-    </v-btn>
+  <v-container class="mt-md-10">
+    <transition name="fade" mode="out-in">
+      <account-info-loading v-if="loading"></account-info-loading>
+      <div class="text-center" v-else>
+        <h1 class="mb-10">Account info</h1>
+        <h2 class="mb-5">
+          <div class="info-label">DISPLAY NAME</div>
+          {{ displayName }}
+        </h2>
+        <h2 class="mb-5">
+          <div class="info-label">EMAIL</div>
+          {{ email }}
+        </h2>
+        <h2 class="mb-5">
+          <div class="info-label">STATUS</div>
+          {{ userStatus }}
+        </h2>
+        <h2 class="mb-5">
+          <div class="info-label">NUMBER OF RESERVATIONS</div>
+          {{ numOfReservations }}
+        </h2>
+        <h2 class="mb-5">
+          <div class="info-label">NUMBER OF LOANS</div>
+          {{ numOfLoans }}
+        </h2>
+        <h2 class="mb-5" v-if="user">
+          <div class="info-label">AUTHENTICATION METHOD</div>
+          <v-img
+            v-if="authMethod === 'google'"
+            src="@/assets/google.png"
+            max-width="40px"
+            class="mx-auto mt-4"
+          ></v-img>
+          <v-icon v-else large class="mx-auto mt-3">mdi-email</v-icon>
+        </h2>
+        <p v-if="hasLoansOrReservations" class="my-14">
+          You currently cannot delete your account because you have at least one active
+          loan or reservation.
+        </p>
+        <v-btn
+          class="mt-14 mb-10"
+          color="red white--text"
+          v-if="user && userStatus === 'user' && !hasLoansOrReservations"
+          @click="openDialog"
+        >
+          Delete account
+        </v-btn>
+      </div>
+    </transition>
     <delete-account
       :active="dialogActive"
       :docId="userDocumentId"
       @close-dialog="closeDialog"
     ></delete-account>
-  </div>
+  </v-container>
 </template>
 
 <script>
@@ -62,11 +67,13 @@ import {
   doc,
   getDoc,
 } from "@/firebase.js"
+import AccountInfoLoading from "@/components/AccountInfoLoading.vue"
 import DeleteAccount from "@/components/user/DeleteAccount.vue"
 
 export default {
   props: ["id"],
   components: {
+    AccountInfoLoading,
     DeleteAccount,
   },
   data() {
@@ -77,6 +84,7 @@ export default {
       email: "",
       displayName: "",
       isAdmin: null,
+      loading: false,
       loans: [],
       activeLoans: [],
       reservations: [],
@@ -138,8 +146,12 @@ export default {
     },
   },
   async created() {
+    this.loading = true
     await this.getUserInfo()
     await this.checkUserLoans(this.loans)
+    setTimeout(() => {
+      this.loading = false
+    }, 250)
   },
 }
 </script>

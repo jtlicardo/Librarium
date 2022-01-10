@@ -28,7 +28,7 @@
         <loan-status :type="item.loan_status"></loan-status>
       </template>
       <template v-slot:[`item.edit`]="{ item }">
-        <v-icon color="primary" @click="editLoan(item)" v-if="!isMobile">
+        <v-icon class="edit" @click="editLoan(item)" v-if="!isMobile">
           mdi-circle-edit-outline
         </v-icon>
         <v-btn color="primary" @click="editLoan(item)" v-else class="edit-button">
@@ -36,7 +36,7 @@
         </v-btn>
       </template>
       <template v-slot:[`item.accept`]="{ item }">
-        <v-icon color="success" @click="acceptRequest(item)" v-if="!isMobile">
+        <v-icon class="accept" @click="acceptRequest(item)" v-if="!isMobile">
           mdi-check-outline
         </v-icon>
         <div class="text-center" v-else>
@@ -59,7 +59,7 @@
         </div>
       </template>
       <template v-slot:[`item.deny`]="{ item }">
-        <v-icon color="red" @click="denyRequest(item)" v-if="!isMobile">
+        <v-icon class="deny" @click="denyRequest(item)" v-if="!isMobile">
           mdi-close-outline
         </v-icon>
       </template>
@@ -415,5 +415,32 @@ export default {
   > .v-data-table__mobile-table-row
   > .v-data-table__mobile-row:nth-of-type(4) {
   display: none;
+}
+
+.edit {
+  color: #1976d2;
+}
+
+.edit:hover {
+  color: #0e78e2;
+  transform: scale(1.2);
+}
+
+.accept {
+  color: #4caf50;
+}
+
+.accept:hover {
+  color: #39c53e;
+  transform: scale(1.2);
+}
+
+.deny {
+  color: #f44336;
+}
+
+.deny:hover {
+  color: red;
+  transform: scale(1.2);
 }
 </style>

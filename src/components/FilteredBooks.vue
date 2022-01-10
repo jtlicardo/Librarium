@@ -36,11 +36,9 @@
         </p>
       </template>
       <template v-slot:[`item.delete`]="{ item }" v-if="userIsAdmin">
-        <v-btn color="white" fab small elevation="1">
-          <v-icon color="red" @click.stop="openDialog(item)">
-            mdi-trash-can-outline
-          </v-icon>
-        </v-btn>
+        <v-icon class="delete" @click.stop="openDialog(item)">
+          mdi-trash-can-outline
+        </v-icon>
       </template>
     </v-data-table>
     <delete-book
@@ -249,8 +247,8 @@ export default {
 </script>
 
 <style scoped>
-.v-data-table >>> .v-data-table__wrapper > table > tbody > tr > td {
-  max-width: 50px;
+.v-data-table >>> .v-data-table__wrapper > table > tbody > tr > td:nth-of-type(1) {
+  max-width: 150px;
 }
 
 ul {
@@ -280,5 +278,14 @@ ul li span::after {
   color: black;
   box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
   cursor: pointer;
+}
+
+.delete {
+  color: #f44336;
+}
+
+.delete:hover {
+  color: red;
+  transform: scale(1.2);
 }
 </style>

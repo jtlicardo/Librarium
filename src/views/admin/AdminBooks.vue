@@ -1,8 +1,8 @@
 <template>
   <v-container class="mt-md-10">
     <v-row>
-      <v-col cols="12" lg="1"></v-col>
-      <v-col cols="12" lg="10">
+      <v-col cols="0" xl="2"></v-col>
+      <v-col cols="12" xl="8">
         <h1 class="mb-5 d-inline-block">All books</h1>
         <p class="mb-10">Click on a book to see more details</p>
         <div v-if="isMobile" class="text-center">
@@ -41,7 +41,7 @@
         </div>
         <add-book :active="addBookDialogActive" @close-dialog="closeDialog"></add-book>
       </v-col>
-      <v-col cols="12" lg="1"></v-col>
+      <v-col cols="0" xl="2"></v-col>
     </v-row>
   </v-container>
 </template>

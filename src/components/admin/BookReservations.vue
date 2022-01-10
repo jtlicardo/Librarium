@@ -26,7 +26,7 @@
         {{ item.copyInvNumber }}
       </template>
       <template v-slot:[`item.delete`]="{ item }">
-        <v-icon color="red" @click="deleteReservation(item)" v-if="!isMobile">
+        <v-icon class="delete" @click="deleteReservation(item)" v-if="!isMobile">
           mdi-trash-can-outline
         </v-icon>
         <v-btn
@@ -294,5 +294,14 @@ export default {
   > .v-data-table__mobile-table-row
   > .v-data-table__mobile-row:nth-of-type(4) {
   display: none;
+}
+
+.delete {
+  color: #f44336;
+}
+
+.delete:hover {
+  color: red;
+  transform: scale(1.2);
 }
 </style>

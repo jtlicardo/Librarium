@@ -9,7 +9,7 @@
     <v-card-title>
       {{ title }}
       <v-spacer></v-spacer>
-      <v-icon color="red" v-if="userIsAdmin || userIsReviewer" @click="deleteReview">
+      <v-icon class="delete" v-if="userIsAdmin || userIsReviewer" @click="deleteReview">
         mdi-trash-can-outline
       </v-icon>
     </v-card-title>
@@ -102,5 +102,14 @@ export default {
   .v-card >>> .v-card__text {
     height: 160px;
   }
+}
+
+.delete {
+  color: #f44336;
+}
+
+.delete:hover {
+  color: red;
+  transform: scale(1.2);
 }
 </style>
