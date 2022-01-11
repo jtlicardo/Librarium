@@ -55,6 +55,12 @@ export default {
           sortable: false,
           align: "center",
         },
+        {
+          text: "USER",
+          value: "user",
+          sortable: false,
+          align: "center",
+        },
       ]
       if (this.isMobile)
         headers.push({
@@ -75,10 +81,26 @@ export default {
   },
   methods: {
     async getBookRequests() {
+      this.loading = true
       const querySnapshot = await getDocs(collection(db, "bookRequests"))
-      querySnapshot.forEach((doc) => {
-        this.requests.push(doc.data())
+      querySnapshot.forEach(async (doc) => {
+        this.requests.push({
+          title: doc.data().title,
+          author: doc.data().author,
+          user: await this.userIdToEmail(doc.data().userId),
+        })
       })
+      this.loading = false
+    },
+    async userIdToEmail(userId) {
+      const usersRef = collection(db, "users")
+      const q = query(usersRef, where("uid", "==", userId))
+      const querySnapshot = await getDocs(q)
+      let email = ""
+      querySnapshot.forEach((doc) => {
+        email = doc.data().email
+      })
+      return email
     },
     async deleteRequest(item) {
       try {

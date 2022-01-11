@@ -75,10 +75,12 @@ export default {
     },
     async sendRequest() {
       if (!this.validate()) return
+      const userId = localStorage.getItem("userId")
       try {
         const docRef = await addDoc(collection(db, "bookRequests"), {
           title: this.title,
           author: this.author,
+          userId
         })
         this.$store.dispatch("displaySnackbar", {
           text: "Request sent!",
