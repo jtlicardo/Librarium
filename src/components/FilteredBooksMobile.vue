@@ -1,19 +1,32 @@
 <template>
   <div class="text-center">
-    <mobile-search-card
-      v-for="(book, index) in books"
-      :key="index"
-      :title="book.title"
-      :author="book.author"
-      :imagesource="book.logoUrl"
-      :genres="book.genres"
-      :reviews="book.reviews"
-      :copies="book.copies"
-      :added="book.added_at"
-      @book-title="displayBookDetails"
-      @delete="openDialog"
-      class="mx-auto"
-    ></mobile-search-card>
+    <v-divider id="books" class="mb-16"></v-divider>
+    <div class="books">
+      <mobile-search-card
+        v-for="(book, index) in booksGroup"
+        :key="index"
+        :title="book.title"
+        :author="book.author"
+        :imagesource="book.logoUrl"
+        :genres="book.genres"
+        :reviews="book.reviews"
+        :copies="book.copies"
+        :added="book.added_at"
+        @book-title="displayBookDetails"
+        @delete="openDialog"
+        class="mx-auto"
+      ></mobile-search-card>
+    </div>
+    <div class="text-center">
+      <v-pagination
+        v-if="numOfPages > 1"
+        v-model="page"
+        :length="numOfPages"
+        class="my-10"
+        @previous="changePage"
+        @next="changePage"
+      ></v-pagination>
+    </div>
     <p v-if="books.length === 0 && !loading">No books found</p>
     <delete-book
       :active="dialogActive"
@@ -52,18 +65,49 @@ export default {
   data() {
     return {
       books: [],
+      booksGroup: [],
       search: "",
       loading: false,
+      page: 1,
+      arrowPageChange: false,
       bookToBeDeleted: null,
       dialogActive: false,
     }
   },
   computed: {
-    backButtonActiveOnRefresh() {
-      return this.$store.getters.backButtonActiveOnRefresh
+    numOfPages() {
+      return Math.ceil(this.books.length / 10)
+    },
+    userIsAdmin() {
+      const userIsAdmin = localStorage.getItem("userIsAdmin")
+      const isAdmin = userIsAdmin === "true"
+      if (isAdmin) return true
+      else return false
     },
   },
   methods: {
+    splitBooks(pageNum) {
+      this.booksGroup = []
+      let startSliceNum = 0
+      if (pageNum > 1) startSliceNum = 10 * (pageNum - 1)
+      this.booksGroup = this.books.slice(startSliceNum, startSliceNum + 10)
+    },
+    timeout(miliseconds) {
+      return new Promise((resolve) => setTimeout(resolve, miliseconds))
+    },
+    async changePage() {
+      this.arrowPageChange = true
+      document.querySelector(".books").classList.toggle("fadeout")
+      await this.timeout(500)
+      this.splitBooks(this.page)
+      document.querySelector(".books").classList.toggle("fadein")
+      await this.timeout(500)
+      document.querySelector(".books").classList.remove("fadeout")
+      document.querySelector(".books").classList.remove("fadein")
+      if (this.userIsAdmin) window.scroll({ top: 400, behavior: "smooth" })
+      else window.scroll({ top: 100, behavior: "smooth" })
+      this.arrowPageChange = false
+    },
     calculateAvgRating(reviews) {
       if (reviews.length === 0) return "N/A"
       let total = 0
@@ -133,9 +177,27 @@ export default {
       this.bookToBeDeleted = null
     },
   },
+  watch: {
+    page(newValue) {
+      if (!this.arrowPageChange) {
+        document.querySelector(".books").classList.toggle("fadeout")
+        this.timeout(500).then(() => {
+          this.splitBooks(newValue)
+          document.querySelector(".books").classList.toggle("fadein")
+          this.timeout(500).then(() => {
+            document.querySelector(".books").classList.remove("fadeout")
+            document.querySelector(".books").classList.remove("fadein")
+            if (this.userIsAdmin) window.scroll({ top: 400, behavior: "smooth" })
+            else window.scroll({ top: 100, behavior: "smooth" })
+          })
+        })
+      }
+    },
+  },
   async created() {
     await this.getAllBooks()
     if (this.searchtitle || this.searchauthor || this.searchgenre) this.filterBooks()
+    this.splitBooks(1)
   },
   mounted() {
     this.$root.$on("getAllBooksMobile", () => {
@@ -145,3 +207,15 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.fadeout {
+  opacity: 0;
+  transition: all 0.5s;
+}
+
+.fadein {
+  opacity: 1;
+  transition: all 0.5s;
+}
+</style>
