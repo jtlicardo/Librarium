@@ -155,9 +155,8 @@ export default {
       rules: {
         required: (value) => !!value || "Required",
         positive: (value) => (value && value > 0) || "Must be a positive number",
-        max: (value) => (value && value.length < 8) || "Inventory number is too long!",
-        genreMax: (value) =>
-          value.length < 25 || value === "" || "Genre name is too long!",
+        max: (value) => value.length < 8 || "Inventory number is too long!",
+        genreMax: (value) => value.length < 25 || "Genre name is too long!",
       },
       validationError: false,
       errorMsg: "",
