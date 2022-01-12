@@ -34,16 +34,19 @@
                     label="Main genre"
                     :rules="[rules.required, rules.genreMax]"
                     required
+                    validate-on-blur
                     v-model.trim="book.genres.mainGenre"
                   ></v-text-field>
                   <v-text-field
                     label="Additional genre (optional)"
                     :rules="[rules.genreMax]"
+                    validate-on-blur
                     v-model.trim="book.genres.secondaryGenre"
                   ></v-text-field>
                   <v-text-field
                     label="Additional genre (optional)"
                     :rules="[rules.genreMax]"
+                    validate-on-blur
                     v-model.trim="book.genres.tertiaryGenre"
                   ></v-text-field>
                 </v-col>
@@ -154,7 +157,7 @@ export default {
         positive: (value) => (value && value > 0) || "Must be a positive number",
         max: (value) => (value && value.length < 8) || "Inventory number is too long!",
         genreMax: (value) =>
-          (value && value.length < 25) || value === "" || "Genre name is too long!",
+          value.length < 25 || value === "" || "Genre name is too long!",
       },
       validationError: false,
       errorMsg: "",
