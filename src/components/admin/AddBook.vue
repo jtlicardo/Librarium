@@ -15,6 +15,7 @@
                     required
                     :rules="[rules.required]"
                     counter
+                    validate-on-blur
                     maxlength="60"
                     v-model.trim="book.title"
                   ></v-text-field>
@@ -25,6 +26,7 @@
                     required
                     :rules="[rules.required]"
                     counter
+                    validate-on-blur
                     maxlength="30"
                     v-model.trim="book.author"
                   ></v-text-field>
@@ -56,6 +58,7 @@
                     type="number"
                     :rules="[rules.required, rules.positive]"
                     required
+                    validate-on-blur
                     v-model="book.numOfPages"
                   ></v-text-field>
                   <v-text-field
@@ -155,8 +158,9 @@ export default {
       rules: {
         required: (value) => !!value || "Required",
         positive: (value) => (value && value > 0) || "Must be a positive number",
-        max: (value) => value.length < 8 || "Inventory number is too long!",
-        genreMax: (value) => value.length < 25 || "Genre name is too long!",
+        max: (value) => (value && value.length < 8) || "Inventory number is too long!",
+        genreMax: (value) =>
+          value === null || value.length < 25 || "Genre name is too long!",
       },
       validationError: false,
       errorMsg: "",
@@ -181,7 +185,15 @@ export default {
       document.querySelector("#fileinput").click()
     },
     closeDialog() {
-      this.$refs.form.reset()
+      this.book.title = ""
+      this.book.author = ""
+      this.book.genres.mainGenre = ""
+      this.book.genres.secondaryGenre = ""
+      this.book.genres.tertiaryGenre = ""
+      this.book.numOfPages = ""
+      this.book.copies[0].inventoryNumber = ""
+      this.logo = null
+      this.$refs.form.resetValidation()
       this.$emit("close-dialog")
     },
     validate() {
