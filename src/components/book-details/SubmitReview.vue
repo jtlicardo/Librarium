@@ -105,13 +105,7 @@ export default {
           text: "Review successfully added!",
           isActive: true,
         })
-        this.$emit("submitted", {
-          userId,
-          title: this.title,
-          name: displayName,
-          comment: this.comment,
-          rating: this.rating,
-        })
+        this.$emit("submitted")
       } catch (e) {
         console.log(e)
         this.$store.dispatch("displayBaseDialog", {

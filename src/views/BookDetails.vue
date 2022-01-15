@@ -63,7 +63,7 @@
               :name="review.displayName"
               :comment="review.comment"
               :rating="review.rating"
-              @deleted="removeReview"
+              @deleted="refreshData"
             />
           </v-col>
           <v-col cols="12" lg="5">
@@ -75,7 +75,7 @@
               :name="review.displayName"
               :comment="review.comment"
               :rating="review.rating"
-              @deleted="removeReview"
+              @deleted="refreshData"
             />
           </v-col>
           <v-col cols="12" lg="1"></v-col>
@@ -92,7 +92,7 @@
         </div>
         <div v-if="!userIsAdmin && !reviewExists">
           <h3 class="mt-14 pt-10 text-center">Submit your own review</h3>
-          <submit-review :id="id" @submitted="addReview" />
+          <submit-review :id="id" @submitted="refreshData" />
         </div>
       </div>
     </transition>
@@ -217,25 +217,13 @@ export default {
       } else {
         console.log("No such document!")
       }
-      await this.timeout(500)
+      await this.timeout(100)
       this.loading = false
     },
-    removeReview(userId) {
-      this.allReviews = this.allReviews.filter((review) => review.userId !== userId)
+    async refreshData() {
+      await this.getBookData()
+      await this.checkIfReviewExists()
       this.page = 1
-      this.checkIfReviewExists()
-      this.splitReviews(1)
-    },
-    addReview(payload) {
-      this.allReviews.push({
-        userId: payload.userId,
-        title: payload.title,
-        displayName: payload.name,
-        comment: payload.comment,
-        rating: payload.rating,
-      })
-      this.page = 1
-      this.checkIfReviewExists()
       this.splitReviews(1)
     },
     splitReviews(pageNum) {
