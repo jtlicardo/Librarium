@@ -77,6 +77,7 @@ import {
   updateDoc,
   doc,
   increment,
+  orderBy,
 } from "@/firebase.js"
 import LoanStatus from "@/components/LoanStatus.vue"
 export default {
@@ -230,7 +231,9 @@ export default {
     async getAllLoans() {
       this.loading = true
       this.loans = []
-      const querySnapshot = await getDocs(collection(db, "loans"))
+      const loansRef = collection(db, "loans")
+      const q = query(loansRef, orderBy("issue_time", "desc"))
+      const querySnapshot = await getDocs(q)
       querySnapshot.forEach((doc) => {
         const issue_date = this.milisecondsToDate(doc.data().issue_time)
         const due_date = this.milisecondsToDate(doc.data().due_time)
