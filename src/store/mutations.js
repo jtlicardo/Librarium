@@ -25,7 +25,7 @@ export default {
     state.sidebar.open = !state.sidebar.open
   },
   setSidebarState(state, payload) {
-    state.sidebarOpen = payload
+    state.sidebar.open = payload
   },
   showBackButton(state) {
     state.header.backButton = true
