@@ -14,9 +14,13 @@ export default new Vuex.Store({
   },
   state() {
     return {
-      sidebarOpen: false,
-      snackbarActive: false,
-      snackbarText: "",
+      sidebar: {
+        open: false,
+      },
+      snackbar: {
+        active: false,
+        text: "",
+      },
       header: {
         backButton: false,
         backButtonActive: false,
@@ -30,14 +34,16 @@ export default new Vuex.Store({
         active: false,
       },
       errorPopup: {
-        errorPopupActive: false,
-        errorPopupText: "",
+        active: false,
+        text: "",
       },
       loadingDialog: {
         active: false,
         title: "",
       },
-      logoutDialogActive: false,
+      logoutDialog: {
+        active: false,
+      },
       searchInput: {
         title: "",
         author: "",

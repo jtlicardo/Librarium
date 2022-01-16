@@ -18,8 +18,8 @@
       @close="closeBaseDialog"
     ></base-dialog>
     <error-popup
-      :active="errorPopup.errorPopupActive"
-      :text="errorPopup.errorPopupText"
+      :active="errorPopup.active"
+      :text="errorPopup.text"
       @close-dialog="closeErrorPopup"
     />
     <loading-dialog
@@ -133,7 +133,7 @@ export default {
       return this.$store.getters.loadingDialog
     },
     logoutDialogActive() {
-      return this.$store.getters.logoutDialogActive
+      return this.$store.getters.logoutDialog.active
     },
   },
   methods: {

@@ -21,7 +21,7 @@
 export default {
   computed: {
     sidebarOpen() {
-      return this.$store.getters.sidebarOpen
+      return this.$store.getters.sidebar.open
     },
   },
 }

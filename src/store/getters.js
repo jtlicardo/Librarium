@@ -1,9 +1,9 @@
 export default {
   snackbarActive(state) {
-    return state.snackbarActive
+    return state.snackbar.active
   },
   snackbarText(state) {
-    return state.snackbarText
+    return state.snackbar.text
   },
   errorPopup(state) {
     return state.errorPopup
@@ -14,11 +14,11 @@ export default {
   loadingDialog(state) {
     return state.loadingDialog
   },
-  logoutDialogActive(state) {
-    return state.logoutDialogActive
+  logoutDialog(state) {
+    return state.logoutDialog
   },
-  sidebarOpen(state) {
-    return state.sidebarOpen
+  sidebar(state) {
+    return state.sidebar
   },
   backButton(state) {
     return state.header.backButton

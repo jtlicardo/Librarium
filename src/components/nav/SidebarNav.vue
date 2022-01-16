@@ -56,7 +56,7 @@ export default {
   computed: {
     sidebarOpen: {
       get: function () {
-        return this.$store.getters.sidebarOpen
+        return this.$store.getters.sidebar.open
       },
       set: function (newValue) {
         this.$store.dispatch("setSidebarState", newValue)

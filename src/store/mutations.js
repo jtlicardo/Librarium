@@ -1,11 +1,11 @@
 export default {
   displaySnackbar(state, payload) {
-    state.snackbarActive = payload.isActive
-    state.snackbarText = payload.text
+    state.snackbar.active = payload.isActive
+    state.snackbar.text = payload.text
   },
   displayErrorPopup(state, payload) {
-    state.errorPopup.errorPopupActive = payload.isActive
-    state.errorPopup.errorPopupText = payload.text
+    state.errorPopup.active = payload.isActive
+    state.errorPopup.text = payload.text
   },
   displayBaseDialog(state, payload) {
     state.baseDialog.title = payload.title
@@ -19,10 +19,10 @@ export default {
     state.loadingDialog.title = payload.title
   },
   toggleLogoutDialog(state) {
-    state.logoutDialogActive = !state.logoutDialogActive
+    state.logoutDialog.active = !state.logoutDialog.active
   },
   toggleSidebar(state) {
-    state.sidebarOpen = !state.sidebarOpen
+    state.sidebar.open = !state.sidebar.open
   },
   setSidebarState(state, payload) {
     state.sidebarOpen = payload
