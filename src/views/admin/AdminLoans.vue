@@ -4,7 +4,7 @@
       <v-col cols="0" xl="2"></v-col>
       <v-col cols="12" xl="8">
         <h1 class="mb-10">All loans</h1>
-        <book-loans @edit-loan="openDialog" ref="loansComponent" />
+        <book-loans @edit-loan="openDialog" ref="loansComponent" v-if="loansChecked" />
         <v-btn class="my-14" color="yellow darken-1" @click="addLoan">Add loan</v-btn>
       </v-col>
       <v-col cols="0" xl="2"></v-col>
@@ -32,6 +32,7 @@ export default {
     return {
       active: false,
       loan: null,
+      loansChecked: false,
     }
   },
   methods: {
@@ -85,6 +86,7 @@ export default {
   },
   async mounted() {
     await this.checkLoanStatus()
+    this.loansChecked = true
   },
 }
 </script>
