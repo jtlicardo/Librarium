@@ -4,7 +4,7 @@
       <v-col cols="0" xl="2"></v-col>
       <v-col cols="12" xl="8">
         <h1 class="mb-10">All reservations</h1>
-        <book-reservations />
+        <book-reservations v-if="autodeleted" />
       </v-col>
       <v-col cols="0" xl="2"></v-col>
     </v-row>
@@ -29,6 +29,11 @@ import {
 export default {
   components: {
     BookReservations,
+  },
+  data() {
+    return {
+      autodeleted: false,
+    }
   },
   methods: {
     async autoDeleteReservations() {
@@ -76,6 +81,7 @@ export default {
   },
   async mounted() {
     await this.autoDeleteReservations()
+    this.autodeleted = true
   },
 }
 </script>
