@@ -142,7 +142,6 @@ export default {
           tertiaryGenre: "",
         },
         numOfPages: "",
-        copiesInvNums: [],
         copies: [
           {
             inventoryNumber: "",
@@ -264,7 +263,6 @@ export default {
         const docReference = doc(db, "books", docRef.id)
         await updateDoc(docReference, {
           logoUrl: url,
-          copiesInvNums: arrayUnion(this.book.copies[0].inventoryNumber),
         })
         this.$store.dispatch("displaySnackbar", {
           text: "Book successfully added!",

@@ -115,9 +115,6 @@ export default {
       try {
         const booksRef = doc(db, "books", this.id)
         await updateDoc(booksRef, {
-          copiesInvNums: arrayRemove(inventoryNumber),
-        })
-        await updateDoc(booksRef, {
           copies: arrayRemove({
             inventoryNumber: inventoryNumber,
             status: status,

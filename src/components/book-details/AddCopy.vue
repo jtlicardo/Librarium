@@ -67,16 +67,17 @@ export default {
         const docRef = doc(db, "books", this.bookId)
         const docSnap = await getDoc(docRef)
         if (docSnap.exists()) {
-          const inventoryNumbers = docSnap.data().copiesInvNums
-          for (let num of inventoryNumbers) {
-            if (num === this.inventoryNumber) {
+          const copies = docSnap.data().copies
+          for (let copy of copies) {
+            if (copy.inventoryNumber === this.inventoryNumber) {
               this.$store.dispatch("displayErrorPopup", {
                 isActive: true,
                 text: "Inventory number already exists!",
               })
               return true
-            } else return false
+            }
           }
+          return false
         }
       } catch (e) {
         console.log(e)
@@ -91,41 +92,40 @@ export default {
     },
     async addCopy() {
       if (!this.validate()) return
-      if (await this.checkIfCopyExists()) return
-      this.$store.dispatch("displayLoadingDialog", {
-        active: true,
-        title: "Adding copy...",
-      })
-      try {
-        const booksRef = doc(db, "books", this.bookId)
-        await updateDoc(booksRef, {
-          copiesInvNums: arrayUnion(this.inventoryNumber),
-        })
-        await updateDoc(booksRef, {
-          copies: arrayUnion({
-            inventoryNumber: this.inventoryNumber,
-            status: "Available",
-          }),
-        })
-        this.$store.dispatch("displaySnackbar", {
-          text: "Copy successfully added!",
-          isActive: true,
-        })
+      else if (await this.checkIfCopyExists()) return
+      else {
         this.$store.dispatch("displayLoadingDialog", {
-          active: false,
-          title: "",
-        })
-        this.$emit("copy-added")
-        this.closeDialog()
-      } catch (e) {
-        console.log(e)
-        this.$store.dispatch("displayBaseDialog", {
-          text: e.toString(),
-          title: "Error! Please try again later.",
-          color: "red",
-          loading: false,
           active: true,
+          title: "Adding copy...",
         })
+        try {
+          const booksRef = doc(db, "books", this.bookId)
+          await updateDoc(booksRef, {
+            copies: arrayUnion({
+              inventoryNumber: this.inventoryNumber,
+              status: "Available",
+            }),
+          })
+          this.$store.dispatch("displaySnackbar", {
+            text: "Copy successfully added!",
+            isActive: true,
+          })
+          this.$store.dispatch("displayLoadingDialog", {
+            active: false,
+            title: "",
+          })
+          this.$emit("copy-added")
+          this.closeDialog()
+        } catch (e) {
+          console.log(e)
+          this.$store.dispatch("displayBaseDialog", {
+            text: e.toString(),
+            title: "Error! Please try again later.",
+            color: "red",
+            loading: false,
+            active: true,
+          })
+        }
       }
     },
   },
