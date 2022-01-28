@@ -98,9 +98,6 @@ export default {
             rating: this.rating,
           }),
         })
-        await updateDoc(booksRef, {
-          reviewsUserIds: arrayUnion(userId),
-        })
         this.$store.dispatch("displaySnackbar", {
           text: "Review successfully added!",
           isActive: true,

@@ -237,9 +237,9 @@ export default {
       const userId = localStorage.getItem("userId")
       const docSnap = await getDoc(booksRef)
       if (docSnap.exists()) {
-        const reviewers = docSnap.data().reviewsUserIds
-        for (let reviewer of reviewers) {
-          if (reviewer === userId) this.reviewExists = true
+        const reviews = docSnap.data().reviews
+        for (let review of reviews) {
+          if (review.userId === userId) this.reviewExists = true
         }
       }
     },

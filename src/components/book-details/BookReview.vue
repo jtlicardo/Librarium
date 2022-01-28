@@ -62,7 +62,7 @@ export default {
   methods: {
     async deleteReview() {
       const bookId = this.$router.currentRoute.params.id
-      const userId = localStorage.getItem("userId")
+      const userId = this.userId
       const docRef = doc(db, "books", bookId)
       await updateDoc(docRef, {
         reviews: arrayRemove({
@@ -72,9 +72,6 @@ export default {
           comment: this.comment,
           rating: this.rating,
         }),
-      })
-      await updateDoc(docRef, {
-        reviewsUserIds: arrayRemove(userId),
       })
       this.$store.dispatch("displaySnackbar", {
         text: "Review deleted!",
