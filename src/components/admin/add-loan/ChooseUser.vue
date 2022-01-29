@@ -13,7 +13,6 @@
     <v-data-table
       :headers="headers"
       :items="users"
-      hide-default-footer
       class="elevation-1 mx-auto"
       :loading="loading"
       @click:row="chooseUser"
