@@ -76,7 +76,7 @@ onAuthStateChanged(auth, (user) => {
         })
       })
       .catch((e) => {
-        console.log(e)
+        console.log("onAuthStateChanged error: ", e)
       })
   } else {
     console.log("Auth state change, no user.")

@@ -7,9 +7,6 @@ export default {
     return {
       currentUser: {
         uid: null,
-        fullname: null,
-        email: null,
-        isAdmin: null,
       },
     }
   },

@@ -145,7 +145,6 @@ export default {
             email: null,
             fullname: null,
             isAdmin: null,
-            backButtonActive: null,
           })
           this.$router.replace("/auth")
           this.$store.dispatch("displaySnackbar", {
@@ -184,7 +183,6 @@ export default {
             email: null,
             fullname: null,
             isAdmin: null,
-            backButtonActive: null,
           })
           this.$router.replace("/auth")
           this.$store.dispatch("displaySnackbar", {
