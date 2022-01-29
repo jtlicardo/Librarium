@@ -133,6 +133,7 @@ export default {
           averageRating: this.calculateAvgRating(doc.data().reviews),
         })
       })
+      this.splitBooks(1)
       this.loading = false
     },
     filterBooks() {
@@ -156,6 +157,7 @@ export default {
           filteredBooks.push(book)
       }
       this.books = filteredBooks
+      this.splitBooks(1)
     },
     async displayBookDetails(title) {
       let bookId = ""
@@ -197,7 +199,6 @@ export default {
   async created() {
     await this.getAllBooks()
     if (this.searchtitle || this.searchauthor || this.searchgenre) this.filterBooks()
-    this.splitBooks(1)
   },
   mounted() {
     this.$root.$on("getAllBooksMobile", () => {
