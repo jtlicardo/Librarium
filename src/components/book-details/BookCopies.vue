@@ -164,7 +164,6 @@ export default {
           start_time,
           end_time,
         })
-        console.log("Document written with ID: ", docRef.id)
         const users = collection(db, "users")
         const q = query(users, where("uid", "==", userId))
         const querySnapshot = await getDocs(q)

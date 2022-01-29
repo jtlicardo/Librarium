@@ -79,7 +79,6 @@ export default {
         })
         // delete reservation
         await deleteDoc(doc(db, "reservations", reservation.id))
-        console.log("Autodeleted reservation: ", reservation.id)
       }
     },
   },

@@ -165,7 +165,6 @@ export default {
       const q = query(booksRef, where("title", "==", title))
       const querySnapshot = await getDocs(q)
       querySnapshot.forEach((doc) => {
-        console.log("Book id: ", doc.id)
         bookId = doc.id
       })
       this.$router.push({ name: "Book Details", params: { id: bookId } })

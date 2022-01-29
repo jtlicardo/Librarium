@@ -46,7 +46,6 @@ export default {
       try {
         this.closeDialog()
         await signOut(auth)
-        console.log("Logout successful!")
         this.$store.dispatch("setUser", {
           uid: null,
           email: null,

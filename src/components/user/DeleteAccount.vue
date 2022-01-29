@@ -137,9 +137,7 @@ export default {
           const authCredential = GoogleAuthProvider.credentialFromResult(result)
           await reauthenticateWithCredential(user, authCredential)
           await deleteDoc(doc(db, "users", this.docId))
-          console.log("User deleted from collection!")
           await deleteUser(user)
-          console.log("User deleted (auth)!")
           this.$store.dispatch("setUser", {
             uid: null,
             email: null,
@@ -175,9 +173,7 @@ export default {
           const authCredential = EmailAuthProvider.credential(this.email, this.password)
           await reauthenticateWithCredential(user, authCredential)
           await deleteDoc(doc(db, "users", this.docId))
-          console.log("User deleted from collection!")
           await deleteUser(user)
-          console.log("User deleted (auth)!")
           this.$store.dispatch("setUser", {
             uid: null,
             email: null,

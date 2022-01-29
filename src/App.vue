@@ -67,7 +67,7 @@ onAuthStateChanged(auth, (user) => {
     const email = user.email
     userIsAdmin(uid)
       .then((result) => {
-        console.log("Auth state change, user logged in: ", email)
+        console.log("Auth state change: ", email)
         store.dispatch("setUser", {
           uid: uid,
           email: email,

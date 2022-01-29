@@ -86,7 +86,6 @@ export default {
           text: "Request sent!",
           isActive: true,
         })
-        console.log("Document written with ID: ", docRef.id)
         this.closeDialog()
       } catch (e) {
         console.log(e)

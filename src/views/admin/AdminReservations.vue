@@ -75,7 +75,6 @@ export default {
           reservations: arrayRemove(reservation.id),
         })
         await deleteDoc(doc(db, "reservations", reservation.id))
-        console.log("Autodeleted reservation: ", reservation.id)
       }
     },
   },

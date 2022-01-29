@@ -213,7 +213,6 @@ export default {
         for (let review of docSnap.data().reviews) {
           this.allReviews.push(review)
         }
-        console.log("Book data: ", this.selectedBook)
       } else {
         console.log("No such document!")
       }

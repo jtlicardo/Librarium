@@ -186,14 +186,6 @@ router.beforeEach((to, from, next) => {
   else if (to.meta.needsAdmin && !isAdmin && isAuthenticated) next("/books")
   else if (to.meta.needsUser && isAdmin && isAuthenticated) next("/adminbooks")
   else next()
-  console.log(
-    "Route change: ",
-    from.name,
-    " -> ",
-    to.name,
-    "/ User authenticated? ",
-    isAuthenticated
-  )
 })
 
 export default router

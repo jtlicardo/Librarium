@@ -128,8 +128,6 @@ export default {
           loans: [],
           reservations: [],
         })
-        console.log("User successfully added to collection!")
-        console.log("Document written with ID: ", docRef.id)
       } catch (e) {
         console.error("Error adding user to collection: ", e)
       }
@@ -160,11 +158,9 @@ export default {
           this.password
         )
         const user = userCredential.user
-        console.log("Signup successful! ", user)
         await updateProfile(auth.currentUser, {
           displayName: this.fullname,
         })
-        console.log("Signed up with display name: ", auth.currentUser.displayName)
         this.addUserToCollection(user.uid)
         await this.animation()
         this.$router.replace({ name: "User Books" })

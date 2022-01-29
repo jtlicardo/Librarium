@@ -77,13 +77,11 @@ export default {
         )
         const user = userCredential.user
         await this.animation()
-        console.log("Login successful! ", user)
         this.$store.dispatch("displaySnackbar", {
           text: "Login successful!",
           isActive: true,
         })
         const userIsAdmin = localStorage.getItem("userIsAdmin")
-        console.log("Login - user is admin?", userIsAdmin)
         if (userIsAdmin === "true") {
           this.$router.replace({ name: "Admin Books" })
         } else if (userIsAdmin === "false") {
@@ -117,13 +115,11 @@ export default {
             title: "Logging you in...",
           })
           const user = result.user
-          console.log("Successful Google login! ", user)
           let check = await this.checkIfUserExists(user.uid)
           if (!check) {
             this.addUserToCollection(user.uid, user.displayName, user.email)
           }
           const userIsAdmin = localStorage.getItem("userIsAdmin")
-          console.log("Login - user is admin?", userIsAdmin)
           await this.animation()
           if (userIsAdmin === "true") {
             this.$router.replace("/adminbooks")
@@ -149,7 +145,6 @@ export default {
       const querySnapshot = await getDocs(q)
       if (querySnapshot.empty === true) return false
       else {
-        console.log("user already exists in collection")
         return true
       }
     },
@@ -163,8 +158,6 @@ export default {
           loans: [],
           reservations: [],
         })
-        console.log("User successfully added to collection!")
-        console.log("Document written with ID: ", docRef.id)
       } catch (e) {
         console.error("Error adding user to collection: ", e)
       }
@@ -185,7 +178,6 @@ export default {
             this.addUserToCollection(user.uid, user.displayName, user.email)
           }
           const userIsAdmin = localStorage.getItem("userIsAdmin")
-          console.log("Login - user is admin?", userIsAdmin)
           await this.animation()
           if (userIsAdmin === "true") {
             this.$router.replace("/adminbooks")

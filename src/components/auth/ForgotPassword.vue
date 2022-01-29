@@ -78,7 +78,6 @@ export default {
         const auth = getAuth()
         sendPasswordResetEmail(auth, this.email)
           .then(() => {
-            console.log("Password reset email sent!")
             this.email = ""
             this.$store.dispatch("displaySnackbar", {
               text: "Reset password email sent!",

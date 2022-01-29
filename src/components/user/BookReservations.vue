@@ -123,7 +123,6 @@ export default {
           el.title === item.title &&
           el.copyInvNumber === item.inventoryNumber
       )
-      console.log(selectedReservation)
       try {
         const booksRef = doc(db, "books", selectedReservation.bookId)
         await updateDoc(booksRef, {

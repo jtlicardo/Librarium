@@ -147,7 +147,6 @@ export default {
           extensionRequested: false,
           extensionApproved: null,
         })
-        console.log("Document written with ID: ", docRef.id)
         // add loan id to user
         const users = collection(db, "users")
         const q = query(users, where("uid", "==", userId))

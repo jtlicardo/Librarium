@@ -63,7 +63,6 @@ export default {
           author: this.author,
           logoUrl: this.imagesource,
         })
-        console.log(this.title, this.author, this.logoUrl)
       } else {
         this.$emit("book-title", this.title)
         this.$store.dispatch("showBackButton")

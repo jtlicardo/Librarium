@@ -84,8 +84,6 @@ export default {
         const docSnap = await getDoc(docRef)
         if (docSnap.exists() && docSnap.data().bookId === this.bookDocumentId) {
           this.userReservedCopy = docSnap.data().copyInvNumber
-        } else {
-          console.log("User has no reservations for selected book")
         }
       }
     },

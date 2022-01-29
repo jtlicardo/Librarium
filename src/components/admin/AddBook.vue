@@ -255,11 +255,9 @@ export default {
         const docRef = await addDoc(collection(db, "books"), {
           ...this.book,
         })
-        console.log("Document written with ID: ", docRef.id)
         const storageRef = ref(storage, docRef.id)
         await uploadBytes(storageRef, this.logo)
         const url = await getDownloadURL(ref(storage, docRef.id))
-        console.log(url)
         const docReference = doc(db, "books", docRef.id)
         await updateDoc(docReference, {
           logoUrl: url,
