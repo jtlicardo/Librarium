@@ -269,7 +269,8 @@ export default {
       const q = query(
         loansRef,
         where("extensionRequested", "==", true),
-        where("extensionApproved", "==", null)
+        where("extensionApproved", "==", null),
+        where("loan_status", "!=", "Finished")
       )
       const querySnapshot = await getDocs(q)
       querySnapshot.forEach((doc) => {
