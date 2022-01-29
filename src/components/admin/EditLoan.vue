@@ -45,9 +45,13 @@
                 @click="revertStatus"
                 width="150px"
                 v-else
+                :disabled="activeLoanExists"
               >
                 Revert status
               </v-btn>
+              <small class="d-block" v-if="activeLoanExists && loanIsFinished">
+                You cannot revert the loan's status because an active loan exists for user
+              </small>
             </v-col>
           </v-row>
         </v-card-actions>
@@ -85,8 +89,14 @@ import {
 export default {
   props: ["active", "loan"],
   emits: ["close-dialog", "refresh"],
+  data() {
+    return {
+      activeLoanExists: false,
+    }
+  },
   methods: {
     closeDialog() {
+      this.activeLoanExists = false
       this.$emit("close-dialog")
     },
     async finishLoan() {
@@ -112,6 +122,26 @@ export default {
       })
       this.$emit("refresh")
       this.closeDialog()
+    },
+    async checkIfActiveLoanExists() {
+      const userId = this.loan.userId
+      const bookId = this.loan.firebaseBookId
+      let loanExists = false
+      const loansRef = collection(db, "loans")
+      const q = query(
+        loansRef,
+        where("bookId", "==", bookId),
+        where("userId", "==", userId)
+      )
+      const querySnapshot = await getDocs(q)
+      querySnapshot.forEach((doc) => {
+        if (doc.data().loan_status !== "Finished") {
+          loanExists = true
+          this.activeLoanExists = true
+          return
+        }
+      })
+      if (!loanExists && this.activeLoanExists) this.activeLoanExists = false
     },
     async revertStatus() {
       // update loan status
@@ -211,6 +241,11 @@ export default {
           active: true,
         })
       }
+    },
+  },
+  watch: {
+    active() {
+      this.checkIfActiveLoanExists()
     },
   },
   computed: {
