@@ -12,7 +12,7 @@
     <v-data-table
       :headers="headers"
       :items="loans"
-      hide-default-footer
+      :hide-default-footer="requests"
       class="elevation-1"
       :loading="loading"
       :search="search"

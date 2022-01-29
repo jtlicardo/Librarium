@@ -13,7 +13,6 @@
     <v-data-table
       :headers="headers"
       :items="reservations"
-      hide-default-footer
       class="elevation-1"
       :loading="loading"
       :search="search"
