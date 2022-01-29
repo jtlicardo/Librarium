@@ -7,7 +7,7 @@
     v-if="!!selectedBook"
   >
     <template v-slot:[`item.status`]="{ item }">
-      <book-status :type="item.status" class="mx-auto" />
+      <copy-status :type="item.status" class="mx-auto" />
     </template>
     <template v-slot:[`item.loan`]="{ item }">
       <v-btn
@@ -24,14 +24,14 @@
 </template>
 
 <script>
-import BookStatus from "@/components/book-details/BookStatus.vue"
+import CopyStatus from "@/components/book-details/CopyStatus.vue"
 import { db, collection, query, where, getDocs, doc, getDoc } from "@/firebase.js"
 
 export default {
   props: ["title", "author", "logoUrl", "userEmail"],
   emits: ["copy-chosen"],
   components: {
-    BookStatus,
+    CopyStatus,
   },
   data() {
     return {

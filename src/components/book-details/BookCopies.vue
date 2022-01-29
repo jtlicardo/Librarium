@@ -8,7 +8,7 @@
     :loading="loading"
   >
     <template v-slot:[`item.status`]="{ item }">
-      <book-status :type="item.status" class="mx-auto" />
+      <copy-status :type="item.status" class="mx-auto" />
     </template>
     <template v-slot:[`item.reserve`]="{ item }" v-if="!userIsAdmin">
       <v-btn
@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import BookStatus from "@/components/book-details/BookStatus.vue"
+import CopyStatus from "@/components/book-details/CopyStatus.vue"
 import {
   doc,
   getDoc,
@@ -55,7 +55,7 @@ export default {
   props: ["id", "title", "author"],
   emits: ["copy-deleted", "copy-reserved"],
   components: {
-    BookStatus,
+    CopyStatus,
   },
   data() {
     return {
