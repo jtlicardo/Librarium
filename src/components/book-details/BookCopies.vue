@@ -98,7 +98,16 @@ export default {
       )
       const querySnapshot = await getDocs(q)
       if (querySnapshot.empty === true) this.userHasLoan = false
-      else this.userHasLoan = true
+      else {
+        querySnapshot.forEach((doc) => {
+          if (doc.data().loan_status !== "Finished") {
+            this.userHasLoan = true
+            return
+          }
+        })
+      }
+      if (this.userHasLoan === true) return
+      else this.userHasLoan = false
     },
     async checkNumOfReservationsForUser() {
       const userId = localStorage.getItem("userId")
