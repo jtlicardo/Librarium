@@ -2,7 +2,6 @@
   <v-data-table
     :headers="headers"
     :items="bookCopies"
-    hide-default-footer
     class="elevation-1 grey lighten-5"
     v-if="selectedBook"
     :loading="loading"
