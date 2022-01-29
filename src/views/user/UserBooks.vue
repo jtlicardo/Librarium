@@ -17,7 +17,7 @@
           </h3>
         </v-form>
       </v-col>
-      <v-col cols="2"></v-col>
+      <v-col cols="12" lg="2"></v-col>
       <v-col cols="12" md="5">
         <h1>Recently added books</h1>
         <recently-added></recently-added>
