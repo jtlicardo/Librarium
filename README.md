@@ -27,7 +27,7 @@ Web aplikacija namijenjena lakšem upravljanju knjižnicom, kao i lakšem koriš
 #### [Link na Figma prototip](https://www.figma.com/proto/FDMiOCGla9YrwEDiIl3a8o/Librarium?node-id=0%3A1&scaling=contain&page-id=0%3A1&starting-point-node-id=10%3A5&show-proto-sidebar=1)
 
 ### Javni link na aplikaciju
-Uskoro...
+[**librarium-ivory.vercel.app**](https://librarium-ivory.vercel.app/)
 <br />
 
 ### Organizacija
