@@ -28,6 +28,10 @@ Web aplikacija namijenjena lakšem upravljanju knjižnicom, kao i lakšem koriš
 
 ### Javni link na aplikaciju
 [**librarium-ivory.vercel.app**](https://librarium-ivory.vercel.app/)
+
+Admin  
+email: admin@librarium.com  
+pw: 123456
 <br />
 
 ### Organizacija
